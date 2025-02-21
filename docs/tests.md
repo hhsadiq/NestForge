@@ -38,4 +38,4 @@ npm run test:e2e:document:docker
 
 Previous: [File uploading](file-uploading.md)
 
-Next: [Benchmarking](benchmarking.md)
+Next: [Load Testing](artillery.md)

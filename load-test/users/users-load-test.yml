@@ -1,0 +1,60 @@
+config:
+  target: 'http://localhost:3000/api/v1'
+  phases:
+    - duration: 60
+      arrivalCount: 50
+      name: 'Load Test for User Management'
+  defaults:
+    headers:
+      Content-Type: 'application/json'
+
+scenarios:
+  - name: 'User API Flow'
+    flow:
+      - post:
+          url: '/auth/email/login'
+          json:
+            email: 'test2@example.com'
+            password: '123456'
+          capture:
+            - json: $
+              as: auth_token
+      - log: ' token:--> {{ auth_token.token }}'
+      - get:
+          url: '/users'
+          headers:
+            authorization: 'Bearer {{ auth_token.token }}'
+          capture:
+            - json: $
+              as: users
+      - log: ' userId:--> {{ users.data[0].id }}'
+      - get:
+          url: '/users/summary/{{ users.data[0].id }}'
+          headers:
+            authorization: 'Bearer {{ auth_token.token }}'
+      - get:
+          url: '/users/summary'
+          headers:
+            authorization: 'Bearer {{ auth_token.token }}'
+      - get:
+          url: '/users/{{ users.data[0].id }}'
+          headers:
+            authorization: 'Bearer {{ auth_token.token }}'
+      - post:
+          url: '/users/{{ users.data[0].username }}/follow'
+          headers:
+            authorization: 'Bearer {{ auth_token.token }}'
+          capture:
+            - json: $
+              as: follow
+      - log: ' follow user:--> {{ follow }}'
+      - delete:
+          url: '/users/{{ users.data[0].username }}/follow'
+          headers:
+            authorization: 'Bearer {{ auth_token.token }}'
+      - patch:
+          url: '/users/{{ users.data[0].id }}'
+          headers:
+            authorization: 'Bearer {{ auth_token.token }}'
+          json:
+            name: 'Updated Load Test Name'

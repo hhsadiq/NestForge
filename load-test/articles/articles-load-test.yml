@@ -1,0 +1,85 @@
+config:
+  target: 'http://localhost:3000/api/v1'
+  phases:
+    - duration: 60
+      arrivalCount: 150
+      name: 'Load Test for Articles'
+  defaults:
+    headers:
+      Content-Type: 'application/json'
+
+scenarios:
+  - name: 'Articles API Flow'
+    flow:
+      - post:
+          url: '/auth/email/login'
+          json:
+            email: 'test2@example.com'
+            password: '123456'
+          capture:
+            - json: $
+              as: auth_token
+      - log: ' token:--> {{ auth_token.token }}'
+      - post:
+          url: '/articles'
+          headers:
+            authorization: 'Bearer {{ auth_token.token }}'
+          json:
+            body: 'This is a load test sample article body'
+            description: 'This is a load test sample description'
+            autoGenerateTitle: false
+            title: 'Load Test Sample Article Title'
+            tagList:
+              - 'test'
+          capture:
+            - json: $
+              as: article
+      - log: ' articleId:--> {{ article.id }}'
+      - get:
+          url: '/articles'
+          headers:
+            authorization: 'Bearer {{ auth_token.token }}'
+      - get:
+          url: '/articles/{{ article.id }}'
+          headers:
+            authorization: 'Bearer {{ auth_token.token }}'
+      - patch:
+          url: '/articles/{{ article.id }}'
+          headers:
+            authorization: 'Bearer {{ auth_token.token }}'
+          json:
+            body: 'Updated Load Test Article Name'
+      - post:
+          url: '/articles/{{ article.slug }}/comments'
+          headers:
+            authorization: 'Bearer {{ auth_token.token }}'
+          json:
+            body: 'load test comment'
+          capture:
+            - json: $
+              as: comment
+      - log: ' commentId:--> {{ comment.id }}'
+      - get:
+          url: '/articles/{{ article.slug }}/comments'
+          headers:
+            authorization: 'Bearer {{ auth_token.token }}'
+      - delete:
+          url: '/articles/{{ article.slug }}/comments/{{ comment.id }}'
+          headers:
+            authorization: 'Bearer {{ auth_token.token }}'
+      - post:
+          url: '/articles/{{ article.slug }}/favorite'
+          headers:
+            authorization: 'Bearer {{ auth_token.token }}'
+      - delete:
+          url: '/articles/{{ article.slug }}/favorite'
+          headers:
+            authorization: 'Bearer {{ auth_token.token }}'
+      - get:
+          url: '/articles/user/feed'
+          headers:
+            authorization: 'Bearer {{ auth_token.token }}'
+      - delete:
+          url: '/articles/{{ article.id }}'
+          headers:
+            authorization: 'Bearer {{ auth_token.token }}'
