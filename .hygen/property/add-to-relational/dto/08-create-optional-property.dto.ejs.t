@@ -4,6 +4,6 @@ to: "<%= version === 'v1' ? 'src/' + h.inflection.transform(name, ['pluralize', 
 before: "} from 'class-validator'"
 skip_if: \IsOptional,
 ---
-<% if (isOptional) { -%>
+<% if (isAddToDto && isOptional) { -%>
 IsOptional,
 <% } -%>
