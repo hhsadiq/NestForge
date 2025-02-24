@@ -1,6 +1,8 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class BiometricVerification1735221313608 implements MigrationInterface {
+export class CreateBiometricChallengeTable1740135516726
+  implements MigrationInterface
+{
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
       `CREATE TABLE "biometric_challenge" (

@@ -1,4 +1,4 @@
-const helpers = require(`${__dirname}/dist/utils/hygen-helper.js`);
+const helpers = require(`${__dirname}/dist/src/utils/hygen-helper.js`);
 
 module.exports = {
   helpers,

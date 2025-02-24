@@ -24,6 +24,8 @@ Implementing the [Realworld Medium Clone Specifications](https://realworld-docs.
 - [x] File uploads. Support local and Amazon S3 drivers.
 - [x] Swagger.
 - [x] Support E2E and unit tests.
+- [x] Load Testing with Artillery:
+  - Performance Benchmarking: Added load testing base structure and scenarios for critical endpoints (articles, user).
 - [x] Docker.
 - [x] CI (Github Actions).
 - [x] Absolute Path in Imports: Enable absolute paths for module imports, improving project structure and readability by avoiding deep relative paths.
@@ -33,6 +35,9 @@ Implementing the [Realworld Medium Clone Specifications](https://realworld-docs.
   - Versioning of Resources: Implement version control for resources, ensuring backward compatibility and smooth upgrades.
   - Property Management: Add or modify properties for specific versions of a resource, making updates seamless and non-disruptive.
   - Raw Query Management: Integrate raw queries into the specific version of a resource to handle complex database queries effectively.
+- [x] Biometric Structure:
+  - Challenge-Based Authentication: Implements a secure, time-bound challenge system to validate biometric data, preventing replay attacks.
+  - Server-Side Validation: Cryptographic signing and verification of biometric challenges to ensure data integrity.
 - [x] Article Module: Full CRUD functionality for article creation, with support for:
   - Commenting: Users can comment on articles.
   - Favorite/Unfavorite: Users can mark articles as favorites or remove them.
