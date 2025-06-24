@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 
+import { ClapsModule } from '@src/claps/claps.module';
 import { CommentsModule } from '@src/comments/comments.module';
 import { DatabaseHelperModule } from '@src/database-helpers/database-helper.module';
 import { GenAiModule } from '@src/gen-ai/gen-ai.module';
@@ -12,6 +13,7 @@ import { RelationalArticlePersistenceModule } from './infrastructure/persistence
 
 @Module({
   imports: [
+    ClapsModule,
     RelationalArticlePersistenceModule,
     UsersModule,
     CommentsModule,

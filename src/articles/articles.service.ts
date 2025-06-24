@@ -3,6 +3,7 @@ import { diff, unique } from 'radash';
 import slugify from 'slugify';
 
 import { JwtPayloadType } from '@src/auth/strategies/types/jwt-payload.type';
+import { ClapsService } from '@src/claps/claps.service';
 import { CommentsService } from '@src/comments/comments.service';
 import { Comment } from '@src/comments/domain/comment';
 import {
@@ -41,6 +42,7 @@ export class ArticlesService {
     private readonly tagsService: TagsService,
     private readonly dbHelperRepository: DatabaseHelperRepository,
     private readonly genAiService: GenAiService,
+    private readonly clapsService: ClapsService,
   ) {}
 
   async create(
@@ -128,17 +130,23 @@ export class ArticlesService {
     return id;
   }
 
-  findAllWithPagination({
+  async findAllWithPagination({
     paginationOptions,
   }: {
     paginationOptions: IPaginationOptions;
-  }) {
-    return this.articleRepository.findAllWithPagination({
+  }): Promise<Article[]> {
+    const articles = await this.articleRepository.findAllWithPagination({
       paginationOptions: {
         page: paginationOptions.page,
         limit: paginationOptions.limit,
       },
     });
+    if (!articles.length) {
+      return [];
+    }
+    return await Promise.all(
+      articles.map((article) => this.getArticleWithClapsCount(article)),
+    );
   }
 
   async findAllWithPaginationStandard({
@@ -297,5 +305,10 @@ export class ArticlesService {
       },
       userId: user.id,
     });
+  }
+
+  async getArticleWithClapsCount(article: Article): Promise<Article> {
+    const clapsCount = await this.clapsService.getCountByArticleId(article.id);
+    return { ...article, clapsCount };
   }
 }
