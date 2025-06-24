@@ -39,6 +39,11 @@ export class Article {
   })
   tagList?: NullableType<Tag['name'][]>;
 
+  @ApiProperty({
+    type: Number,
+  })
+  clapsCount?: number;
+
   // @custom-inject-point
   @ApiProperty()
   createdAt: Date;

@@ -20,6 +20,7 @@ import { AuthGoogleModule } from './auth-google/auth-google.module';
 import googleConfig from './auth-google/config/google.config';
 import { AuthTwitterModule } from './auth-twitter/auth-twitter.module';
 import twitterConfig from './auth-twitter/config/twitter.config';
+import { ClapsModule } from './claps/claps.module';
 import { CommentsModule } from './comments/comments.module';
 import appConfig from './config/app.config';
 import { AllConfigType } from './config/config.type';
@@ -47,6 +48,7 @@ const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
 
 @Module({
   imports: [
+    ClapsModule,
     GenAiModule,
     ViewsModule,
     TagsModule,

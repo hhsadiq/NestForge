@@ -1,4 +1,5 @@
 export const TABLES = {
+  clap: 'clap',
   article: 'article',
   comment: 'comment',
   file: 'file',
