@@ -274,4 +274,24 @@ export class ArticlesController {
       { page, limit },
     );
   }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Post(':slug/clap')
+  @ApiParam({
+    name: 'slug',
+    type: String,
+    required: true,
+  })
+  @ApiResponse({
+    type: ArticleResponseMessageDto,
+  })
+  async clapArticle(
+    @Param('slug') slug: string,
+    @Request() request,
+  ): Promise<ArticleResponseMessageDto> {
+    const user = request.user;
+    const result = await this.articlesService.clapArticle(slug, user);
+    return { message: result };
+  }
 }

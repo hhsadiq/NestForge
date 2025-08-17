@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { diff, unique } from 'radash';
 import slugify from 'slugify';
+import crypto from 'crypto';
 
 import { JwtPayloadType } from '@src/auth/strategies/types/jwt-payload.type';
 import { CommentsService } from '@src/comments/comments.service';
@@ -97,6 +98,7 @@ export class ArticlesService {
       ...clonedPayload,
       tagList: tags,
       slug: this.slugify(clonedPayload.title),
+      clap_count: 0, // Add this line
     };
 
     const article = await this.articleRepository.create(articlePayload);
@@ -122,7 +124,7 @@ export class ArticlesService {
     const randomValues = crypto.getRandomValues(new Uint8Array(length));
 
     for (let i = 0; i < length; i++) {
-      id += charset[randomValues[i] & 63]; // Ensure the index is twithin the range 0-63
+      id += charset[randomValues[i] & 63]; // Ensure the index is within the range 0-63
     }
 
     return id;
@@ -225,7 +227,7 @@ export class ArticlesService {
   }
 
   async findAndValidate(field, value, fetchRelations = false) {
-    const repoFunction = `findBy${field.charAt(0).toUpperCase()}${field.slice(1)}${fetchRelations ? 'WithRelations' : ''}`; // captilize first letter of the field name
+    const repoFunction = `findBy${field.charAt(0).toUpperCase()}${field.slice(1)}${fetchRelations ? 'WithRelations' : ''}`; // capitalize first letter of the field name
     if (typeof this.articleRepository[repoFunction] !== 'function') {
       throw UNPROCESSABLE_ENTITY(
         `Method ${repoFunction} not found on article repository.`,
@@ -297,5 +299,25 @@ export class ArticlesService {
       },
       userId: user.id,
     });
+  }
+
+  async clapArticle(slug: string, user: User): Promise<string> {
+    const article = await this.findAndValidate('slug', slug);
+
+    const clap = await this.articleRepository.findClap(user.id, article.id);
+
+    if (clap) {
+      await this.articleRepository.updateClap(clap.id, clap.counter + 1);
+    } else {
+      await this.articleRepository.createClap({
+        user: { id: user.id } as User,
+        article: { id: article.id } as Article,
+        counter: 1,
+      });
+    }
+
+    await this.articleRepository.incrementClapCount(article.id);
+
+    return 'Article clapped successfully';
   }
 }

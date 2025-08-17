@@ -1,5 +1,6 @@
 import { ArticleDTOWithTagDomains } from '@src/articles/articles.types';
 import { Article } from '@src/articles/domain/article';
+import { Clap } from '@src/articles/domain/clap';
 import { FavoriteArticle } from '@src/articles/domain/favorite-article';
 import { User } from '@src/users/domain/user';
 import { DeepPartial } from '@src/utils/types/deep-partial.type';
@@ -59,4 +60,12 @@ export abstract class ArticleAbstractRepository {
   ): Promise<NullableType<FavoriteArticle>>;
 
   abstract removeFavorite(id: FavoriteArticle['id']): Promise<void>;
+
+  abstract findClap(
+    userId: User['id'],
+    articleId: Article['id'],
+  ): Promise<Clap | null>;
+  abstract createClap(data: Partial<Clap>): Promise<Clap>;
+  abstract updateClap(id: Clap['id'], counter: number): Promise<void>;
+  abstract incrementClapCount(articleId: Article['id']): Promise<void>;
 }

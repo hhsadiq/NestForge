@@ -11,9 +11,12 @@ import { FavoriteArticleEntity } from '@src/articles/infrastructure/persistence/
 import { ArticleMapper } from '@src/articles/infrastructure/persistence/relational/mappers/article.mapper';
 import { FavoriteArticleMapper } from '@src/articles/infrastructure/persistence/relational/mappers/favorite.article.mapper';
 import { User } from '@src/users/domain/user';
-import { UserFollowEntity as UserFollowEntity } from '@src/users/infrastructure/persistence/relational/entities/user-follow.entity';
+import { UserFollowEntity } from '@src/users/infrastructure/persistence/relational/entities/user-follow.entity';
 import { NullableType } from '@src/utils/types/nullable.type';
 import { IPaginationOptions } from '@src/utils/types/pagination-options';
+import { Clap } from '@src/articles/domain/clap';
+import { ClapEntity } from '@src/articles/infrastructure/persistence/relational/entities/clap.entity';
+import { ClapMapper } from '@src/articles/infrastructure/persistence/relational/mappers/clap.mapper';
 
 @Injectable()
 export class ArticleRelationalRepository implements ArticleAbstractRepository {
@@ -24,6 +27,8 @@ export class ArticleRelationalRepository implements ArticleAbstractRepository {
     private readonly favoriteArticleRepository: Repository<FavoriteArticleEntity>,
     @InjectRepository(UserFollowEntity)
     private readonly userFollowRepository: Repository<UserFollowEntity>,
+    @InjectRepository(ClapEntity)
+    private readonly clapRepository: Repository<ClapEntity>,
   ) {}
 
   async create(data: ArticleDTOWithTagDomains): Promise<Article> {
@@ -170,5 +175,35 @@ export class ArticleRelationalRepository implements ArticleAbstractRepository {
 
   async removeFavorite(id: FavoriteArticle['id']): Promise<void> {
     await this.favoriteArticleRepository.delete(id);
+  }
+
+  async findClap(
+    userId: User['id'],
+    articleId: Article['id'],
+  ): Promise<Clap | null> {
+    const entity = await this.clapRepository.findOne({
+      where: {
+        user: { id: Number(userId) },
+        article: { id: articleId },
+      },
+      relations: ['user', 'article'],
+    });
+    return entity ? ClapMapper.toDomain(entity) : null;
+  }
+
+  async createClap(data: Partial<Clap>): Promise<Clap> {
+    const persistenceModel = ClapMapper.toPersistence(data);
+    const newEntity = await this.clapRepository.save(
+      this.clapRepository.create(persistenceModel as ClapEntity),
+    );
+    return ClapMapper.toDomain(newEntity);
+  }
+
+  async updateClap(id: Clap['id'], counter: number): Promise<void> {
+    await this.clapRepository.update(id, { counter });
+  }
+
+  async incrementClapCount(articleId: Article['id']): Promise<void> {
+    await this.articleRepository.increment({ id: articleId }, 'clap_count', 1);
   }
 }
