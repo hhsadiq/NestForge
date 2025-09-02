@@ -11,6 +11,14 @@ export class <%= name %>Mapper {
     domainEntity.createdAt = raw.created_at;
     domainEntity.updatedAt = raw.updated_at;
 
+    <% if(typeof fields !== 'undefined' && fields.length > 0) { %>
+      <% fields.forEach(field => { 
+        const camelCaseName = h.inflection.camelize(field.name, true);
+        const snakeCaseName = h.inflection.underscore(field.name);
+      %>
+      domainEntity.<%= camelCaseName %> = raw.<%= snakeCaseName %>;
+      <% }) %>
+    <% } %>
     return domainEntity;
   }
 
@@ -22,6 +30,14 @@ export class <%= name %>Mapper {
     persistenceEntity.created_at = domainEntity.createdAt;
     persistenceEntity.updated_at = domainEntity.updatedAt;
 
+    <% if(typeof fields !== 'undefined' && fields.length > 0) { %>
+      <% fields.forEach(field => { 
+      const camelCaseName = h.inflection.camelize(field.name, true);
+      const snakeCaseName = h.inflection.underscore(field.name);
+    %>
+    persistenceEntity.<%= snakeCaseName %> = domainEntity.<%= camelCaseName %>;
+      <% }) %>
+    <% } %>
     return persistenceEntity;
   }
 }

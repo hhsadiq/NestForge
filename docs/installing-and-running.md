@@ -21,7 +21,7 @@ Interactions with the database are implemented based on [Hexagonal Architecture]
 1. Clone repository
 
    ```bash
-   git clone --depth 1 git@github.com:hhsadiq/medium-clone-nestjs.git my-app
+   git clone --depth 1 git@github.com:hhsadiq/nestforge.git my-app
    ```
 
 1. Go to folder, and copy `env-example-relational` as `.env`.
@@ -78,7 +78,7 @@ If you want quick run your app, you can use following commands:
 1. Clone repository
 
    ```bash
-   git clone --depth 1 git@github.com:hhsadiq/medium-clone-nestjs.git my-app
+   git clone --depth 1 git@github.com:hhsadiq/nestforge.git my-app
    ```
 
 1. Go to folder, and copy `env-example-relational` as `.env`.

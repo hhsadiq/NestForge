@@ -59,7 +59,7 @@ import { infinityPagination } from '../utils/infinity-pagination';
 import { FindAll<%= h.inflection.transform(name, ['pluralize']) %>Dto } from './dto/find-all-<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>.dto';
 <% } %>
 
-@ApiTags('<%= h.inflection.transform(name, ['pluralize', 'humanize']) %>')
+@ApiTags('<%= h.inflection.transform(name, ['pluralize', 'humanize', 'dasherize', 'underscore']) %>')
 @ApiBearerAuth()
 @UseGuards(AuthGuard('jwt'))
 @Controller({
@@ -109,10 +109,10 @@ export class <%= h.inflection.transform(name, ['pluralize']) %>Controller {
   @Get(':id')
   @ApiParam({
     name: 'id',
-    type: String,
+    type: Number,
     required: true,
   })
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: number) {
     return this.<%= h.inflection.camelize(h.inflection.pluralize(name), true) %>Service.findOne(id);
   }
   <% } %>
@@ -121,14 +121,14 @@ export class <%= h.inflection.transform(name, ['pluralize']) %>Controller {
   @Patch(':id')
   @ApiParam({
     name: 'id',
-    type: String,
+    type: Number,
     required: true,
   })
   @ApiOkResponse({
     type: <%= name %>,
   })
   update(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() update<%= name %>Dto: Update<%= name %>Dto,
   ) {
     return this.<%= h.inflection.camelize(h.inflection.pluralize(name), true) %>Service.update(id, update<%= name %>Dto);
@@ -139,10 +139,10 @@ export class <%= h.inflection.transform(name, ['pluralize']) %>Controller {
   @Delete(':id')
   @ApiParam({
     name: 'id',
-    type: String,
+    type: Number,
     required: true,
   })
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: number) {
     return this.<%= h.inflection.camelize(h.inflection.pluralize(name), true) %>Service.remove(id);
   }
   <% } %>
