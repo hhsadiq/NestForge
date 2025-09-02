@@ -9,6 +9,7 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 
 import { AuthBiometricModule } from '@src/auth_biometric/auth-biometric.module';
 
+import { ArticlesModule } from './articles/articles.module';
 import { AuthModule } from './auth/auth.module';
 import authConfig from './auth/config/auth.config';
 import { AuthAppleModule } from './auth-apple/auth-apple.module';
@@ -19,6 +20,7 @@ import { AuthGoogleModule } from './auth-google/auth-google.module';
 import googleConfig from './auth-google/config/google.config';
 import { AuthTwitterModule } from './auth-twitter/auth-twitter.module';
 import twitterConfig from './auth-twitter/config/twitter.config';
+import { CommentsModule } from './comments/comments.module';
 import appConfig from './config/app.config';
 import { AllConfigType } from './config/config.type';
 import databaseConfig from './database/config/database.config';
@@ -32,6 +34,7 @@ import mailConfig from './mail/config/mail.config';
 import { MailModule } from './mail/mail.module';
 import { MailerModule } from './mailer/mailer.module';
 import { SessionModule } from './session/session.module';
+import { TagsModule } from './tags/tags.module';
 import { UsersModule } from './users/users.module';
 import { ViewsModule } from './views/views.module';
 
@@ -46,6 +49,9 @@ const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
   imports: [
     GenAiModule,
     ViewsModule,
+    TagsModule,
+    CommentsModule,
+    ArticlesModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [
