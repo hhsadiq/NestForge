@@ -8,7 +8,6 @@ import {
   Delete,
   UseGuards,
   Query,
-  Request,
   HttpStatus,
   HttpCode,
   SerializeOptions,
@@ -37,7 +36,6 @@ import { User } from './domain/user';
 import { CreateUserDto } from './dto/create-user.dto';
 import { QueryUserDto } from './dto/query-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserResponseMessageDto } from './dto/user-response-message.dto';
 import { UsersService } from './users.service';
 
 @ApiBearerAuth()
@@ -181,37 +179,5 @@ export class UsersController {
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: User['id']): Promise<void> {
     return this.usersService.remove(id);
-  }
-
-  @Post(':username/follow')
-  @ApiParam({
-    name: 'username',
-    type: String,
-    required: true,
-  })
-  @ApiOkResponse({ type: UserResponseMessageDto })
-  async followUser(
-    @Param('username') username: string,
-    @Request() req,
-  ): Promise<UserResponseMessageDto> {
-    const userId = req.user.id;
-    const result = await this.usersService.followUser(userId, username);
-    return { message: result };
-  }
-
-  @Delete(':username/follow')
-  @ApiParam({
-    name: 'username',
-    type: String,
-    required: true,
-  })
-  @ApiOkResponse({ type: UserResponseMessageDto })
-  async unFollowUser(
-    @Param('username') username: string,
-    @Request() req,
-  ): Promise<UserResponseMessageDto> {
-    const userId = req.user.id;
-    const result = await this.usersService.unFollowUser(userId, username);
-    return { message: result };
   }
 }

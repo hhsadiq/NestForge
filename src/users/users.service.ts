@@ -2,23 +2,12 @@ import { Injectable } from '@nestjs/common';
 import bcrypt from 'bcryptjs';
 
 import { AuthProvidersEnum } from '@src/auth/auth-providers.enum';
-import {
-  ALREADY_FOLLOWING_ERROR,
-  ERROR_MESSAGES,
-  NOT_FOLLOWING_ERROR,
-  SELF_ACTION_ERROR,
-} from '@src/common/error-messages';
+import { ERROR_MESSAGES } from '@src/common/error-messages';
 import {
   FORBIDDEN,
   NOT_FOUND,
   UNPROCESSABLE_ENTITY,
-  CustomException,
-  BAD_REQUEST,
 } from '@src/common/exceptions';
-import {
-  USER_FOLLOW_SUCCESS,
-  USER_UNFOLLOW_SUCCESS,
-} from '@src/common/response-messages';
 import { FilesService } from '@src/files/files.service';
 import { RoleEnum } from '@src/roles/roles.enum';
 import { StatusEnum } from '@src/statuses/statuses.enum';
@@ -220,58 +209,5 @@ export class UsersService {
   getUserSummary(id: User['id']): Promise<NullableType<UserSummary>> {
     const userSummaryView = this.viewsService.getUsersSummaryView();
     return this.usersRepository.getUserSummary(id, userSummaryView);
-  }
-
-  async unFollowUser(followerId: number, username: string): Promise<any> {
-    const followingUser = await this.usersRepository.findByUsername(username);
-    if (!followingUser) {
-      throw NOT_FOUND('User', { username: username });
-    }
-
-    if (followerId === followingUser.id) {
-      throw CustomException(SELF_ACTION_ERROR, 'unfollow');
-    }
-
-    const existingFollow = await this.usersRepository.findFollow(
-      followerId,
-      followingUser.id,
-    );
-
-    if (!existingFollow) throw BAD_REQUEST(NOT_FOLLOWING_ERROR);
-
-    await this.usersRepository.removeFollow(existingFollow.id);
-    return USER_UNFOLLOW_SUCCESS;
-  }
-
-  async followUser(followerId: number, username: string): Promise<any> {
-    const followingUser = await this.usersRepository.findByUsername(username);
-
-    if (!followingUser) {
-      throw NOT_FOUND('User', { username: username });
-    }
-
-    if (followerId === followingUser.id) {
-      throw CustomException(SELF_ACTION_ERROR, 'follow');
-    }
-
-    const existingFollow = await this.usersRepository.findFollow(
-      followerId,
-      followingUser.id,
-    );
-
-    if (existingFollow) throw BAD_REQUEST(ALREADY_FOLLOWING_ERROR);
-
-    const clonedPayload = {
-      follower: {
-        id: followerId,
-      } as User,
-      following: {
-        id: Number(followingUser.id),
-      } as User,
-    };
-
-    await this.usersRepository.createFollow(clonedPayload);
-
-    return USER_FOLLOW_SUCCESS;
   }
 }

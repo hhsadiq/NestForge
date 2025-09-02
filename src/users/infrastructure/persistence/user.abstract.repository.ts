@@ -1,7 +1,6 @@
 import { SelectQueryBuilder } from 'typeorm';
 
 import { User } from '@src/users/domain/user';
-import { UserFollow } from '@src/users/domain/user-follow';
 import { FilterUserDto, SortUserDto } from '@src/users/dto/query-user.dto';
 import { DeepPartial } from '@src/utils/types/deep-partial.type';
 import { NullableType } from '@src/utils/types/nullable.type';
@@ -25,8 +24,6 @@ export abstract class UserAbstractRepository {
   }): Promise<User[]>;
 
   abstract findById(id: User['id']): Promise<NullableType<User>>;
-
-  abstract findByIdWithRelations(id: User['id']): Promise<NullableType<User>>;
 
   abstract findByEmail(email: User['email']): Promise<NullableType<User>>;
 
@@ -52,15 +49,4 @@ export abstract class UserAbstractRepository {
     id: User['id'],
     query: SelectQueryBuilder<UserSummaryViewEntity>,
   ): Promise<NullableType<UserSummary>>;
-
-  abstract createFollow(
-    data: Omit<UserFollow, 'id' | 'createdAt' | 'updatedAt'>,
-  ): Promise<UserFollow>;
-
-  abstract findFollow(
-    followerId: User['id'],
-    followingId: User['id'],
-  ): Promise<NullableType<UserFollow>>;
-
-  abstract removeFollow(id: UserFollow['id']): Promise<void>;
 }
