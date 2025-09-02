@@ -59,7 +59,7 @@ import { infinityPagination } from '../utils/infinity-pagination';
 import { FindAll<%= h.inflection.transform(name, ['pluralize']) %>Dto } from './dto/find-all-<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>.dto';
 <% } %>
 
-@ApiTags('<%= h.inflection.transform(name, ['pluralize', 'humanize', 'dasherize', 'underscore']) %>')
+@ApiTags('<%= h.inflection.transform(name, ['pluralize', 'dasherize', 'underscore']) %>')
 @ApiBearerAuth()
 @UseGuards(AuthGuard('jwt'))
 @Controller({
