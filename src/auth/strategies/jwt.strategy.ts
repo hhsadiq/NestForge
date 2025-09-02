@@ -18,7 +18,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
 
   // Why we don't check if the user exists in the database:
-  // https://github.com/hhsadiq/medium-clone-nestjs/blob/develop/docs/auth.md#about-jwt-strategy
+  // https://github.com/hhsadiq/nestforge/blob/develop/docs/auth.md#about-jwt-strategy
   public validate(payload: JwtPayloadType): OrNeverType<JwtPayloadType> {
     if (!payload.id) {
       throw new UnauthorizedException();

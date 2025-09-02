@@ -1,0 +1,10 @@
+---
+inject: true
+to: src/<%= h.inflection.transform(parent, ['pluralize', 'underscore', 'dasherize']) %>/infrastructure/persistence/<%= h.inflection.transform(parent, ['underscore', 'dasherize']) %>.abstract.repository.ts
+before: 'import'
+skip_if: '{ IPaginationOptions }'
+---
+
+<% if (functionalities.includes('findAll')) { %>
+import { IPaginationOptions } from '../../../utils/types/pagination-options';
+<% } %>
