@@ -37,7 +37,6 @@ function getEntityFilePath(name, parent) {
     // 1️⃣ Parent modules
     for (const entity of jsonData) {
       if (entity.parent) continue;
-
       const entityPath = getEntityFilePath(entity.name, entity.parent);
       console.log('entityPath: ', entityPath);
       if (fs.existsSync(entityPath)) {
