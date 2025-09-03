@@ -1,4 +1,4 @@
-import { Session } from '@src/session/domain/session';
+import { Session } from '@src/sessions/domain/session';
 import { User } from '@src/users/domain/user';
 import { NullableType } from '@src/utils/types/nullable.type';
 

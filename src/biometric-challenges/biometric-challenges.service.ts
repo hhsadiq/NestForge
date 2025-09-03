@@ -3,9 +3,9 @@ import * as Sentry from '@sentry/nestjs';
 import { BIOMETRIC_CHALLENGE_EXPIRY } from 'test/utils/constants';
 
 import { AuthService } from '@src/auth/auth.service';
-import { EnableBiometricDto } from '@src/auth_biometric/dtos/enable-biometric-payload.dto';
-import { VerifyBiometricDto } from '@src/auth_biometric/dtos/verify-biometric.dto';
-import { AuthBiometricAbstractRepository } from '@src/auth_biometric/infrastructure/persistence/auth-biometric.abstract.repository';
+import { EnableBiometricDto } from '@src/biometric-challenges/dtos/enable-biometric-payload.dto';
+import { VerifyBiometricDto } from '@src/biometric-challenges/dtos/verify-biometric.dto';
+import { BiometricChallengeAbstractRepository } from '@src/biometric-challenges/infrastructure/persistence/biometric-challenge.abstract.repository';
 import {
   BIOMETRIC_CHALLENGE_ERROR,
   BIOMETRIC_VERIFICATION_FAILED,
@@ -20,9 +20,9 @@ import { verifySignature } from '@src/utils/crypto-helper';
 import { generateUniqueSuffix } from '@src/utils/slugify';
 
 @Injectable()
-export class AuthBiometricService {
+export class BiometricChallengeService {
   constructor(
-    private readonly biometricRepo: AuthBiometricAbstractRepository,
+    private readonly biometricRepo: BiometricChallengeAbstractRepository,
     private readonly authService: AuthService,
     private usersService: UsersService,
   ) {}
@@ -32,7 +32,7 @@ export class AuthBiometricService {
     enableBiometricDto: EnableBiometricDto,
   ) {
     try {
-      const userDevice = await this.biometricRepo.findByUserIdAndDeviceId(
+      const userDevice = await this.usersService.findDeviceByUserIdAndDeviceId(
         userId,
         enableBiometricDto.deviceId,
       );
@@ -41,9 +41,15 @@ export class AuthBiometricService {
           deviceId: enableBiometricDto.deviceId,
           user: { id: userId } as User,
         };
-        await this.biometricRepo.enable(userDevicePartial, enableBiometricDto);
+        await this.usersService.addBiometricKeyInUserDevice(
+          userDevicePartial,
+          enableBiometricDto,
+        );
       } else {
-        await this.biometricRepo.enable(userDevice, enableBiometricDto);
+        await this.usersService.addBiometricKeyInUserDevice(
+          userDevice,
+          enableBiometricDto,
+        );
       }
       return;
     } catch (error) {
@@ -55,7 +61,7 @@ export class AuthBiometricService {
   }
 
   async disable(userId: number | string, deviceId: string) {
-    const userDevice = await this.biometricRepo.findByUserIdAndDeviceId(
+    const userDevice = await this.usersService.findDeviceByUserIdAndDeviceId(
       userId,
       deviceId,
     );
@@ -63,7 +69,7 @@ export class AuthBiometricService {
       throw NOT_FOUND('User device', { userId, deviceId });
     }
     try {
-      await this.biometricRepo.disable(userDevice);
+      await this.usersService.removeBiometricKeyInUserDevice(userDevice);
       return;
     } catch (error) {
       throw BAD_REQUEST(DISABLE_BIOMETRIC_ERROR(userId, deviceId), error);
@@ -75,7 +81,7 @@ export class AuthBiometricService {
     if (!user) {
       throw NOT_FOUND('User', { email });
     }
-    const userDevice = await this.biometricRepo.findByUserIdAndDeviceId(
+    const userDevice = await this.usersService.findDeviceByUserIdAndDeviceId(
       user.id,
       deviceId,
     );
@@ -115,7 +121,7 @@ export class AuthBiometricService {
       throw NOT_FOUND('User', { email: verifyBiometricDto.email });
     }
 
-    const userDevice = await this.biometricRepo.findByUserIdAndDeviceId(
+    const userDevice = await this.usersService.findDeviceByUserIdAndDeviceId(
       user.id,
       verifyBiometricDto.deviceId,
     );

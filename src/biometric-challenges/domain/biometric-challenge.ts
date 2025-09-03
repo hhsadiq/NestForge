@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { UserDevice } from '@src/auth_biometric/domain/user-device';
+import { UserDevice } from '@src/users/domain/user-device';
 
 export class BiometricChallenge {
   @ApiProperty({

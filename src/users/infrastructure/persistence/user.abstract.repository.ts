@@ -1,6 +1,8 @@
 import { SelectQueryBuilder } from 'typeorm';
 
+import { EnableBiometricDto } from '@src/biometric-challenges/dtos/enable-biometric-payload.dto';
 import { User } from '@src/users/domain/user';
+import { UserDevice } from '@src/users/domain/user-device';
 import { FilterUserDto, SortUserDto } from '@src/users/dto/query-user.dto';
 import { DeepPartial } from '@src/utils/types/deep-partial.type';
 import { NullableType } from '@src/utils/types/nullable.type';
@@ -49,4 +51,28 @@ export abstract class UserAbstractRepository {
     id: User['id'],
     query: SelectQueryBuilder<UserSummaryViewEntity>,
   ): Promise<NullableType<UserSummary>>;
+
+  abstract findDeviceByUserIdAndDeviceId(
+    id: User['id'],
+    deviceId: UserDevice['deviceId'],
+  ): Promise<NullableType<UserDevice>>;
+
+  abstract createUserDevice(
+    data: Omit<
+      UserDevice,
+      'id' | 'createdAt' | 'deletedAt' | 'updatedAt' | 'biometricPublicKey'
+    >,
+  ): Promise<UserDevice>;
+
+  abstract addBiometricKeyInUserDevice(
+    userDevice: Omit<
+      UserDevice,
+      'id' | 'createdAt' | 'deletedAt' | 'updatedAt' | 'biometricPublicKey'
+    >,
+    enableBiometricDto: EnableBiometricDto,
+  ): Promise<NullableType<UserDevice>>;
+
+  abstract removeBiometricKeyInUserDevice(
+    userDevice: UserDevice,
+  ): Promise<NullableType<UserDevice>>;
 }

@@ -1,6 +1,6 @@
-import { BiometricChallenge } from '@src/auth_biometric/domain/biometric-challenge';
-import { BiometricChallengeEntity } from '@src/auth_biometric/infrastructure/persistence/relational/entities/biometric-challenge.entity';
-import { UserDeviceMapper } from '@src/auth_biometric/infrastructure/persistence/relational/mappers/user-device.mapper';
+import { BiometricChallenge } from '@src/biometric-challenges/domain/biometric-challenge';
+import { BiometricChallengeEntity } from '@src/biometric-challenges/infrastructure/persistence/relational/entities/biometric-challenge.entity';
+import { UserDeviceMapper } from '@src/users/infrastructure/persistence/relational/mappers/user-device.mapper';
 
 export class BiometricChallengeMapper {
   static toDomain(raw: BiometricChallengeEntity): BiometricChallenge {

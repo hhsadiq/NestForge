@@ -1,5 +1,5 @@
-import { UserDevice } from '@src/auth_biometric/domain/user-device';
-import { UserDeviceEntity } from '@src/auth_biometric/infrastructure/persistence/relational/entities/user-device.entity';
+import { UserDevice } from '@src/users/domain/user-device';
+import { UserDeviceEntity } from '@src/users/infrastructure/persistence/relational/entities/user-device.entity';
 import { UserMapper } from '@src/users/infrastructure/persistence/relational/mappers/user.mapper';
 
 export class UserDeviceMapper {

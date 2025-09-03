@@ -1,5 +1,5 @@
-import { Session } from '@src/session/domain/session';
-import { SessionEntity } from '@src/session/infrastructure/persistence/relational/entities/session.entity';
+import { Session } from '@src/sessions/domain/session';
+import { SessionEntity } from '@src/sessions/infrastructure/persistence/relational/entities/session.entity';
 import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity';
 import { UserMapper } from '@src/users/infrastructure/persistence/relational/mappers/user.mapper';
 

@@ -14,19 +14,19 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 import { LoginResponseDto } from '@src/auth/dto/login-response.dto';
-import { AuthBiometricService } from '@src/auth_biometric/auth-biometric.service';
-import { DisableBiometricDto } from '@src/auth_biometric/dtos/disable-biometric-payload.dto';
-import { EnableBiometricDto } from '@src/auth_biometric/dtos/enable-biometric-payload.dto';
-import { GetChallengePathParamDto } from '@src/auth_biometric/dtos/get-challenge-params.dto';
-import { VerifyBiometricDto } from '@src/auth_biometric/dtos/verify-biometric.dto';
+import { BiometricChallengeService } from '@src/biometric-challenges/biometric-challenges.service';
+import { DisableBiometricDto } from '@src/biometric-challenges/dtos/disable-biometric-payload.dto';
+import { EnableBiometricDto } from '@src/biometric-challenges/dtos/enable-biometric-payload.dto';
+import { GetChallengePathParamDto } from '@src/biometric-challenges/dtos/get-challenge-params.dto';
+import { VerifyBiometricDto } from '@src/biometric-challenges/dtos/verify-biometric.dto';
 
-@ApiTags('Auth Biometric')
+@ApiTags('Biometric Challenge')
 @Controller({
-  path: 'auth/biometric',
+  path: 'biometric-challenge',
   version: '1',
 })
-export class AuthBiometricController {
-  constructor(private readonly service: AuthBiometricService) {}
+export class BiometricChallengeController {
+  constructor(private readonly service: BiometricChallengeService) {}
 
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))

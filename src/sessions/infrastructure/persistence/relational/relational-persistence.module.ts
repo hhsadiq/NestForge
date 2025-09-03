@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { SessionAbstractRepository } from '@src/session/infrastructure/persistence/session.abstract.repository';
+import { SessionAbstractRepository } from '@src/sessions/infrastructure/persistence/session.abstract.repository';
 
 import { SessionEntity } from './entities/session.entity';
 import { SessionRelationalRepository } from './repositories/session.repository';

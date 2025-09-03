@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import bcrypt from 'bcryptjs';
 
 import { AuthProvidersEnum } from '@src/auth/auth-providers.enum';
+import { EnableBiometricDto } from '@src/biometric-challenges/dtos/enable-biometric-payload.dto';
 import { ERROR_MESSAGES } from '@src/common/error-messages';
 import {
   FORBIDDEN,
@@ -11,6 +12,7 @@ import {
 import { FilesService } from '@src/files/files.service';
 import { RoleEnum } from '@src/roles/roles.enum';
 import { StatusEnum } from '@src/statuses/statuses.enum';
+import { UserDevice } from '@src/users/domain/user-device';
 import { DeepPartial } from '@src/utils/types/deep-partial.type';
 import { NullableType } from '@src/utils/types/nullable.type';
 import { IPaginationOptions } from '@src/utils/types/pagination-options';
@@ -184,6 +186,43 @@ export class UsersService {
 
   async remove(id: User['id']): Promise<void> {
     await this.usersRepository.remove(id);
+  }
+
+  // User Device
+
+  addBiometricKeyInUserDevice(
+    userDevice: Omit<
+      UserDevice,
+      'id' | 'createdAt' | 'deletedAt' | 'updatedAt' | 'biometricPublicKey'
+    >,
+    biometricPublicKey: EnableBiometricDto,
+  ): Promise<UserDevice | NullableType<UserDevice>> {
+    return this.usersRepository.addBiometricKeyInUserDevice(
+      userDevice,
+      biometricPublicKey,
+    );
+  }
+
+  removeBiometricKeyInUserDevice(
+    userDevice: UserDevice,
+  ): Promise<UserDevice | NullableType<UserDevice>> {
+    return this.usersRepository.removeBiometricKeyInUserDevice(userDevice);
+  }
+
+  createUserDevice(
+    data: Omit<
+      UserDevice,
+      'id' | 'createdAt' | 'deletedAt' | 'updatedAt' | 'biometricPublicKey'
+    >,
+  ): Promise<UserDevice> {
+    return this.usersRepository.createUserDevice(data);
+  }
+
+  findDeviceByUserIdAndDeviceId(
+    id: User['id'],
+    deviceId: UserDevice['deviceId'],
+  ): Promise<NullableType<UserDevice>> {
+    return this.usersRepository.findDeviceByUserIdAndDeviceId(id, deviceId);
   }
 
   async findAndValidate(field, value, fetchRelations = false) {

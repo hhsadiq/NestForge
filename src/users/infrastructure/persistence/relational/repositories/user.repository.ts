@@ -2,9 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository, SelectQueryBuilder } from 'typeorm';
 
+import { EnableBiometricDto } from '@src/biometric-challenges/dtos/enable-biometric-payload.dto';
 import { User } from '@src/users/domain/user';
+import { UserDevice } from '@src/users/domain/user-device';
 import { FilterUserDto, SortUserDto } from '@src/users/dto/query-user.dto';
+import { UserDeviceEntity } from '@src/users/infrastructure/persistence/relational/entities/user-device.entity';
 import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity';
+import { UserDeviceMapper } from '@src/users/infrastructure/persistence/relational/mappers/user-device.mapper';
 import { UserMapper } from '@src/users/infrastructure/persistence/relational/mappers/user.mapper';
 import { UserAbstractRepository } from '@src/users/infrastructure/persistence/user.abstract.repository';
 import { NullableType } from '@src/utils/types/nullable.type';
@@ -18,6 +22,8 @@ export class UsersRelationalRepository implements UserAbstractRepository {
   constructor(
     @InjectRepository(UserEntity)
     private readonly usersRepository: Repository<UserEntity>,
+    @InjectRepository(UserDeviceEntity)
+    private readonly userDevicesRepository: Repository<UserDeviceEntity>,
   ) {}
 
   async create(data: User): Promise<User> {
@@ -137,5 +143,73 @@ export class UsersRelationalRepository implements UserAbstractRepository {
   ): Promise<NullableType<UserSummary>> {
     const summary = await query.where({ id: Number(id) }).getOne();
     return summary ? UserSummaryMapper.toDomain(summary) : null;
+  }
+
+  async findDeviceByUserIdAndDeviceId(
+    id: User['id'],
+    deviceId: UserDevice['deviceId'],
+  ): Promise<NullableType<UserDevice>> {
+    try {
+      const entity = await this.userDevicesRepository.findOne({
+        where: {
+          user: { id: Number(id) },
+          device_id: deviceId,
+        },
+      });
+
+      return entity ? UserDeviceMapper.toDomain(entity) : null;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async createUserDevice(userDevice: UserDevice): Promise<UserDevice> {
+    try {
+      const persistenceModel = UserDeviceMapper.toPersistence(userDevice);
+      const newEntity = await this.userDevicesRepository.save(
+        this.userDevicesRepository.create(persistenceModel),
+      );
+      return UserDeviceMapper.toDomain(newEntity);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async addBiometricKeyInUserDevice(
+    userDevice: UserDevice,
+    enableBiometricDto: EnableBiometricDto,
+  ): Promise<NullableType<UserDevice>> {
+    try {
+      const updatedUserDevice = await this.userDevicesRepository.save(
+        this.userDevicesRepository.create(
+          UserDeviceMapper.toPersistence({
+            ...userDevice,
+            user: { id: Number(enableBiometricDto.userId) } as User,
+            biometricPublicKey: enableBiometricDto.biometricPublicKey,
+          }),
+        ),
+      );
+      return UserDeviceMapper.toDomain(updatedUserDevice);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async removeBiometricKeyInUserDevice(
+    userDevice: UserDevice,
+  ): Promise<NullableType<UserDevice>> {
+    try {
+      const updatedUserDevice = await this.userDevicesRepository.save(
+        this.userDevicesRepository.create(
+          UserDeviceMapper.toPersistence({
+            ...userDevice,
+            biometricPublicKey: '',
+          }),
+        ),
+      );
+      return UserDeviceMapper.toDomain(updatedUserDevice);
+    } catch (error) {
+      throw error;
+    }
   }
 }
