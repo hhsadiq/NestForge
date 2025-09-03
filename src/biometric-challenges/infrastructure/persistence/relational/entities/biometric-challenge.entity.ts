@@ -10,8 +10,8 @@ import {
   JoinColumn,
 } from 'typeorm';
 
-import { UserDeviceEntity } from '@src/auth_biometric/infrastructure/persistence/relational/entities/user-device.entity';
 import { TABLES } from '@src/common/constants';
+import { UserDeviceEntity } from '@src/users/infrastructure/persistence/relational/entities/user-device.entity';
 import { EntityRelationalHelper } from '@src/utils/relational-entity-helper';
 
 @Entity({

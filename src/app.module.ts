@@ -7,7 +7,7 @@ import { HeaderResolver } from 'nestjs-i18n';
 import { I18nModule } from 'nestjs-i18n/dist/i18n.module';
 import { DataSource, DataSourceOptions } from 'typeorm';
 
-import { AuthBiometricModule } from '@src/auth_biometric/auth-biometric.module';
+import { BiometricChallengeModule } from '@src/biometric-challenges/biometric-challenges.module';
 
 import { AuthModule } from './auth/auth.module';
 import authConfig from './auth/config/auth.config';
@@ -31,7 +31,7 @@ import { HomeModule } from './home/home.module';
 import mailConfig from './mail/config/mail.config';
 import { MailModule } from './mail/mail.module';
 import { MailerModule } from './mailer/mailer.module';
-import { SessionModule } from './session/session.module';
+import { SessionModule } from './sessions/session.module';
 import { UsersModule } from './users/users.module';
 import { ViewsModule } from './views/views.module';
 
@@ -93,7 +93,7 @@ const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
     AuthGoogleModule,
     AuthTwitterModule,
     AuthAppleModule,
-    AuthBiometricModule,
+    BiometricChallengeModule,
     SessionModule,
     MailModule,
     MailerModule,
