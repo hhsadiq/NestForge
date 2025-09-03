@@ -19,10 +19,10 @@ function getEntityFilePath(name, parent) {
   const entityName = toKebabCase(name);
   if (!parent) {
     const folder = pluralize(entityName);
-    return path.join('..\\src', folder, 'domain', `${entityName}.ts`);
+    return path.join('..', 'src', folder, 'domain', `${entityName}.ts`);
   } else {
     const parentFolder = pluralize(toKebabCase(parent));
-    return path.join('..\\src', parentFolder, 'domain', `${entityName}.ts`);
+    return path.join('..', 'src', parentFolder, 'domain', `${entityName}.ts`);
   }
 }
 
@@ -39,6 +39,7 @@ function getEntityFilePath(name, parent) {
       if (entity.parent) continue;
 
       const entityPath = getEntityFilePath(entity.name, entity.parent);
+      console.log('entityPath: ', entityPath);
       if (fs.existsSync(entityPath)) {
         skippedEntities.push(entity.name);
         console.log(`⏭️  Skipping ${entity.name}, already exists`);

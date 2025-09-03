@@ -1,5 +1,324 @@
 [
   {
+    "name": "Role",
+    "parent": null,
+    "isAddTestCase": false,
+    "functionalities": ["create", "findAll", "findOne", "update", "delete"],
+    "fields": [
+      {
+        "name": "name",
+        "type": "varchar",
+        "customType": "",
+        "optional": false,
+        "example": "example_string",
+        "dto": true
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "Status",
+    "parent": null,
+    "isAddTestCase": false,
+    "functionalities": ["create", "findAll", "findOne", "update", "delete"],
+    "fields": [
+      {
+        "name": "name",
+        "type": "varchar",
+        "customType": "",
+        "optional": false,
+        "example": "example_string",
+        "dto": true
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "File",
+    "parent": null,
+    "isAddTestCase": false,
+    "functionalities": ["create", "findAll", "findOne", "update", "delete"],
+    "fields": [
+      {
+        "name": "path",
+        "type": "varchar",
+        "customType": "",
+        "optional": false,
+        "example": "example_string",
+        "dto": true
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "User",
+    "parent": null,
+    "isAddTestCase": false,
+    "functionalities": ["create", "findAll", "findOne", "update", "delete"],
+    "fields": [
+      {
+        "name": "email",
+        "type": "varchar",
+        "customType": "",
+        "optional": true,
+        "example": "example_string",
+        "dto": true
+      },
+      {
+        "name": "username",
+        "type": "varchar",
+        "customType": "",
+        "optional": true,
+        "example": "example_string",
+        "dto": true
+      },
+      {
+        "name": "password",
+        "type": "varchar",
+        "customType": "",
+        "optional": true,
+        "example": "example_string",
+        "dto": true
+      },
+      {
+        "name": "provider",
+        "type": "varchar",
+        "customType": "",
+        "optional": false,
+        "example": "example_string",
+        "dto": true
+      },
+      {
+        "name": "social_id",
+        "type": "varchar",
+        "customType": "",
+        "optional": true,
+        "example": "example_string",
+        "dto": true
+      },
+      {
+        "name": "first_name",
+        "type": "varchar",
+        "customType": "",
+        "optional": true,
+        "example": "example_string",
+        "dto": true
+      },
+      {
+        "name": "last_name",
+        "type": "varchar",
+        "customType": "",
+        "optional": true,
+        "example": "example_string",
+        "dto": true
+      },
+      {
+        "name": "deleted_at",
+        "type": "timestamp",
+        "customType": "",
+        "optional": true,
+        "example": "2025-01-15T13:45:30Z",
+        "dto": true
+      },
+      {
+        "name": "photo_id",
+        "type": "uuid",
+        "customType": "",
+        "optional": true,
+        "example": "550e8400-e29b-41d4-a716-446655440000",
+        "dto": true
+      },
+      {
+        "name": "role_id",
+        "type": "int",
+        "customType": "",
+        "optional": true,
+        "example": 123,
+        "dto": true
+      },
+      {
+        "name": "status_id",
+        "type": "int",
+        "customType": "",
+        "optional": true,
+        "example": 123,
+        "dto": true
+      }
+    ],
+    "relations": [
+      {
+        "sourceEntityName": "User",
+        "sourceEntityParent": null,
+        "fieldName": "filePhotoId",
+        "relationType": "OneToOne",
+        "relationEntityParent": null,
+        "relationEntityName": "File",
+        "sourceColumnName": "photo_id",
+        "relationFieldName": null
+      },
+      {
+        "sourceEntityName": "User",
+        "sourceEntityParent": null,
+        "fieldName": "role",
+        "relationType": "ManyToOne",
+        "relationEntityParent": null,
+        "relationEntityName": "Role",
+        "sourceColumnName": "role_id",
+        "relationFieldName": null
+      },
+      {
+        "sourceEntityName": "User",
+        "sourceEntityParent": null,
+        "fieldName": "status",
+        "relationType": "ManyToOne",
+        "relationEntityParent": null,
+        "relationEntityName": "Status",
+        "sourceColumnName": "status_id",
+        "relationFieldName": null
+      }
+    ]
+  },
+  {
+    "name": "Session",
+    "parent": null,
+    "isAddTestCase": false,
+    "functionalities": ["create", "findAll", "findOne", "update", "delete"],
+    "fields": [
+      {
+        "name": "hash",
+        "type": "varchar",
+        "customType": "",
+        "optional": false,
+        "example": "example_string",
+        "dto": true
+      },
+      {
+        "name": "deleted_at",
+        "type": "timestamp",
+        "customType": "",
+        "optional": true,
+        "example": "2025-01-15T13:45:30Z",
+        "dto": true
+      },
+      {
+        "name": "user_id",
+        "type": "int",
+        "customType": "",
+        "optional": true,
+        "example": 123,
+        "dto": true
+      }
+    ],
+    "relations": [
+      {
+        "sourceEntityName": "Session",
+        "sourceEntityParent": null,
+        "fieldName": "user",
+        "relationType": "ManyToOne",
+        "relationEntityParent": null,
+        "relationEntityName": "User",
+        "sourceColumnName": "user_id",
+        "relationFieldName": null
+      }
+    ]
+  },
+  {
+    "name": "UserDevice",
+    "parent": null,
+    "isAddTestCase": false,
+    "functionalities": ["create", "findAll", "findOne", "update", "delete"],
+    "fields": [
+      {
+        "name": "user_id",
+        "type": "int",
+        "customType": "",
+        "optional": false,
+        "example": 123,
+        "dto": true
+      },
+      {
+        "name": "device_id",
+        "type": "varchar",
+        "customType": "",
+        "optional": true,
+        "example": "example_string",
+        "dto": true
+      },
+      {
+        "name": "biometric_public_key",
+        "type": "varchar",
+        "customType": "",
+        "optional": true,
+        "example": "example_string",
+        "dto": true
+      },
+      {
+        "name": "deleted_at",
+        "type": "timestamp",
+        "customType": "",
+        "optional": true,
+        "example": "2025-01-15T13:45:30Z",
+        "dto": true
+      }
+    ],
+    "relations": [
+      {
+        "sourceEntityName": "UserDevice",
+        "sourceEntityParent": null,
+        "fieldName": "user",
+        "relationType": "ManyToOne",
+        "relationEntityParent": null,
+        "relationEntityName": "User",
+        "sourceColumnName": "user_id",
+        "relationFieldName": null
+      }
+    ]
+  },
+  {
+    "name": "BiometricChallenge",
+    "parent": null,
+    "isAddTestCase": false,
+    "functionalities": ["create", "findAll", "findOne", "update", "delete"],
+    "fields": [
+      {
+        "name": "user_device_id",
+        "type": "int",
+        "customType": "",
+        "optional": false,
+        "example": 123,
+        "dto": true
+      },
+      {
+        "name": "challenge",
+        "type": "varchar",
+        "customType": "",
+        "optional": false,
+        "example": "example_string",
+        "dto": true
+      },
+      {
+        "name": "expires_at",
+        "type": "timestamp",
+        "customType": "",
+        "optional": false,
+        "example": "2025-01-15T13:45:30Z",
+        "dto": true
+      }
+    ],
+    "relations": [
+      {
+        "sourceEntityName": "BiometricChallenge",
+        "sourceEntityParent": null,
+        "fieldName": "userDevice",
+        "relationType": "ManyToOne",
+        "relationEntityParent": null,
+        "relationEntityName": "UserDevice",
+        "sourceColumnName": "user_device_id",
+        "relationFieldName": null
+      }
+    ]
+  },
+  {
     "name": "Team",
     "parent": null,
     "isAddTestCase": false,
@@ -10,7 +329,7 @@
         "type": "varchar",
         "customType": "",
         "optional": false,
-        "example": "Lions",
+        "example": "example_string",
         "dto": true
       },
       {
@@ -18,7 +337,7 @@
         "type": "varchar",
         "customType": "",
         "optional": false,
-        "example": "Karachi",
+        "example": "example_string",
         "dto": true
       }
     ],
@@ -35,23 +354,23 @@
         "type": "varchar",
         "customType": "",
         "optional": false,
-        "example": "Ali Khan",
+        "example": "example_string",
         "dto": true
       },
       {
-        "name": "experienceYears",
+        "name": "experience_years",
         "type": "int",
         "customType": "",
         "optional": false,
-        "example": 8,
+        "example": 123,
         "dto": true
       },
       {
-        "name": "teamId",
+        "name": "team_id",
         "type": "int",
         "customType": "",
         "optional": true,
-        "example": 1,
+        "example": 123,
         "dto": true
       }
     ],
@@ -64,7 +383,7 @@
         "relationEntityParent": null,
         "relationEntityName": "Team",
         "sourceColumnName": "team_id",
-        "relationFieldName": "coach"
+        "relationFieldName": null
       }
     ]
   },
@@ -79,7 +398,7 @@
         "type": "varchar",
         "customType": "",
         "optional": false,
-        "example": "Zain",
+        "example": "example_string",
         "dto": true
       },
       {
@@ -87,15 +406,15 @@
         "type": "varchar",
         "customType": "",
         "optional": false,
-        "example": "Forward",
+        "example": "example_string",
         "dto": true
       },
       {
-        "name": "teamId",
+        "name": "team_id",
         "type": "int",
         "customType": "",
         "optional": true,
-        "example": 1,
+        "example": 123,
         "dto": true
       }
     ],
@@ -108,7 +427,7 @@
         "relationEntityParent": null,
         "relationEntityName": "Team",
         "sourceColumnName": "team_id",
-        "relationFieldName": "players"
+        "relationFieldName": null
       }
     ]
   },
@@ -123,7 +442,7 @@
         "type": "varchar",
         "customType": "",
         "optional": false,
-        "example": "League",
+        "example": "example_string",
         "dto": true
       }
     ],
@@ -136,35 +455,35 @@
     "functionalities": ["create", "findAll", "findOne", "update", "delete"],
     "fields": [
       {
-        "name": "homeTeamId",
+        "name": "home_team_id",
         "type": "int",
         "customType": "",
         "optional": true,
-        "example": 1,
+        "example": 123,
         "dto": true
       },
       {
-        "name": "awayTeamId",
+        "name": "away_team_id",
         "type": "int",
         "customType": "",
         "optional": true,
-        "example": 2,
+        "example": 123,
         "dto": true
       },
       {
-        "name": "matchTypeId",
+        "name": "match_type_id",
         "type": "int",
         "customType": "",
         "optional": true,
-        "example": 1,
+        "example": 123,
         "dto": true
       },
       {
-        "name": "matchDate",
+        "name": "match_date",
         "type": "date",
         "customType": "",
         "optional": false,
-        "example": "2025-09-15",
+        "example": "2025-01-15",
         "dto": true
       }
     ],
@@ -172,22 +491,22 @@
       {
         "sourceEntityName": "Match",
         "sourceEntityParent": null,
-        "fieldName": "homeTeam",
+        "fieldName": "teamHomeTeamId",
         "relationType": "ManyToOne",
         "relationEntityParent": null,
         "relationEntityName": "Team",
         "sourceColumnName": "home_team_id",
-        "relationFieldName": "homeMatches"
+        "relationFieldName": null
       },
       {
         "sourceEntityName": "Match",
         "sourceEntityParent": null,
-        "fieldName": "awayTeam",
+        "fieldName": "teamAwayTeamId",
         "relationType": "ManyToOne",
         "relationEntityParent": null,
         "relationEntityName": "Team",
         "sourceColumnName": "away_team_id",
-        "relationFieldName": "awayMatches"
+        "relationFieldName": null
       },
       {
         "sourceEntityName": "Match",
@@ -197,7 +516,7 @@
         "relationEntityParent": "Match",
         "relationEntityName": "MatchType",
         "sourceColumnName": "match_type_id",
-        "relationFieldName": "matches"
+        "relationFieldName": null
       }
     ]
   },
@@ -208,19 +527,19 @@
     "functionalities": ["create", "findAll", "findOne", "update", "delete"],
     "fields": [
       {
-        "name": "playerId",
+        "name": "player_id",
         "type": "int",
         "customType": "",
         "optional": true,
-        "example": 1,
+        "example": 123,
         "dto": true
       },
       {
-        "name": "matchId",
+        "name": "match_id",
         "type": "int",
         "customType": "",
         "optional": true,
-        "example": 1,
+        "example": 123,
         "dto": true
       }
     ],
@@ -233,7 +552,7 @@
         "relationEntityParent": null,
         "relationEntityName": "Player",
         "sourceColumnName": "player_id",
-        "relationFieldName": "playerMatches"
+        "relationFieldName": null
       },
       {
         "sourceEntityName": "PlayerMatch",
@@ -243,7 +562,7 @@
         "relationEntityParent": null,
         "relationEntityName": "Match",
         "sourceColumnName": "match_id",
-        "relationFieldName": "playerMatches"
+        "relationFieldName": null
       }
     ]
   }
