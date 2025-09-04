@@ -10,7 +10,7 @@ import { ConfigService } from '@nestjs/config';
 
 import { ERROR_MESSAGES } from '@src/common/error-messages';
 import { UNPROCESSABLE_ENTITY } from '@src/common/exceptions';
-import { FileType } from '@src/files/domain/file';
+import { File } from '@src/files/domain/file';
 import { FileAbstractRepository } from '@src/files/infrastructure/persistence/file.abstract.repository';
 
 import { FileUploadDto } from './dto/file.dto';
@@ -38,7 +38,7 @@ export class FilesS3PresignedService {
 
   async create(
     file: FileUploadDto,
-  ): Promise<{ file: FileType; uploadSignedUrl: string }> {
+  ): Promise<{ file: File; uploadSignedUrl: string }> {
     if (!file) {
       throw UNPROCESSABLE_ENTITY(ERROR_MESSAGES.NOT_PRESENT('file'), 'file');
     }

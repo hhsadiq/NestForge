@@ -15,8 +15,8 @@ import { EntityRelationalHelper } from '@src/utils/relational-entity-helper';
 
 @Entity({ name: TABLES.file })
 export class FileEntity extends EntityRelationalHelper {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn('identity')
+  id: number;
 
   @Column()
   @Transform(
