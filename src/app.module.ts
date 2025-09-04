@@ -9,6 +9,32 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 
 import { BiometricChallengeModule } from '@src/biometric-challenges/biometric-challenges.module';
 
+import { PoemMediaModule } from './poem-media/poem-media.module';
+import { MediaPlatformsModule } from './media-platforms/media-platforms.module';
+import { ReviewFeedbacksModule } from './review-feedbacks/review-feedbacks.module';
+import { FeedbackPresetsModule } from './feedback-presets/feedback-presets.module';
+import { ReviewsModule } from './reviews/reviews.module';
+import { ReviewersModule } from './reviewers/reviewers.module';
+import { VerseTagsModule } from './verse-tags/verse-tags.module';
+import { PoemTagsModule } from './poem-tags/poem-tags.module';
+import { ParagraphTagsModule } from './paragraph-tags/paragraph-tags.module';
+import { SectionTagsModule } from './section-tags/section-tags.module';
+import { TagsModule } from './tags/tags.module';
+import { TranslationsModule } from './translations/translations.module';
+import { TranslatorsModule } from './translators/translators.module';
+import { WorkflowStatusesModule } from './workflow-statuses/workflow-statuses.module';
+import { VerseAuthorsModule } from './verse-authors/verse-authors.module';
+import { VersesModule } from './verses/verses.module';
+import { StanzasModule } from './stanzas/stanzas.module';
+import { PoemsModule } from './poems/poems.module';
+import { MetersModule } from './meters/meters.module';
+import { PoemFormsModule } from './poem-forms/poem-forms.module';
+import { ParagraphsModule } from './paragraphs/paragraphs.module';
+import { SectionsModule } from './sections/sections.module';
+import { BookAuthorsModule } from './book-authors/book-authors.module';
+import { BooksModule } from './books/books.module';
+import { AuthorsModule } from './authors/authors.module';
+import { LanguagesModule } from './languages/languages.module';
 import { AuthModule } from './auth/auth.module';
 import authConfig from './auth/config/auth.config';
 import { AuthAppleModule } from './auth-apple/auth-apple.module';
@@ -44,6 +70,32 @@ const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
 
 @Module({
   imports: [
+    PoemMediaModule,
+    MediaPlatformsModule,
+    ReviewFeedbacksModule,
+    FeedbackPresetsModule,
+    ReviewsModule,
+    ReviewersModule,
+    VerseTagsModule,
+    PoemTagsModule,
+    ParagraphTagsModule,
+    SectionTagsModule,
+    TagsModule,
+    TranslationsModule,
+    TranslatorsModule,
+    WorkflowStatusesModule,
+    VerseAuthorsModule,
+    VersesModule,
+    StanzasModule,
+    PoemsModule,
+    MetersModule,
+    PoemFormsModule,
+    ParagraphsModule,
+    SectionsModule,
+    BookAuthorsModule,
+    BooksModule,
+    AuthorsModule,
+    LanguagesModule,
     GenAiModule,
     ViewsModule,
     ConfigModule.forRoot({
