@@ -9,13 +9,13 @@ import appConfig from '@src/config/app.config';
 import { FileConfig, FileDriver } from '@src/files/config/file-config.type';
 import fileConfig from '@src/files/config/file.config';
 
-export class FileType {
+export class File {
   @ApiProperty({
-    type: String,
-    example: 'cbcfa8b8-3a25-4adb-a9c6-e325f0d0f3ae',
+    type: Number,
+    example: 1,
   })
   @Allow()
-  id: string;
+  id: number;
 
   @ApiProperty({
     type: String,

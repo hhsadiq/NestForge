@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { ERROR_MESSAGES } from '@src/common/error-messages';
 import { UNPROCESSABLE_ENTITY } from '@src/common/exceptions';
 import { AllConfigType } from '@src/config/config.type';
-import { FileType } from '@src/files/domain/file';
+import { File } from '@src/files/domain/file';
 import { FileAbstractRepository } from '@src/files/infrastructure/persistence/file.abstract.repository';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class FilesLocalService {
     private readonly fileRepository: FileAbstractRepository,
   ) {}
 
-  async create(file: Express.Multer.File): Promise<{ file: FileType }> {
+  async create(file: Express.Multer.File): Promise<{ file: File }> {
     if (!file) {
       throw UNPROCESSABLE_ENTITY(ERROR_MESSAGES.NOT_PRESENT('file'), 'file');
     }
