@@ -19,10 +19,10 @@ function getEntityFilePath(name, parent) {
   const entityName = toKebabCase(name);
   if (!parent) {
     const folder = pluralize(entityName);
-    return path.join('..', 'src', folder, 'domain', `${entityName}.ts`);
+    return path.join('src', folder, 'domain', `${entityName}.ts`);
   } else {
     const parentFolder = pluralize(toKebabCase(parent));
-    return path.join('..', 'src', parentFolder, 'domain', `${entityName}.ts`);
+    return path.join('src', parentFolder, 'domain', `${entityName}.ts`);
   }
 }
 
@@ -31,6 +31,7 @@ function getEntityFilePath(name, parent) {
     const filePath = path.join(__dirname, 'sample.json');
     const data = fs.readFileSync(filePath, 'utf-8');
     const jsonData = JSON.parse(data);
+    const processingFilePath = path.join(__dirname, 'process-entity.json');
 
     console.log('Generating modules using Hygen...');
 
@@ -45,7 +46,7 @@ function getEntityFilePath(name, parent) {
         continue;
       }
 
-      fs.writeFileSync('process-entity.json', JSON.stringify(entity));
+      fs.writeFileSync(processingFilePath, JSON.stringify(entity));
       const command = `npx cross-env DATA_FILE=.hygen-entity-schema/process-entity.json npm run generate:resource`;
       console.log(`🚀 Executing: ${command}`);
       relations.push(...entity.relations);
@@ -65,7 +66,7 @@ function getEntityFilePath(name, parent) {
         continue;
       }
 
-      fs.writeFileSync('process-entity.json', JSON.stringify(entity));
+      fs.writeFileSync(processingFilePath, JSON.stringify(entity));
       const command = `npx cross-env DATA_FILE=.hygen-entity-schema/process-entity.json npm run generate:sub-entity`;
       console.log(`🚀 Executing: ${command}`);
       await execAsync(command);
@@ -73,15 +74,15 @@ function getEntityFilePath(name, parent) {
     }
 
     for (const relation of relations) {
-      fs.writeFileSync('process-entity.json', JSON.stringify(relation));
+      fs.writeFileSync(processingFilePath, JSON.stringify(relation));
       const command = `npx cross-env DATA_FILE=.hygen-entity-schema/process-entity.json npm run generate:relationship`;
       console.log(`🚀 Executing: ${command}`);
       await execAsync(command);
     }
 
     // Cleanup
-    if (fs.existsSync('process-entity.json')) {
-      fs.unlinkSync('process-entity.json');
+    if (fs.existsSync(processingFilePath)) {
+      fs.unlinkSync(processingFilePath);
     }
 
     console.log('✅ All modules generated successfully.');
@@ -98,7 +99,7 @@ function getEntityFilePath(name, parent) {
   // Lint
   try {
     console.log('\n🔍 Running lint check (with auto-fix)...\n');
-    const { stdout, stderr } = await execAsync(`npm run lint -- --fix`);
+    const { stdout, stderr } = await execAsync(`npm run lint --fix`);
     if (stdout) console.log(stdout);
     if (stderr) console.error(stderr);
     console.log('✅ Linting completed without critical errors.');

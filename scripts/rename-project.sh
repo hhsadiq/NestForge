@@ -32,15 +32,21 @@ echo "Replacing:"
 echo "  $OLD_KEBAB -> $KEBAB_NAME (in JSON files)"
 echo "  $OLD_PASCAL -> $PASCAL_NAME (in Markdown files)"
 
+# ✅ Base dir = project root (one up from script’s dir)
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
 # Replace in JSON files (kebab-case)
-sed -i.mybak "s/$OLD_KEBAB/$KEBAB_NAME/g" ../package.json ../package-lock.json
+sed -i.mybak "s/$OLD_KEBAB/$KEBAB_NAME/g" \
+  "$PROJECT_ROOT/package.json" \
+  "$PROJECT_ROOT/package-lock.json"
 
 # Replace in Markdown files (PascalCase)
-sed -i.mybak "s/$OLD_PASCAL/$PASCAL_NAME/g" ../README.md ../docs/readme.md
+sed -i.mybak "s/$OLD_PASCAL/$PASCAL_NAME/g" \
+  "$PROJECT_ROOT/README.md" \
+  "$PROJECT_ROOT/docs/readme.md"
 
 # Cleanup backups
-rm -f ../*.mybak ../docs/*.mybak
+rm -f "$PROJECT_ROOT"/*.mybak "$PROJECT_ROOT/docs"/*.mybak
 
 echo "Project renamed to $NEW_NAME successfully!"
-
