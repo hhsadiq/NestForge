@@ -1,0 +1,44 @@
+{
+    "name": "Coach",
+    "parent": null,
+    "isAddTestCase": false,
+    "functionalities": ["create", "findAll", "findOne", "update", "delete"],
+    "fields": [
+      {
+        "name": "name",
+        "type": "varchar",
+        "customType": "",
+        "optional": false,
+        "example": "Ali Khan",
+        "dto": true
+      },
+      {
+        "name": "experienceYears",
+        "type": "int",
+        "customType": "",
+        "optional": false,
+        "example": 8,
+        "dto": true
+      },
+      {
+        "name": "teamId",
+        "type": "int",
+        "customType": "",
+        "optional": true,
+        "example": 1,
+        "dto": true
+      }
+    ],
+    "relations": [
+      {
+        "sourceEntityName": "Coach",
+        "sourceEntityParent": null,
+        "fieldName": "team",
+        "relationType": "OneToOne",
+        "relationEntityParent": null,
+        "relationEntityName": "Team",
+        "sourceColumnName": "team_id",
+        "relationFieldName": "coach"
+      }
+    ]
+  }
