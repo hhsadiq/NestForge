@@ -41,7 +41,9 @@
     "test:e2e:watch": "env-cmd jest --config ./test/jest-e2e.json --watch",
     "test:e2e:relational:docker": "docker compose -f docker-compose.relational.test.yaml --env-file env-example-relational -p tests up -d --build && docker compose -f docker-compose.relational.test.yaml -p tests exec api /opt/wait-for-it.sh -t 0 localhost:3000 -- npm run test:e2e -- --watchAll --runInBand && docker compose -f docker-compose.relational.test.yaml -p tests down && docker compose -p tests rm -svf",
     "prepare": "is-ci || husky",
-    "release": "release-it"
+    "release": "release-it",
+    "rename": "chmod +x scripts/rename-project.sh && bash scripts/rename-project.sh",
+    "generate:entities": "node .hygen-entity-schema/index.js"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.616.0",
@@ -119,6 +121,7 @@
     "hygen": "6.2.11",
     "is-ci": "3.0.1",
     "jest": "29.7.0",
+    "npm-check-updates": "^18.0.3",
     "prettier": "3.3.3",
     "prompts": "2.4.2",
     "release-it": "17.4.0",
