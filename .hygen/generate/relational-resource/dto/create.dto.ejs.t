@@ -51,7 +51,6 @@ export class Create<%= name %>Dto {
   %>
   @ApiProperty({
     enum: <%= h.inflection.classify(field.associatedEnumName) %>Enum,
-    example: <%= h.inflection.classify(field.associatedEnumName) %>Enum.<%= field.associatedEnumName.split(/(?=[A-Z])/).join('_').toUpperCase() %>,
     required: <%= !field.optional %>
   })
   <% if (field.optional) { %>@IsOptional()<% } %>

@@ -97,6 +97,14 @@ function getEntityFilePath(name, parent) {
     }
 
     for (const enumDef of allEnums) {
+      // Check if enum file already exists
+      const enumFileName = enumDef.name.replace(/([A-Z])/g, '-$1').toLowerCase().replace(/^-/, '');
+      const enumFilePath = `src/${enumDef.moduleName}/enums/${enumFileName}.enum.ts`;
+      if (fs.existsSync(enumFilePath)) {
+        console.log(`⏭️  Skipping ${enumDef.name}, already exists`);
+        continue;
+      }
+
       fs.writeFileSync(processingFilePath, JSON.stringify(enumDef));
       const command = `npx cross-env DATA_FILE=.hygen-entity-schema/process-entity.json npm run generate:enum`;
       console.log(`🚀 Executing: ${command}`);
