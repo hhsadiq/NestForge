@@ -8,7 +8,8 @@ const pluralize = require('pluralize');
 const execAsync = util.promisify(exec);
 const skippedEntities = [];
 const relations = [];
-
+const allEnums = [];
+    
 // Convert PascalCase -> kebab-case
 function toKebabCase(str) {
   return str.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
@@ -76,6 +77,28 @@ function getEntityFilePath(name, parent) {
     for (const relation of relations) {
       fs.writeFileSync(processingFilePath, JSON.stringify(relation));
       const command = `npx cross-env DATA_FILE=.hygen-entity-schema/process-entity.json npm run generate:relationship`;
+      console.log(`🚀 Executing: ${command}`);
+      await execAsync(command);
+    }
+
+    // 4️⃣ Enums
+    console.log('\n🔧 Generating enums...');
+    for (const entity of jsonData) {
+      if (entity.enums && Array.isArray(entity.enums)) {
+        allEnums.push(...entity.enums.map(enumDef => ({
+          name: enumDef.name,
+          values: enumDef.values,
+          entityName: entity.name,
+          moduleName: entity.parent ? 
+            pluralize(toKebabCase(entity.parent)) : 
+            pluralize(toKebabCase(entity.name))
+        })));
+      }
+    }
+
+    for (const enumDef of allEnums) {
+      fs.writeFileSync(processingFilePath, JSON.stringify(enumDef));
+      const command = `npx cross-env DATA_FILE=.hygen-entity-schema/process-entity.json npm run generate:enum`;
       console.log(`🚀 Executing: ${command}`);
       await execAsync(command);
     }

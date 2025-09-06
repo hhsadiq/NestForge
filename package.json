@@ -43,7 +43,8 @@
     "prepare": "is-ci || husky",
     "release": "release-it",
     "rename": "chmod +x scripts/rename-project.sh && bash scripts/rename-project.sh",
-    "generate:entities": "node .hygen-entity-schema/index.js"
+    "generate:entities": "node .hygen-entity-schema/index.js",
+    "generate:enum": "hygen generate-enum relational-resource"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.616.0",
