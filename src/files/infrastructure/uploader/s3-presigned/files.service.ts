@@ -24,14 +24,19 @@ export class FilesS3PresignedService {
     private readonly configService: ConfigService,
   ) {
     this.s3 = new S3Client({
-      region: configService.get('file.awsS3Region', { infer: true }),
+      region: configService.getOrThrow<string>('file.awsS3Region', {
+        infer: true,
+      }),
       credentials: {
-        accessKeyId: configService.getOrThrow('file.accessKeyId', {
+        accessKeyId: configService.getOrThrow<string>('file.accessKeyId', {
           infer: true,
         }),
-        secretAccessKey: configService.getOrThrow('file.secretAccessKey', {
-          infer: true,
-        }),
+        secretAccessKey: configService.getOrThrow<string>(
+          'file.secretAccessKey',
+          {
+            infer: true,
+          },
+        ),
       },
     });
   }
@@ -69,7 +74,7 @@ export class FilesS3PresignedService {
       ?.toLowerCase()}`;
 
     const command = new PutObjectCommand({
-      Bucket: this.configService.getOrThrow('file.awsDefaultS3Bucket', {
+      Bucket: this.configService.getOrThrow<string>('file.awsDefaultS3Bucket', {
         infer: true,
       }),
       Key: key,

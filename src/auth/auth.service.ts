@@ -5,7 +5,7 @@ import { randomStringGenerator } from '@nestjs/common/utils/random-string-genera
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcryptjs';
-import ms from 'ms';
+import ms, { StringValue } from 'ms';
 
 import { ERROR_MESSAGES } from '@src/common/error-messages';
 import {
@@ -320,11 +320,14 @@ export class AuthService {
   async forgotPassword(email: string): Promise<void> {
     const user = await this.findAndValidate('email', email);
 
-    const tokenExpiresIn = this.configService.getOrThrow('auth.forgotExpires', {
-      infer: true,
-    });
+    const tokenExpiresIn = this.configService.getOrThrow<string>(
+      'auth.forgotExpires',
+      {
+        infer: true,
+      },
+    );
 
-    const tokenExpires = Date.now() + ms(tokenExpiresIn);
+    const tokenExpires = Date.now() + Number(ms(tokenExpiresIn as StringValue));
 
     const hash = await this.jwtService.signAsync(
       {
@@ -514,11 +517,14 @@ export class AuthService {
     sessionId: Session['id'];
     hash: Session['hash'];
   }) {
-    const tokenExpiresIn = this.configService.getOrThrow('auth.expires', {
-      infer: true,
-    });
+    const tokenExpiresIn = this.configService.getOrThrow<string>(
+      'auth.expires',
+      {
+        infer: true,
+      },
+    );
 
-    const tokenExpires = Date.now() + ms(tokenExpiresIn);
+    const tokenExpires = Date.now() + Number(ms(tokenExpiresIn as StringValue));
 
     const [token, refreshToken] = await Promise.all([
       await this.jwtService.signAsync(
