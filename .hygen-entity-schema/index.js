@@ -41,6 +41,21 @@ function getEntityFilePath(name, parent) {
       if (entity.parent) continue;
       const entityPath = getEntityFilePath(entity.name, entity.parent);
       console.log('entityPath: ', entityPath);
+      
+      // Collect enums from this entity (even if entity is skipped)
+      if (entity.enums && Array.isArray(entity.enums)) {
+        console.log(`Found ${entity.enums.length} enums in entity ${entity.name}`);
+        allEnums.push(...entity.enums.map(enumDef => ({
+          name: enumDef.name,
+          values: enumDef.values,
+          entityName: enumDef.entityName,
+          entityParent: enumDef.entityParent || null,
+          moduleName: enumDef.entityParent ? 
+            pluralize(toKebabCase(enumDef.entityParent)) : 
+            pluralize(toKebabCase(enumDef.entityName))
+        })));
+      }
+      
       if (fs.existsSync(entityPath)) {
         skippedEntities.push(entity.name);
         console.log(`⏭️  Skipping ${entity.name}, already exists`);
@@ -59,6 +74,21 @@ function getEntityFilePath(name, parent) {
       if (!entity.parent) continue;
 
       const entityPath = getEntityFilePath(entity.name, entity.parent);
+      
+      // Collect enums from this entity (even if entity is skipped)
+      if (entity.enums && Array.isArray(entity.enums)) {
+        console.log(`Found ${entity.enums.length} enums in entity ${entity.name}`);
+        allEnums.push(...entity.enums.map(enumDef => ({
+          name: enumDef.name,
+          values: enumDef.values,
+          entityName: enumDef.entityName,
+          entityParent: enumDef.entityParent || null,
+          moduleName: enumDef.entityParent ? 
+            pluralize(toKebabCase(enumDef.entityParent)) : 
+            pluralize(toKebabCase(enumDef.entityName))
+        })));
+      }
+      
       if (fs.existsSync(entityPath)) {
         skippedEntities.push(`${entity.parent} -> ${entity.name}`);
         console.log(
@@ -83,18 +113,7 @@ function getEntityFilePath(name, parent) {
 
     // 4️⃣ Enums
     console.log('\n🔧 Generating enums...');
-    for (const entity of jsonData) {
-      if (entity.enums && Array.isArray(entity.enums)) {
-        allEnums.push(...entity.enums.map(enumDef => ({
-          name: enumDef.name,
-          values: enumDef.values,
-          entityName: entity.name,
-          moduleName: entity.parent ? 
-            pluralize(toKebabCase(entity.parent)) : 
-            pluralize(toKebabCase(entity.name))
-        })));
-      }
-    }
+    console.log('All enums found:', allEnums.length);
 
     for (const enumDef of allEnums) {
       // Check if enum file already exists
