@@ -29,7 +29,7 @@ function getEntityFilePath(name, parent) {
 
 (async () => {
   try {
-    const filePath = path.join(__dirname, 'sample.json');
+    const filePath = path.join(__dirname, 'entities-generator.json');
     const data = fs.readFileSync(filePath, 'utf-8');
     const jsonData = JSON.parse(data);
     const processingFilePath = path.join(__dirname, 'process-entity.json');
@@ -60,9 +60,11 @@ function getEntityFilePath(name, parent) {
       }
 
       fs.writeFileSync(processingFilePath, JSON.stringify(entity));
-      const command = `npx cross-env DATA_FILE=.hygen-entity-schema/process-entity.json npm run generate:resource`;
+      const command = `npx cross-env DATA_FILE=.hygen-entities-generator/process-entity.json npm run generate:resource`;
       console.log(`🚀 Executing: ${command}`);
-      relations.push(...entity.relations);
+      if (entity.relations) {
+        relations.push(...entity.relations);
+      }
       await execAsync(command);
     }
 
@@ -92,10 +94,19 @@ function getEntityFilePath(name, parent) {
       }
 
       fs.writeFileSync(processingFilePath, JSON.stringify(entity));
-      const command = `npx cross-env DATA_FILE=.hygen-entity-schema/process-entity.json npm run generate:sub-entity`;
+      const command = `npx cross-env DATA_FILE=.hygen-entities-generator/process-entity.json npm run generate:sub-entity`;
       console.log(`🚀 Executing: ${command}`);
       await execAsync(command);
-      relations.push(...entity.relations);
+      if (entity.relations) {
+        relations.push(...entity.relations);
+      }
+    }
+
+    // Collect relation objects defined at the main (top-level)
+    for (const relation of jsonData) {
+      if (relation.relationType) {
+        relations.push(...relation);
+      }
     }
 
     // 3️⃣ Only enums
@@ -114,7 +125,7 @@ function getEntityFilePath(name, parent) {
 
     for (const relation of relations) {
       fs.writeFileSync(processingFilePath, JSON.stringify(relation));
-      const command = `npx cross-env DATA_FILE=.hygen-entity-schema/process-entity.json npm run generate:relationship`;
+      const command = `npx cross-env DATA_FILE=.hygen-entities-generator/process-entity.json npm run generate:relationship`;
       console.log(`🚀 Executing: ${command}`);
       await execAsync(command);
     }

@@ -1,0 +1,16 @@
+{
+  "name": "MatchType",
+  "parent": "Match",
+  "isAddTestCase": false,
+  "functionalities": ["create", "findAll", "findOne", "update", "delete"],
+  "fields": [
+    {
+      "name": "name",
+      "type": "varchar",
+      "customType": "",
+      "optional": false,
+      "example": "League",
+      "dto": true
+    }
+  ]
+}
