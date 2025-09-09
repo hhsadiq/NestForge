@@ -183,14 +183,14 @@
       {
         "entityName": "User",
         "entityParent": null,
-        "name": "UserRole",
-        "values": ["ADMIN", "USER"]
+        "enumName": "UserRole",
+        "enumValues": ["ADMIN", "USER"]
       },
       {
         "entityName": "User",
         "entityParent": null,
-        "name": "UserStatus",
-        "values": ["ACTIVE", "INACTIVE"]
+        "enumName": "UserStatus",
+        "enumValues": ["ACTIVE", "INACTIVE"]
       }
     ]
   }

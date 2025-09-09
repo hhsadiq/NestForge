@@ -26,8 +26,8 @@ module.exports = async (args, prompter) => {
           if (entity.enums && Array.isArray(entity.enums)) {
             for (const enumDef of entity.enums) {
               allEnums.push({
-                name: enumDef.name,
-                values: enumDef.values,
+                name: enumDef.enumName,
+                values: enumDef.enumValues,
                 entityName: enumDef.entityName,
                 entityParent: enumDef.entityParent,
                 moduleName: enumDef.entityParent ? 
@@ -44,21 +44,33 @@ module.exports = async (args, prompter) => {
         return allEnums;
       } else {
         // This is a single enum object from process-entity.json
-        if (!parsed.name || !parsed.values) {
+        if (!parsed.enumName || !parsed.enumValues) {
           console.error('❌ JSON must be a valid enum object with name and values');
           process.exit(1);
         }
 
         // Check if enum file already exists
-        const enumFileName = parsed.name.replace(/([A-Z])/g, '-$1').toLowerCase().replace(/^-/, '');
-        const enumFilePath = `src/${parsed.moduleName}/enums/${enumFileName}.enum.ts`;
+        let moduleName = parsed.entityParent ? 
+                  pluralize(parsed.entityParent.toLowerCase()) : 
+                  pluralize(parsed.entityName.toLowerCase());
+        const enumFileName = parsed.enumName.replace(/([A-Z])/g, '-$1').toLowerCase().replace(/^-/, '');
+        const enumFilePath = `src/${moduleName}/enums/${enumFileName}.enum.ts`;
         if (fs.existsSync(enumFilePath)) {
-          console.log(`⏭️  Skipping ${parsed.name}, already exists`);
+          console.log(`⏭️  Skipping ${parsed.enumName}, already exists`);
           return null;
         }
 
-        console.log(`\n📦 Generating enum: ${parsed.name} (in ${parsed.moduleName} module)`);
-        return parsed;
+        console.log(`\n📦 Generating enum: ${parsed.enumName} (in ${moduleName} module)`);
+        
+        // Ensure values is properly set
+        const result = {
+          ...parsed,
+          name: parsed.enumName,
+          values: parsed.enumValues,
+          moduleName: moduleName
+        };
+        
+        return result;
       }
     } catch (err) {
       console.error(`❌ Error parsing JSON: ${err.message}`);
@@ -104,13 +116,6 @@ module.exports = async (args, prompter) => {
         type: 'input',
         name: 'enumValues',
         message: "Enter enum values (comma separated) e.g. ABC, XYZ",
-        filter: (input) => {
-          // Convert input into an array of trimmed strings
-          return input
-            .split(',')
-            .map((val) => val.trim())
-            .filter((val) => val.length > 0);
-        },
         validate: (input) => {
           if (!input.trim()) {
             return 'At least one enum value is required';
@@ -125,7 +130,14 @@ module.exports = async (args, prompter) => {
       pluralize(result.entityParent.toLowerCase()) : 
       pluralize(result.entityName.toLowerCase());
     
-    // Convert enumValues to values array
+    // Convert enumValues to values array (manual processing since filter didn't work)
+    if (typeof result.enumValues === 'string') {
+      result.enumValues = result.enumValues
+        .split(',')
+        .map((val) => val.trim())
+        .filter((val) => val.length > 0);
+    }
+    
     result.values = result.enumValues;
 
     return result;

@@ -46,10 +46,9 @@ function getEntityFilePath(name, parent) {
       if (entity.enums && Array.isArray(entity.enums)) {
         console.log(`Found ${entity.enums.length} enums in entity ${entity.name}`);
         allEnums.push(...entity.enums.map(enumDef => ({
-          name: enumDef.name,
-          values: enumDef.values,
-          entityName: enumDef.entityName,
-          entityParent: enumDef.entityParent || null,
+          ...enumDef,
+          name: enumDef.enumName,
+          values: enumDef.enumValues,
           moduleName: enumDef.entityParent ? 
             pluralize(toKebabCase(enumDef.entityParent)) : 
             pluralize(toKebabCase(enumDef.entityName))
@@ -79,10 +78,9 @@ function getEntityFilePath(name, parent) {
       if (entity.enums && Array.isArray(entity.enums)) {
         console.log(`Found ${entity.enums.length} enums in entity ${entity.name}`);
         allEnums.push(...entity.enums.map(enumDef => ({
-          name: enumDef.name,
-          values: enumDef.values,
-          entityName: enumDef.entityName,
-          entityParent: enumDef.entityParent || null,
+          ...enumDef,
+          name: enumDef.enumName,
+          values: enumDef.enumValues,
           moduleName: enumDef.entityParent ? 
             pluralize(toKebabCase(enumDef.entityParent)) : 
             pluralize(toKebabCase(enumDef.entityName))
@@ -102,6 +100,22 @@ function getEntityFilePath(name, parent) {
       console.log(`🚀 Executing: ${command}`);
       await execAsync(command);
       relations.push(...entity.relations);
+    }
+
+    // 3️⃣ Only enums
+    for (const entity of jsonData) {
+      if (!entity.enumName) continue;
+
+      // Collect enums from the file
+      console.log(`Found ${entity.enumName} enum`);
+      allEnums.push({
+        ...entity,
+        name: entity.enumName,
+        values: entity.enumValues,
+        moduleName: entity.entityParent ? 
+          pluralize(toKebabCase(entity.entityParent)) : 
+          pluralize(toKebabCase(entity.entityName))
+      });      
     }
 
     for (const relation of relations) {
