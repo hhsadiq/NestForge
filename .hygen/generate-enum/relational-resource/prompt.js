@@ -28,8 +28,8 @@ module.exports = async (args, prompter) => {
               allEnums.push({
                 ...enumDef,
                 moduleName: enumDef.entityParent ? 
-                  enumDef.entityParent.toLowerCase() : 
-                  enumDef.entityName.toLowerCase()
+                  enumDef.entityParent : 
+                  enumDef.entityName
               });
             }
           }
