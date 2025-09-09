@@ -172,7 +172,7 @@ const pathRules = {
       }
 
       fs.writeFileSync(processingFilePath, JSON.stringify(enumDef));
-      const command = `npx cross-env DATA_FILE=.hygen-entity-schema/process-entity.json npm run generate:enum`;
+      const command = `npx cross-env DATA_FILE=.hygen-entities-generator/process-entity.json npm run generate:enum`;
       console.log(`🚀 Executing: ${command}`);
       await execAsync(command);
     }
