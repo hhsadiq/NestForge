@@ -47,11 +47,9 @@ function getEntityFilePath(name, parent) {
         console.log(`Found ${entity.enums.length} enums in entity ${entity.name}`);
         allEnums.push(...entity.enums.map(enumDef => ({
           ...enumDef,
-          name: enumDef.enumName,
-          values: enumDef.enumValues,
           moduleName: enumDef.entityParent ? 
-            pluralize(toKebabCase(enumDef.entityParent)) : 
-            pluralize(toKebabCase(enumDef.entityName))
+            enumDef.entityParent : 
+            enumDef.entityName
         })));
       }
       
@@ -79,11 +77,9 @@ function getEntityFilePath(name, parent) {
         console.log(`Found ${entity.enums.length} enums in entity ${entity.name}`);
         allEnums.push(...entity.enums.map(enumDef => ({
           ...enumDef,
-          name: enumDef.enumName,
-          values: enumDef.enumValues,
           moduleName: enumDef.entityParent ? 
-            pluralize(toKebabCase(enumDef.entityParent)) : 
-            pluralize(toKebabCase(enumDef.entityName))
+            enumDef.entityParent : 
+            enumDef.entityName
         })));
       }
       
@@ -110,11 +106,9 @@ function getEntityFilePath(name, parent) {
       console.log(`Found ${entity.enumName} enum`);
       allEnums.push({
         ...entity,
-        name: entity.enumName,
-        values: entity.enumValues,
         moduleName: entity.entityParent ? 
-          pluralize(toKebabCase(entity.entityParent)) : 
-          pluralize(toKebabCase(entity.entityName))
+          entity.entityParent : 
+          entity.entityName
       });      
     }
 
@@ -131,10 +125,10 @@ function getEntityFilePath(name, parent) {
 
     for (const enumDef of allEnums) {
       // Check if enum file already exists
-      const enumFileName = enumDef.name.replace(/([A-Z])/g, '-$1').toLowerCase().replace(/^-/, '');
+      const enumFileName = enumDef.enumName.replace(/([A-Z])/g, '-$1').toLowerCase().replace(/^-/, '');
       const enumFilePath = `src/${enumDef.moduleName}/enums/${enumFileName}.enum.ts`;
       if (fs.existsSync(enumFilePath)) {
-        console.log(`⏭️  Skipping ${enumDef.name}, already exists`);
+        console.log(`⏭️  Skipping ${enumDef.enumName}, already exists`);
         continue;
       }
 

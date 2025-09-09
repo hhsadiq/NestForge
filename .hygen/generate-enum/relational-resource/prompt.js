@@ -26,20 +26,17 @@ module.exports = async (args, prompter) => {
           if (entity.enums && Array.isArray(entity.enums)) {
             for (const enumDef of entity.enums) {
               allEnums.push({
-                name: enumDef.enumName,
-                values: enumDef.enumValues,
-                entityName: enumDef.entityName,
-                entityParent: enumDef.entityParent,
+                ...enumDef,
                 moduleName: enumDef.entityParent ? 
-                  pluralize(enumDef.entityParent.toLowerCase()) : 
-                  pluralize(enumDef.entityName.toLowerCase())
+                  enumDef.entityParent.toLowerCase() : 
+                  enumDef.entityName.toLowerCase()
               });
             }
           }
         }
 
         console.log(`\n📦 Found ${allEnums.length} enums to generate:`);
-        allEnums.forEach(e => console.log(` - ${e.name} (in ${e.moduleName} module)`));
+        allEnums.forEach(e => console.log(` - ${e.enumName} (in ${e.moduleName} module)`));
 
         return allEnums;
       } else {
@@ -51,8 +48,8 @@ module.exports = async (args, prompter) => {
 
         // Check if enum file already exists
         let moduleName = parsed.entityParent ? 
-                  pluralize(parsed.entityParent.toLowerCase()) : 
-                  pluralize(parsed.entityName.toLowerCase());
+                  parsed.entityParent.toLowerCase() : 
+                  parsed.entityName.toLowerCase();
         const enumFileName = parsed.enumName.replace(/([A-Z])/g, '-$1').toLowerCase().replace(/^-/, '');
         const enumFilePath = `src/${moduleName}/enums/${enumFileName}.enum.ts`;
         if (fs.existsSync(enumFilePath)) {
@@ -65,8 +62,6 @@ module.exports = async (args, prompter) => {
         // Ensure values is properly set
         const result = {
           ...parsed,
-          name: parsed.enumName,
-          values: parsed.enumValues,
           moduleName: moduleName
         };
         
@@ -84,7 +79,7 @@ module.exports = async (args, prompter) => {
     const result = await prompter.prompt([
       {
         type: 'input',
-        name: 'name',
+        name: 'enumName',
         message: 'What is the enum name?',
         validate: (input) => {
           if (!input.trim()) {
@@ -138,7 +133,7 @@ module.exports = async (args, prompter) => {
         .filter((val) => val.length > 0);
     }
     
-    result.values = result.enumValues;
+    // result.values = result.enumValues;
 
     return result;
   } catch (err) {
