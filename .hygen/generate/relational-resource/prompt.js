@@ -21,7 +21,8 @@ module.exports = async (args, prompter) => {
               optional: field.optional,
               customType: field.customType,
               example: field.example,
-              includeInDTO: field.dto
+              includeInDTO: field.dto,
+              associatedEnumName: field.associatedEnumName
             }))
           : []
       };
