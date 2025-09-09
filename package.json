@@ -43,7 +43,7 @@
     "prepare": "is-ci || husky",
     "release": "release-it",
     "project:rename": "chmod +x scripts/rename-project.sh && bash scripts/rename-project.sh",
-    "generate:entities": "node .hygen-entity-schema/index.js",
+    "generate:entities": "node .hygen-entities-generator/index.js",
     "generate:enum": "hygen generate-enum relational-resource"
   },
   "dependencies": {

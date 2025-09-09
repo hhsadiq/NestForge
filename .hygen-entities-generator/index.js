@@ -9,23 +9,38 @@ const execAsync = util.promisify(exec);
 const skippedEntities = [];
 const relations = [];
 const allEnums = [];
-    
+
 // Convert PascalCase -> kebab-case
 function toKebabCase(str) {
   return str.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
 }
 
 // Build entity file path
-function getEntityFilePath(name, parent) {
-  const entityName = toKebabCase(name);
-  if (!parent) {
-    const folder = pluralize(entityName);
-    return path.join('src', folder, 'domain', `${entityName}.ts`);
-  } else {
-    const parentFolder = pluralize(toKebabCase(parent));
-    return path.join('src', parentFolder, 'domain', `${entityName}.ts`);
-  }
-}
+const pathRules = {
+  entity: ({ moduleName }) => {
+    const folder = pluralize(toKebabCase(moduleName));
+    return path.join('src', folder, 'domain', `${toKebabCase(moduleName)}.ts`);
+  },
+
+  'sub-entity': ({ moduleName, parentModule }) => {
+    if (!parentModule) throw new Error('Sub-entity requires a parentModule.');
+    const parentFolder = pluralize(toKebabCase(parentModule));
+    return path.join(
+      'src',
+      parentFolder,
+      'domain',
+      `${toKebabCase(moduleName)}.ts`,
+    );
+  },
+
+  enum: ({ enumName, moduleName }) => {
+    if (!enumName) throw new Error('Enum requires enumName.');
+    const transformedEnumName = toKebabCase(enumName);
+
+    const folder = pluralize(toKebabCase(moduleName));
+    return path.join('src', folder, 'enums', `${transformedEnumName}.enum.ts`);
+  },
+};
 
 (async () => {
   try {
@@ -39,20 +54,28 @@ function getEntityFilePath(name, parent) {
     // 1️⃣ Parent modules
     for (const entity of jsonData) {
       if (entity.parent) continue;
-      const entityPath = getEntityFilePath(entity.name, entity.parent);
-      console.log('entityPath: ', entityPath);
-      
+
       // Collect enums from this entity (even if entity is skipped)
-      if (entity.enums && Array.isArray(entity.enums)) {
-        console.log(`Found ${entity.enums.length} enums in entity ${entity.name}`);
-        allEnums.push(...entity.enums.map(enumDef => ({
-          ...enumDef,
-          moduleName: enumDef.entityParent ? 
-            enumDef.entityParent : 
-            enumDef.entityName
-        })));
+      if (entity.enums) {
+        console.log(
+          `Found ${entity.enums.length} enums in entity ${entity.name}`,
+        );
+        allEnums.push(
+          ...entity.enums.map((enumDef) => ({
+            ...enumDef,
+            moduleName: enumDef.entityParent
+              ? enumDef.entityParent
+              : enumDef.entityName,
+          })),
+        );
       }
-      
+      // Collect relations from this entity (even if entity is skipped)
+      if (entity.relations) {
+        relations.push(...entity.relations);
+      }
+
+      const entityPath = pathRules.entity({ moduleName: entity.name });
+      console.log('entityPath: ', entityPath);
       if (fs.existsSync(entityPath)) {
         skippedEntities.push(entity.name);
         console.log(`⏭️  Skipping ${entity.name}, already exists`);
@@ -62,29 +85,36 @@ function getEntityFilePath(name, parent) {
       fs.writeFileSync(processingFilePath, JSON.stringify(entity));
       const command = `npx cross-env DATA_FILE=.hygen-entities-generator/process-entity.json npm run generate:resource`;
       console.log(`🚀 Executing: ${command}`);
-      if (entity.relations) {
-        relations.push(...entity.relations);
-      }
       await execAsync(command);
     }
 
     // 2️⃣ Sub-modules
     for (const entity of jsonData) {
       if (!entity.parent) continue;
-
-      const entityPath = getEntityFilePath(entity.name, entity.parent);
-      
       // Collect enums from this entity (even if entity is skipped)
-      if (entity.enums && Array.isArray(entity.enums)) {
-        console.log(`Found ${entity.enums.length} enums in entity ${entity.name}`);
-        allEnums.push(...entity.enums.map(enumDef => ({
-          ...enumDef,
-          moduleName: enumDef.entityParent ? 
-            enumDef.entityParent : 
-            enumDef.entityName
-        })));
+      if (entity.enums) {
+        console.log(
+          `Found ${entity.enums.length} enums in entity ${entity.name}`,
+        );
+        allEnums.push(
+          ...entity.enums.map((enumDef) => ({
+            ...enumDef,
+            moduleName: enumDef.entityParent
+              ? enumDef.entityParent
+              : enumDef.entityName,
+          })),
+        );
       }
-      
+      // Collect relations from this entity (even if entity is skipped)
+      if (entity.relations) {
+        relations.push(...entity.relations);
+      }
+
+      const entityPath = pathRules['sub-entity']({
+        moduleName: entity.name,
+        parentModule: entity.parent,
+      });
+
       if (fs.existsSync(entityPath)) {
         skippedEntities.push(`${entity.parent} -> ${entity.name}`);
         console.log(
@@ -97,9 +127,6 @@ function getEntityFilePath(name, parent) {
       const command = `npx cross-env DATA_FILE=.hygen-entities-generator/process-entity.json npm run generate:sub-entity`;
       console.log(`🚀 Executing: ${command}`);
       await execAsync(command);
-      if (entity.relations) {
-        relations.push(...entity.relations);
-      }
     }
 
     // Collect relation objects defined at the main (top-level)
@@ -109,18 +136,17 @@ function getEntityFilePath(name, parent) {
       }
     }
 
-    // 3️⃣ Only enums
+    // Collect enums objects defined at the main (top-level)
     for (const entity of jsonData) {
       if (!entity.enumName) continue;
-
       // Collect enums from the file
       console.log(`Found ${entity.enumName} enum`);
       allEnums.push({
         ...entity,
-        moduleName: entity.entityParent ? 
-          entity.entityParent : 
-          entity.entityName
-      });      
+        moduleName: entity.entityParent
+          ? entity.entityParent
+          : entity.entityName,
+      });
     }
 
     for (const relation of relations) {
@@ -135,11 +161,13 @@ function getEntityFilePath(name, parent) {
     console.log('All enums found:', allEnums.length);
 
     for (const enumDef of allEnums) {
-      // Check if enum file already exists
-      const enumFileName = enumDef.enumName.replace(/([A-Z])/g, '-$1').toLowerCase().replace(/^-/, '');
-      const enumFilePath = `src/${enumDef.moduleName}/enums/${enumFileName}.enum.ts`;
+      const { enumName, moduleName } = enumDef;
+      const enumFilePath = pathRules.enum({
+        moduleName,
+        enumName,
+      });
       if (fs.existsSync(enumFilePath)) {
-        console.log(`⏭️  Skipping ${enumDef.enumName}, already exists`);
+        console.log(`⏭️  Skipping ${enumName}, already exists`);
         continue;
       }
 

@@ -1,5 +1,5 @@
 ---
-to: "src/<%= h.inflection.transform(moduleName, ['pluralize', 'underscore', 'dasherize']) %>/enums/<%= h.inflection.transform(enumName, ['pluralize', 'underscore', 'dasherize']) %>.enum.ts"
+to: "src/<%= h.inflection.transform(moduleName, ['pluralize', 'underscore', 'dasherize']) %>/enums/<%= h.inflection.transform(enumName, ['underscore', 'dasherize']) %>.enum.ts"
 ---
 
 
