@@ -63,9 +63,13 @@ export class <%= name %> {
       }
     %>
     @ApiProperty({
-      type: <%= apiType %>,
-      example: <%- JSON.stringify(exampleValue, null, 2) %>,
-      required: <%= !field.optional %>,
+      <% if (field.associatedEnumName) { %>
+        enum: <%= apiType %>,
+      <% } else { %>
+        type: <%= apiType %>,
+        example: <%- JSON.stringify(exampleValue, null, 2) %>,
+        required: <%= !field.optional %>,
+      <% } %>
     })
     <%= propertyName %><%= field.optional ? '?' : '' %>: <%- tsType %>;
     <% }) %>
