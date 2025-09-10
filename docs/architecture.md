@@ -14,9 +14,16 @@
   - [2. Decoupled Business Logic Enables Query Optimization and Swappable ORMs](#2-decoupled-business-logic-enables-query-optimization-and-swappable-orms)
   - [3. Payment Module Example - Platform Abstraction](#3-payment-module-example---platform-abstraction)
   - [4. Development Time Efficiency](#4-development-time-efficiency)
-- [Description of the module structure](#description-of-the-module-structure)
+- [Module Structures](#module-structures)
+  - [Parent Module Structure](#parent-module-structure)
+  - [Sub-entity or Sub-module Structure](#sub-entity-or-sub-module-structure)
+- [Naming Conventions](#naming-conventions)
+  - [1. Client-Facing and Business Logic (camelCase)](#1-client-facing-and-business-logic-camelcase)
+  - [2. Database Layer (snake_case)](#2-database-layer-snake_case)
+  - [3. Role of Mappers: Bridging the Gap](#3-role-of-mappers-bridging-the-gap)
 - [Recommendations](#recommendations)
   - [Repository](#repository)
+  - [Handling Modular Circular Dependencies](#handling-modular-circular-dependencies)
 - [Pitfalls \& Drawbacks](#pitfalls--drawbacks)
 - [FAQ](#faq)
   - [Is there a way to generate a new resource (controller, service, DTOs, etc) with Hexagonal Architecture?](#is-there-a-way-to-generate-a-new-resource-controller-service-dtos-etc-with-hexagonal-architecture)
@@ -57,6 +64,7 @@ Given this project will involve a lot of 3rd party integrations, so it can pay o
 2. **Improved Testability and Reliability**: Abstracting third-party services makes it easier to create mock versions, leading to more reliable and faster testing.
 
 ## Practical Benefits of Hexagonal Architecture
+
 Hexagonal Architecture is not just a theoretical pattern—it brings real, practical value to your day-to-day development work. Below are a few tangible benefits based on real-world scenarios:
 
 ### 1. Pre-defined Structure - No Architectural Decisions
@@ -70,6 +78,7 @@ This standardization saves cognitive effort and promotes developer productivity 
 Suppose you have written a TypeORM-based query in repository layer and built some business logic in the service layer on top of that. In the longer run, you decide to replace this complex TypeOrm query with a raw query for performance:
 
 With hexagonal architecture:
+
 - Your business logic remains intact
 - You only need to update the repository implementation and the mappers
 - No changes required in the service layer
@@ -78,6 +87,7 @@ With hexagonal architecture:
 This is a classic example of continuous improvement. Without this architecture, you would have to update both the repository layer implementation and then modify the business logic to accommodate the new response structure.
 
 ### 3. Payment Module Example - Platform Abstraction
+
 Use Case: You're building an in-app purchase module. You can organize it like this:
 
 ```
@@ -102,6 +112,7 @@ payment/
 ```
 
 In this setup:
+
 - Your business logic in `payment.service.ts` interacts only with the payment port interface. It has no concern about any specific payment platform
 - Platform-specific details (Google, Apple, Huawei) are encapsulated in their own adapters.
 - If you need to replace a payment platform or its API changes, in the future, you just update that specific adapter and mapper
@@ -112,19 +123,21 @@ In this setup:
 
 For modules with simple CRUD operations (where you could traditionally work with 3-tier architecture), the expected additional development time is actually saved due to the integrated code generation tool Hygen. The pre-defined structure and generators make development faster, not slower.
 
-## Description of the module structure
+## Module Structures
+
+### Parent Module Structure
 
 ```txt
 .
 ├── domain
-│   └── [DOMAIN_ENTITY].ts
+│   └── [DOMAIN].ts
 ├── dto
 │   ├── create.dto.ts
 │   ├── find-all.dto.ts
 │   └── update.dto.ts
 ├── infrastructure
 │   └── persistence
-│       ├── document
+│       ├── document  (for NoSQL DB; present only if NoSQL is used)
 │       │   ├── document-persistence.module.ts
 │       │   ├── entities
 │       │   │   └── [SCHEMA].ts
@@ -132,7 +145,7 @@ For modules with simple CRUD operations (where you could traditionally work with
 │       │   │   └── [MAPPER].ts
 │       │   └── repositories
 │       │       └── [ADAPTER].repository.ts
-│       ├── relational
+│       ├── relational (for SQL DB; present only if SQL is used)
 │       │   ├── entities
 │       │   │   └── [ENTITY].ts
 │       │   ├── mappers
@@ -146,21 +159,98 @@ For modules with simple CRUD operations (where you could traditionally work with
 └── service.ts
 ```
 
-`[DOMAIN ENTITY].ts` represents an entity used in the business logic. Domain entity has no dependencies on the database or any other infrastructure.
+[DOMAIN].ts represents an entity used in the business logic. Domain entity has no dependencies on the database or any other infrastructure.
 
-`[SCHEMA].ts` represents the **database structure**. It is used in the document-oriented database (MongoDB).
+[SCHEMA].ts represents the database structure used in document-oriented databases (e.g., MongoDB).
 
-`[ENTITY].ts` represents the **database structure**. It is used in the relational database (PostgreSQL).
+[ENTITY].ts represents the database structure used in relational databases (e.g., PostgreSQL).
 
-`[MAPPER].ts` is a mapper that converts **database entity** to **domain entity** and vice versa.
+[MAPPER].ts converts database entities to domain entities and vice versa.
 
-`[PORT].repository.ts` is a repository **port** that defines the methods for interacting with the database.
+[PORT].repository.ts defines the repository port (interface) for interacting with the database.
 
-`[ADAPTER].repository.ts` is a repository that implements the `[PORT].repository.ts`. It is used to interact with the database.
+[ADAPTER].repository.ts implements the repository port and interacts with the database.
 
-`infrastructure` folder - contains all the infrastructure-related components such as `persistence`, `uploader`, `senders`, etc.
+### Sub-entity or Sub-module Structure
 
-Each component has `port` and `adapters`. `Port` is interface that define the methods for interacting with the infrastructure. `Adapters` are implementations of the `port`.
+Sometimes a module has additional entities that are children of the module’s main domain entity. We call these sub-entities or sub-modules. The parent module exists at `src/[module]`, and the child lives within the same module, sharing the same controller/service/module and repository port/adapter while adding child-specific domain, entities, and mappers.
+
+Structure:
+
+```txt
+.
+├── controller.ts           (same file for parent and child)
+├── module.ts               (same file for parent and child)
+├── service.ts              (same file for parent and child)
+├── domain
+│   ├── [DOMAIN].ts
+│   └── [CHILD_DOMAIN].ts
+├── dto                     (at the same level as parent)
+│   ├── create.dto.ts
+│   ├── find-all.dto.ts
+│   └── update.dto.ts
+└── infrastructure
+    └── persistence
+        ├── [PORT].repository.ts         (same file for parent and child)
+        ├── relational/                  (for SQL DB; present only if SQL is used)
+        │   ├── entities
+        │   │   ├── [ENTITY].ts
+        │   │   └── [CHILD_ENTITY].ts
+        │   ├── mappers
+        │   │   ├── [MAPPER].ts
+        │   │   └── [CHILD_MAPPER].ts
+        │   └── repositories
+        │       └── [ADAPTER].repository.ts   (same file for parent and child)
+        └── document/                  (present only if NoSQL is used, follow the same structure as relational folder)
+            └── ...
+```
+
+`[CHILD_DOMAIN].ts` is an additional domain entity conceptually subordinate to the parent’s domain entity.
+
+`[CHILD_ENTITY].ts` and `[CHILD_MAPPER].ts` mirror the parent’s persistence and mapping layers for the child entity.
+
+Key points:
+
+- **Shared files**: `controller.ts`, `service.ts`, `module.ts`, and repository port/adapter files are the same for parent and child.
+- **Domain**: both parent and child domain entities live side-by-side.
+- **DTOs**: remain at the same level as the parent’s DTOs.
+- **Persistence**: parent and child database entities and mappers co-exist; the repository adapter remains the same.
+
+This layout keeps business logic centralized while allowing the module to grow with related sub-entities without duplicating controllers, services, modules, or repository interfaces/adapters.
+
+**Relational vs Document**: The `relational` folder exists only when using a relational SQL database. The `document` folder exists
+only when using a NoSQL database (e.g., MongoDB) and follows the same structure as the `relational` folder.
+
+## Naming Conventions
+
+This project enforces a clear separation of naming conventions to ensure consistency and maintainability across different layers:
+
+### 1. Client-Facing and Business Logic (camelCase)
+
+All data exchanged with the client, as well as the internal business logic within the application, follows the **camelCase** naming convention. This applies to:
+
+- **Domain files**: (`[DOMAIN].ts`, `[CHILD_DOMAIN].ts`)
+- **Controllers**: (`controller.ts`)
+- **Services**: (`service.ts`)
+- **DTOs (Data Transfer Objects)**: (`create.dto.ts`, `find-all.dto.ts`, `update.dto.ts`, etc.)
+
+This ensures that the service layer and all interactions with external clients consistently use a readable and common standard.
+
+### 2. Database Layer (snake_case)
+
+Conversely, files directly related to the database structure and interactions adhere to the **snake_case** naming convention. This primarily includes:
+
+- **Entity files**: (`[ENTITY].ts`, `[SCHEMA].ts`, `[CHILD_ENTITY].ts`, `[CHILD_SCHEMA].ts`)
+
+### 3. Role of Mappers: Bridging the Gap
+
+The `[MAPPER].ts` files play a crucial role in translating between these two naming conventions, ensuring a clean separation of concerns. Mappers contain functions such as `toDomain()` and `toPersistence()`:
+
+- **`toPersistence()`**: When data is being written to or updated in the database, it first passes through the relevant `toPersistence()` function. This function is responsible for converting attributes from **camelCase** (from the service layer) to **snake_case** (for the database layer).
+
+- **`toDomain()`**: When data is retrieved from the database, it is always in **snake_case**. This data is then passed to the `toDomain()` function of the relevant mapper, which translates the attributes back into **camelCase** format before returning them to the service layer.
+
+This strict separation ensures that the service layer remains entirely free of snake_case attributes, receiving all data in a consistent camelCase format, regardless of its origin.
 
 ## Recommendations
 
@@ -192,6 +282,20 @@ export class UsersRelationalRepository implements UserRepository {
 }
 ```
 
+### Handling Modular Circular Dependencies
+
+In NestJS, circular dependencies between modules (e.g., when `User` and `File` modules depend on each other) can lead to application startup issues. To resolve this, a common module can be introduced to encapsulate shared logic or interactions between the interdependent modules.
+
+**Approach:**
+
+1. **Create a Common Module**: Design a new module (e.g., `user-and-file/`) that acts as an intermediary.
+2. **Shared Service and Repository Layer**: This common module will primarily contain:
+   - A service file to house business logic that involves both entities.
+   - A dedicated repository layer where both `User` and `File` entities are imported.
+3. **Centralized Database Operations**: The common module's repository will perform database calls that involve interactions between the `User` and `File` entities. This centralizes the data access logic, effectively breaking the circular dependency by abstracting the direct interaction between the original `User` and `File` modules.
+
+This approach ensures a clear separation of concerns while effectively managing complex inter-module relationships, enhancing modularity and maintainability.
+
 ## Pitfalls & Drawbacks
 
 While hexagonal architecture provides significant benefits, there are some considerations to keep in mind:
@@ -199,7 +303,7 @@ While hexagonal architecture provides significant benefits, there are some consi
 **Initial Complexity**: Hexagonal Architecture can take more effort to implement initially, but it provides more flexibility and scalability in the long run. [You still can use Three-tier architecture](#i-dont-want-to-use-hexagonal-architecture-how-can-i-use-a-traditional-three-tier-architecture-for-nestjs), but we recommend using Hexagonal Architecture. Try to create resources via our [CLI](cli.md) - you'll find it takes the same time (maybe even less 🤔) as Three-tier architecture.
 
 **Code Generation Limitations**: While we have integrated Hygen for code generation, it has its own limitations. For example:
-- You can't add relations between two entities through Hygen terminal or command line
+
 - Complex customizations may require manual intervention
 
 **AI Tool Integration**: AI tools cannot fully understand the hexagonal structure, making it somewhat difficult to get things done with AI agents like Cursor AI or GitHub Copilot. The tools may not suggest the most appropriate file locations or understand the separation of concerns.

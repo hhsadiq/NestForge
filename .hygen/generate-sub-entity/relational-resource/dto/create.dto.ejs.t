@@ -9,6 +9,17 @@ import { ApiProperty } from '@nestjs/swagger';
   const needsDate = fields?.some(f => ['timestamp','date'].includes(f.type));
   const needsObject = fields?.some(f => f.type === 'json');
   const needsOptional = fields?.some(f => f.optional);
+  const needsEnum = fields?.some(f => f.associatedEnumName);
+  
+  // Collect all unique enums needed for imports
+  const enumImports = new Set();
+  if (fields) {
+    fields.forEach(field => {
+      if (field.associatedEnumName) {
+        enumImports.add(field.associatedEnumName);
+      }
+    });
+  }
 %>
 import {
 <% if (needsString) { %>  IsString,<% } %>
@@ -17,7 +28,13 @@ import {
 <% if (needsDate) { %>  IsDate,<% } %>
 <% if (needsObject) { %>  IsObject,<% } %>
 <% if (needsOptional) { %>  IsOptional,<% } %>
+<% if (needsEnum) { %>  IsEnum,<% } %>
 } from 'class-validator';
+<% if (enumImports.size > 0) { %>
+<% enumImports.forEach(enumName => { %>
+import { <%= h.inflection.classify(enumName) %>Enum } from '../enums/<%= h.inflection.transform(enumName, ['underscore', 'dasherize']) %>.enum';
+<% }); %>
+<% } %>
 
 import {
 <% if (needsDate) { %>  Transform, <% } %>
@@ -29,6 +46,17 @@ export class Create<%= name %>Dto {
   <% fields.filter(field => field.includeInDTO).forEach(field => { 
     const propertyName = h.inflection.camelize(field.name, true);
 
+    // Handle enum fields
+    if (field.associatedEnumName) {
+  %>
+  @ApiProperty({
+    enum: <%= h.inflection.classify(field.associatedEnumName) %>Enum,
+    required: <%= !field.optional %>
+  })
+  <% if (field.optional) { %>@IsOptional()<% } %>
+  @IsEnum(<%= h.inflection.classify(field.associatedEnumName) %>Enum)
+  <%= propertyName %><%= field.optional ? '?' : '' %>: <%= h.inflection.classify(field.associatedEnumName) %>Enum;
+  <% } else {
     const tsType = (
       field.type === 'varchar' || field.type === 'text' || field.type === 'uuid' || field.type === 'custom'
         ? (field.customType === 'bit(1)' ? 'boolean' : 'string')
@@ -64,6 +92,7 @@ export class Create<%= name %>Dto {
   <% if (tsType === 'Date') { %>@IsDate()<% } %>
   <% if (tsType === 'Record<string, any>') { %>@IsObject()<% } %>
   <%= propertyName %><%= field.optional ? '?' : '' %>: <%- tsType %>;
+  <% } %>
   <% }) %>
   <% } %>
 }

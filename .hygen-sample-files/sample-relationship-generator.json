@@ -1,0 +1,9 @@
+{
+  "sourceEntityName": "Coach",
+  "sourceEntityParent": null,
+  "relationType": "OneToOne",
+  "relationEntityParent": null,
+  "relationEntityName": "Team",
+  "sourceColumnName": "team_id",
+  "relationFieldName": null
+}

@@ -10,6 +10,22 @@ import {
 } from 'typeorm';
 import { EntityRelationalHelper } from '@src/utils/relational-entity-helper';
 import { TABLES } from '@src/common/constants';
+<%
+  // Collect all unique enums needed for imports
+  const enumImports = new Set();
+  if (fields) {
+    fields.forEach(field => {
+      if (field.associatedEnumName) {
+        enumImports.add(field.associatedEnumName);
+      }
+    });
+  }
+%>
+<% if (enumImports.size > 0) { %>
+<% enumImports.forEach(enumName => { %>
+import { <%= h.inflection.classify(enumName) %>Enum } from '@src/<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>/enums/<%= h.inflection.transform(enumName, ['underscore', 'dasherize']) %>.enum';
+<% }); %>
+<% } %>
 
 @Entity({
   name: TABLES.<%= h.inflection.camelize(name, true) %>,
@@ -26,7 +42,10 @@ export class <%= name %>Entity extends EntityRelationalHelper {
     let columnType = '';
     let useTransformer = false;
 
-    if (field.type === 'varchar' || field.type === 'text' || field.type === 'uuid') {
+    if (field.associatedEnumName) {
+      columnType = 'varchar'; // Enums are stored as varchar in database
+      useTransformer = true;
+    } else if (field.type === 'varchar' || field.type === 'text' || field.type === 'uuid') {
       columnType = 'varchar';
     } else if (field.type === 'int') {
       columnType = 'int';
@@ -53,7 +72,7 @@ export class <%= name %>Entity extends EntityRelationalHelper {
     type: '<%= columnType %>',
     nullable: <%= field.optional %>, 
   })
-  <%= propertyName %><%= field.optional ? '?' : '' %>: <%- field.type === 'int' || field.type === 'float' || field.type === 'double' || field.type === 'decimal' ? 'number' : field.type === 'boolean' ? 'boolean' : field.type === 'json' ? 'Record<string, any>' : field.type === 'timestamp' ? 'Date' : field.type === 'date' ? 'Date' : 'string' %>;
+  <%= propertyName %><%= field.optional ? '?' : '' %>: <%- field.associatedEnumName ? h.inflection.classify(field.associatedEnumName) + 'Enum' : field.type === 'int' || field.type === 'float' || field.type === 'double' || field.type === 'decimal' ? 'number' : field.type === 'boolean' ? 'boolean' : field.type === 'json' ? 'Record<string, any>' : field.type === 'timestamp' ? 'Date' : field.type === 'date' ? 'Date' : 'string' %>;
   <% }) %>
   <% } %>
   @CreateDateColumn()

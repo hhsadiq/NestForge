@@ -20,9 +20,26 @@
         "optional": false,
         "example": "Karachi",
         "dto": true
+      },
+      {
+        "name": "teamLevel",
+        "type": "int",
+        "customType": "",
+        "optional": false,
+        "example": 1,
+        "dto": true,
+        "associatedEnumName": "TeamLevel"
       }
     ],
-    "relations": []
+    "relations": [],
+    "enums": [
+      {
+        "entityName": "Team",
+        "entityParent": null,
+        "enumName": "TeamLevel",
+        "enumValues": ["NATIONAL", "REGIONAL", "CLUB"]
+      }
+    ]
   },
   {
     "name": "Coach",
@@ -88,7 +105,8 @@
         "customType": "",
         "optional": false,
         "example": "Forward",
-        "dto": true
+        "dto": true,
+        "associatedEnumName": "PlayerPosition"
       },
       {
         "name": "teamId",
@@ -110,6 +128,14 @@
         "sourceColumnName": "team_id",
         "relationFieldName": "players"
       }
+    ],
+    "enums": [
+      {
+        "entityName": "Player",
+        "entityParent": null,
+        "enumName": "PlayerPosition",
+        "enumValues": ["GOALKEEPER", "DEFENDER", "MIDFIELDER", "FORWARD"]
+      }
     ]
   },
   {
@@ -124,10 +150,19 @@
         "customType": "",
         "optional": false,
         "example": "League",
-        "dto": true
+        "dto": true,
+        "associatedEnumName": "MatchCategory"
       }
     ],
-    "relations": []
+    "relations": [],
+    "enums": [
+      {
+        "entityName": "MatchType",
+        "entityParent": "Match",
+        "enumName": "MatchCategory",
+        "enumValues": ["LEAGUE", "FRIENDLY", "KNOCKOUT"]
+      }
+    ]
   },
   {
     "name": "Match",
@@ -166,6 +201,15 @@
         "optional": false,
         "example": "2025-09-15",
         "dto": true
+      },
+      {
+        "name": "status",
+        "type": "varchar",
+        "customType": "",
+        "optional": false,
+        "example": "SCHEDULED",
+        "dto": true,
+        "associatedEnumName": "MatchStatus"
       }
     ],
     "relations": [
@@ -198,6 +242,14 @@
         "relationEntityName": "MatchType",
         "sourceColumnName": "match_type_id",
         "relationFieldName": "matches"
+      }
+    ],
+    "enums": [
+      {
+        "entityName": "Match",
+        "entityParent": null,
+        "enumName": "MatchStatus",
+        "enumValues": ["SCHEDULED", "ONGOING", "COMPLETED", "CANCELLED"]
       }
     ]
   },

@@ -17,7 +17,7 @@ module.exports = async (args, prompter) => {
         fields: Array.isArray(parsed.fields)
           ? parsed.fields.map(field => ({
               name: field.name,
-              type: field.type,
+              type: field.associatedEnumName? null : field.type,
               optional: field.optional,
               customType: field.customType,
               example: field.example,

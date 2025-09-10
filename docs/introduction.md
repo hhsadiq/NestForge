@@ -18,6 +18,6 @@
 
 ---
 
-Previous: [Main](readme.md)
+Previous: [Project Rename](project-rename.md)
 
 Next: [Installing and Running](installing-and-running.md)

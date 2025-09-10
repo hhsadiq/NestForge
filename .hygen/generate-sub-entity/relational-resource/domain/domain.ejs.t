@@ -2,6 +2,22 @@
 to: src/<%= h.inflection.transform(parent, ['pluralize', 'underscore', 'dasherize']) %>/domain/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.ts
 ---
 import { ApiProperty } from '@nestjs/swagger';
+<%
+  // Collect all unique enums needed for imports
+  const enumImports = new Set();
+  if (fields) {
+    fields.forEach(field => {
+      if (field.associatedEnumName) {
+        enumImports.add(field.associatedEnumName);
+      }
+    });
+  }
+%>
+<% if (enumImports.size > 0) { %>
+<% enumImports.forEach(enumName => { %>
+import { <%= h.inflection.classify(enumName) %>Enum } from '../enums/<%= h.inflection.transform(enumName, ['underscore', 'dasherize']) %>.enum';
+<% }); %>
+<% } %>
 
 export class <%= name %> {
   @ApiProperty({
@@ -12,7 +28,9 @@ export class <%= name %> {
   <% if (typeof fields !== 'undefined' && fields.length > 0) { %>
     <% fields.forEach(field => { 
       const tsType = (
-        field.type === 'varchar' || field.type === 'text' || field.type === 'uuid' || field.type === 'custom'
+        field.associatedEnumName
+          ? h.inflection.classify(field.associatedEnumName) + 'Enum'
+          : field.type === 'varchar' || field.type === 'text' || field.type === 'uuid' || field.type === 'custom'
           ? 'string'
           : field.type === 'int' || field.type === 'float' || field.type === 'double' || field.type === 'decimal'
           ? 'number'
@@ -26,11 +44,13 @@ export class <%= name %> {
       );
 
       const apiType = (
-        tsType === 'string' ? 'String' :
-        tsType === 'number' ? 'Number' :
-        tsType === 'boolean' ? 'Boolean' :
-        tsType === 'Date' ? 'Date' :
-        tsType === 'Record<string, any>' ? 'Object' : 'any'
+        field.associatedEnumName
+          ? field.associatedEnumName + 'Enum'
+          : tsType === 'string' ? 'String' :
+          tsType === 'number' ? 'Number' :
+          tsType === 'boolean' ? 'Boolean' :
+          tsType === 'Date' ? 'Date' :
+          tsType === 'Record<string, any>' ? 'Object' : 'any'
       );
 
       const propertyName = h.inflection.camelize(field.name, true);
