@@ -2,9 +2,9 @@ name: NestJS API CI
 
 on:
   push:
-    branches: [main]
+    branches: [your-branch-name] # Replace with your branch name
   pull_request:
-    branches: [main]
+    branches: [your-branch-name] # Replace with your branch name
 
 jobs:
   build:
@@ -22,8 +22,6 @@ jobs:
         if: ${{ failure() && steps.relational.conclusion == 'failure' }}
         run: docker cp ci-relational-api-1:/usr/src/app/prod.log .
       # </database-relational-block>
-
-      
 
       - name: Upload prod.log to artifacts for debugging
         if: failure()
