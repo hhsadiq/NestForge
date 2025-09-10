@@ -45,7 +45,7 @@ export class <%= name %> {
 
       const apiType = (
         field.associatedEnumName
-          ? 'String'
+          ? field.associatedEnumName + 'Enum'
           : tsType === 'string' ? 'String' :
           tsType === 'number' ? 'Number' :
           tsType === 'boolean' ? 'Boolean' :
