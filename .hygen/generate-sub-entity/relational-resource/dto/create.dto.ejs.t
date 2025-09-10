@@ -1,26 +1,30 @@
 ---
 to: "<%= functionalities.includes('create') ? `src/${h.inflection.transform(parent, ['pluralize', 'underscore', 'dasherize'])}/dto/create-${h.inflection.transform(name, ['underscore', 'dasherize'])}.dto.ts` : null %>"
 ---
-import { ApiProperty } from '@nestjs/swagger';
 <%
-  const needsString = fields?.some(f => ['varchar','text','uuid','custom'].includes(f.type) && f.customType !== 'bit(1)');
-  const needsNumber = fields?.some(f => ['int','float','double','decimal'].includes(f.type));
-  const needsBoolean = fields?.some(f => f.type === 'boolean' || (f.type === 'custom' && f.customType === 'bit(1)'));
-  const needsDate = fields?.some(f => ['timestamp','date'].includes(f.type));
-  const needsObject = fields?.some(f => f.type === 'json');
-  const needsOptional = fields?.some(f => f.optional);
-  const needsEnum = fields?.some(f => f.associatedEnumName);
+  const hasDtoFields = fields?.some(f => f.includeInDTO);
+
+  const needsString = fields?.some(f => f.includeInDTO && ['varchar','text','uuid','custom'].includes(f.type) && f.customType !== 'bit(1)');
+  const needsNumber = fields?.some(f => f.includeInDTO && ['int','float','double','decimal'].includes(f.type));
+  const needsBoolean = fields?.some(f => f.includeInDTO && (f.type === 'boolean' || (f.type === 'custom' && f.customType === 'bit(1)')));
+  const needsDate = fields?.some(f => f.includeInDTO && ['timestamp','date'].includes(f.type));
+  const needsObject = fields?.some(f => f.includeInDTO && f.type === 'json');
+  const needsOptional = fields?.some(f => f.includeInDTO && f.optional);
+  const needsEnum = fields?.some(f => f.includeInDTO && f.associatedEnumName);
   
-  // Collect all unique enums needed for imports
   const enumImports = new Set();
   if (fields) {
-    fields.forEach(field => {
+    fields.filter(f => f.includeInDTO).forEach(field => {
       if (field.associatedEnumName) {
         enumImports.add(field.associatedEnumName);
       }
     });
   }
 %>
+
+<% if (hasDtoFields) { %>
+import { ApiProperty } from '@nestjs/swagger';
+
 import {
 <% if (needsString) { %>  IsString,<% } %>
 <% if (needsNumber) { %>  IsNumber,<% } %>
@@ -30,16 +34,17 @@ import {
 <% if (needsOptional) { %>  IsOptional,<% } %>
 <% if (needsEnum) { %>  IsEnum,<% } %>
 } from 'class-validator';
+
 <% if (enumImports.size > 0) { %>
 <% enumImports.forEach(enumName => { %>
 import { <%= h.inflection.classify(enumName) %>Enum } from '../enums/<%= h.inflection.transform(enumName, ['underscore', 'dasherize']) %>.enum';
 <% }); %>
 <% } %>
 
-import {
-<% if (needsDate) { %>  Transform, <% } %>
-
-} from 'class-transformer';
+<% if (needsDate) { %>
+import { Transform } from 'class-transformer';
+<% } %>
+<% } %>
 
 export class Create<%= name %>Dto {
   <% if(typeof fields !== 'undefined' && fields.length > 0) { %>

@@ -6,7 +6,9 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  <% if (typeof fields !== 'undefined' && fields.length > 0) { %>
   Column,
+  <% } %>
 } from 'typeorm';
 import { EntityRelationalHelper } from '@src/utils/relational-entity-helper';
 import { TABLES } from '@src/common/constants';
