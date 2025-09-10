@@ -5,10 +5,7 @@
 ## Table of Contents
 
 - [Entities (Batch) generator](entities.md)
-<<<<<<< Updated upstream
-=======
 - [Enum generator](enum.md)
->>>>>>> Stashed changes
 - [Resource generator](resource-entity.md)
 - [Sub-entity generator](sub-entity.md)
 - [Relationship generator](relationship.md)
