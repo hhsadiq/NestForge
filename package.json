@@ -6,7 +6,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "typeorm": "env-cmd ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
+    "typeorm": "env-cmd ts-node --require tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "migration:generate": "npm run typeorm -- --dataSource=src/database/data-source.ts migration:generate",
     "postmigration:migration:generate": "npm run lint -- --fix",
     "migration:create": "npm run typeorm -- migration:create",
@@ -23,7 +23,7 @@
     "generate:relationship": "hygen generate-relationship relational-resource",
     "add:property": "hygen property add-to-relational",
     "postadd:property": "npm run lint -- --fix",
-    "seed:run:relational": "ts-node -r tsconfig-paths/register ./src/database/seeds/relational/run-seed.ts",
+    "seed:run:relational": "ts-node --require tsconfig-paths/register ./src/database/seeds/relational/run-seed.ts",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -44,7 +44,8 @@
     "release": "release-it",
     "project:rename": "chmod +x scripts/rename-project.sh && bash scripts/rename-project.sh",
     "generate:entities": "node .hygen-entities-generator/index.js",
-    "generate:enum": "hygen generate-enum relational-resource"
+    "generate:enum": "hygen generate-enum relational-resource",
+    "setup": "chmod +x scripts/setup.sh && bash scripts/setup.sh"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.883.0",
