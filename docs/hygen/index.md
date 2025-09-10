@@ -5,6 +5,7 @@
 ## Table of Contents
 
 - [Entities (Batch) generator](entities.md)
+- [Enum generator](enum.md)
 - [Resource generator](resource-entity.md)
 - [Sub-entity generator](sub-entity.md)
 - [Relationship generator](relationship.md)
