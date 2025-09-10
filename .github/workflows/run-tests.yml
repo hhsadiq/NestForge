@@ -1,0 +1,101 @@
+name: Run Tests on PR create & update
+
+on:
+  pull_request:
+    branches:
+      - develop
+
+    types:
+      - opened
+      - ready_for_review
+      - synchronize
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Get environment variables from AWS Secrets Manager
+        run: |
+          aws secretsmanager get-secret-value \
+            --secret-id "dev/nestforge" \
+            --query 'SecretString' \
+            --output text | \
+            jq -r 'to_entries[] | "\(.key)=\(.value | @json)"' | \
+            sed 's/^"\(.*\)"$/\1/' > .env
+
+      - name: Download certs from Secrets Manager
+        run: |
+          SECRET_NAME="dev/nestforge/certs"
+          CERTS_DIR="./certs"
+          mkdir -p "$CERTS_DIR"
+
+          aws secretsmanager get-secret-value \
+            --secret-id "$SECRET_NAME" \
+            --query 'SecretString' \
+            --output text | \
+            jq -r 'to_entries[] | [.key, .value] | @tsv' | \
+            while IFS=$'\t' read -r filename content; do
+              if [[ "$filename" == *.p12 || "$filename" == *.pfx ]]; then
+                  echo "$content" | base64 --decode > "$CERTS_DIR/$filename"
+              elif [[ "$filename" == *.json ]]; then
+                  echo -e "$content" | jq -r . > "$CERTS_DIR/$filename"
+              else
+                  echo -e "$content" > "$CERTS_DIR/$filename"
+              fi
+              chmod 600 "$CERTS_DIR/$filename"
+              echo "[✓] Created $CERTS_DIR/$filename"
+          done
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22.12.0
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run build
+        run: npm run build
+
+      - name: Start server and print logs
+        run: |
+          # Override Redis config to use local Redis service
+          echo 'REDIS_HOST=127.0.0.1' >> .env
+          echo 'REDIS_IS_CLUSTER_MODE=false' >> .env
+          echo 'NODE_ENV=local' >> .env
+
+          npm start > server.log 2>&1 &
+          sleep 10
+          cat server.log || true
+          ps aux | grep node
+
+      - name: Install wait-on
+        run: npm install -g wait-on
+
+      - name: Wait for server to be ready
+        run: |
+          npx wait-on http://localhost:3000 --timeout 60000 --interval 1000
+
+      - name: Run tests
+        run: npm run test -- --testTimeout=30000 --passWithNoTests --maxWorkers=4
