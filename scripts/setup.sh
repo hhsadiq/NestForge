@@ -46,40 +46,20 @@ echo "🔄 Renaming project to: $PROJECT_NAME"
 npm run project:rename -- "$PROJECT_NAME"
 
 # ---------------------------
-# Step 6: Check entities-generator.json
-# ---------------------------
-while [ ! -s .hygen-entities-generator/entities-generator.json ]; do
-  echo "❌ .hygen-entities-generator/entities-generator.json not found or is empty!"
-  read -p "👉 Do you want to try again after creating/filling it? (yes/no): " ANSWER
-
-  if [[ "$ANSWER" == "no" ]]; then
-    echo "❌ Setup terminated. Please add and fill .hygen-entities-generator/entities-generator.json and rerun."
-    exit 1
-  fi
-
-  if [[ "$ANSWER" != "yes" ]]; then
-    echo "⚠️ Please answer 'yes' or 'no'."
-  fi
-done
-
-echo "✅ entities-generator.json found and not empty!"
-
-
-# ---------------------------
-# Step 7: Generate entities
+# Step 6: Generate entities
 # ---------------------------
 echo "⚡ Generating entities from schema..."
 npm run generate:entities
 
 
 # ---------------------------
-# Step 8: Start project
+# Step 7: Start project
 # ---------------------------
 echo "🚀 Creating Build..."
 npm run build
 
 # ---------------------------
-# Step 9: Start project
+# Step 8: Start project
 # ---------------------------
 echo "🚀 Starting project..."
 npm run start

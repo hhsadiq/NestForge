@@ -4,9 +4,11 @@ const path = require('path');
 const { exec } = require('child_process');
 const util = require('util');
 const pluralize = require('pluralize');
+const readline = require('readline');
 
 const execAsync = util.promisify(exec);
 const processingFilePath = path.join(__dirname, 'process-entity.json');
+const inputFilePath = path.join(__dirname, 'entities-generator.json');
 
 // Skipped logs
 const skipped = { entities: [], subEntities: [], relations: [], enums: [] };
@@ -84,9 +86,50 @@ function collectDefinitions(jsonData) {
   return { entities, subEntities, relations, enums };
 }
 
+// ✅ Interactive check if entities-generator.json exists and not empty
+async function ensureEntitiesFile() {
+  return new Promise((resolve, reject) => {
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+
+    function checkFile() {
+      if (fs.existsSync(inputFilePath) && fs.statSync(inputFilePath).size > 0) {
+        console.log('✅ entities-generator.json found and not empty!');
+        rl.close();
+        resolve();
+      } else {
+        console.error('❌ entities-generator.json not found or is empty!');
+        rl.question(
+          '👉 Do you want to try again after creating/filling it? (yes/no): ',
+          (answer) => {
+            if (answer.toLowerCase() === 'no') {
+              console.error(
+                '❌ Setup terminated. Please add and fill entities-generator.json and rerun.',
+              );
+              rl.close();
+              process.exit(1);
+            } else if (answer.toLowerCase() === 'yes') {
+              checkFile();
+            } else {
+              console.log("⚠️ Please answer 'yes' or 'no'.");
+              checkFile();
+            }
+          },
+        );
+      }
+    }
+
+    checkFile();
+  });
+}
+
 (async () => {
   try {
     const filePath = path.join(__dirname, 'entities-generator.json');
+    await ensureEntitiesFile();
+
     const data = fs.readFileSync(filePath, 'utf-8');
     const jsonData = JSON.parse(data);
 
