@@ -23,7 +23,7 @@ export class BaseSchema1756810370971 implements MigrationInterface {
     // --- file table ---
     await queryRunner.query(
       `CREATE TABLE "file" (
-        "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
+        "id" INTEGER GENERATED ALWAYS AS IDENTITY,
         "path" character varying NOT NULL,
         CONSTRAINT "PK_36b46d232307066b3a2c9ea3a1d" PRIMARY KEY ("id")
       )`,
@@ -32,7 +32,7 @@ export class BaseSchema1756810370971 implements MigrationInterface {
     // --- user table (with FKs directly) ---
     await queryRunner.query(
       `CREATE TABLE "user" (
-        "id" SERIAL NOT NULL,
+        "id" INTEGER GENERATED ALWAYS AS IDENTITY,
         "email" character varying,
         "username" character varying,
         "password" character varying,
@@ -43,7 +43,7 @@ export class BaseSchema1756810370971 implements MigrationInterface {
         "created_at" TIMESTAMP NOT NULL DEFAULT now(),
         "updated_at" TIMESTAMP NOT NULL DEFAULT now(),
         "deleted_at" TIMESTAMP,
-        "photo_id" uuid,
+        "photo_id" integer,
         "role_id" integer,
         "status_id" integer,
         CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("email"),
@@ -69,7 +69,7 @@ export class BaseSchema1756810370971 implements MigrationInterface {
     // --- session table (with FK directly) ---
     await queryRunner.query(
       `CREATE TABLE "session" (
-        "id" SERIAL NOT NULL,
+        "id" INTEGER GENERATED ALWAYS AS IDENTITY,
         "hash" character varying NOT NULL,
         "created_at" TIMESTAMP NOT NULL DEFAULT now(),
         "updated_at" TIMESTAMP NOT NULL DEFAULT now(),
@@ -86,8 +86,8 @@ export class BaseSchema1756810370971 implements MigrationInterface {
     // --- user_device table (with biometric_public_key + FK directly) ---
     await queryRunner.query(
       `CREATE TABLE "user_device" (
-        "id" bigint GENERATED ALWAYS AS IDENTITY,
-        "user_id" bigint NOT NULL,
+        "id" INTEGER GENERATED ALWAYS AS IDENTITY,
+        "user_id" integer NOT NULL,
         "device_id" character varying,
         "biometric_public_key" character varying,
         "created_at" TIMESTAMP NOT NULL DEFAULT now(),
@@ -102,8 +102,8 @@ export class BaseSchema1756810370971 implements MigrationInterface {
     // --- biometric_challenge table (with FK directly) ---
     await queryRunner.query(
       `CREATE TABLE "biometric_challenge" (
-        "id" bigint GENERATED ALWAYS AS IDENTITY,
-        "user_device_id" bigint NOT NULL,
+        "id" INTEGER GENERATED ALWAYS AS IDENTITY,
+        "user_device_id" integer NOT NULL,
         "challenge" character varying NOT NULL,
         "created_at" TIMESTAMP NOT NULL DEFAULT now(),
         "updated_at" TIMESTAMP NOT NULL DEFAULT now(),
@@ -116,16 +116,12 @@ export class BaseSchema1756810370971 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    // drop biometric_challenge first
     await queryRunner.query(`DROP TABLE "biometric_challenge"`);
-    // drop user_device
     await queryRunner.query(`DROP TABLE "user_device"`);
-    // drop session
     await queryRunner.query(
       `DROP INDEX "public"."IDX_3d2f174ef04fb312fdebd0ddc5"`,
     );
     await queryRunner.query(`DROP TABLE "session"`);
-    // drop user
     await queryRunner.query(
       `DROP INDEX "public"."IDX_f0e1b4ecdca13b177e2e3a0613"`,
     );
@@ -136,7 +132,6 @@ export class BaseSchema1756810370971 implements MigrationInterface {
       `DROP INDEX "public"."IDX_9bd2fe7a8e694dedc4ec2f666f"`,
     );
     await queryRunner.query(`DROP TABLE "user"`);
-    // drop file/status/role
     await queryRunner.query(`DROP TABLE "file"`);
     await queryRunner.query(`DROP TABLE "status"`);
     await queryRunner.query(`DROP TABLE "role"`);
