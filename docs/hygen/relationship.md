@@ -27,16 +27,17 @@ Interactive prompts will ask for the following details:
 
 If you want to define your relationship in advance using a structured schema, you can use **Cursor AI** to help generate the schema JSON. You can then use this schema to generate the relationship without any interactive prompts.
 
+**⚠️ Important:** This command can take only one JSON object at a time.
+
 Save the JSON at the following path relative to the project root:
 
 ```text
 .hygen-entities-generator/<relation-name-kebab-case>.json
 ```
 
-**Sample files:**
+**Sample file:**
 
-- `.hygen-sample-files/sample-relationship-generator.json` - Single relationship example
-- `.hygen-sample-files/sample-entities-generator.json` - Multiple relationships within full schema
+- `.hygen-sample-files/sample-relationship-generator.json`
 
 Example structure:
 
@@ -150,6 +151,6 @@ This will generate the relationship without further prompts.
 
 ---
 
-Previous: [Sub-entity (child) generator](sub-entity.md)
+Previous: [Sub-entity generator](sub-entity.md)
 
 Next: [Property generator](property.md)

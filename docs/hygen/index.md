@@ -22,3 +22,9 @@ Use these guides to scaffold modules consistently. Each page documents:
 - JSON-driven usage via `DATA_FILE`
 - Cursor AI prompt template
 - After-generation notes
+
+---
+
+Previous: [Architecture](architecture.md)
+
+Next: [Working with database](database.md)

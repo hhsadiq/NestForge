@@ -93,19 +93,16 @@ In short: **the generator works whether you give it a full schema or just the pi
 The generator processes input in the correct order, regardless of whether you provide only parents, only sub-entities, only relationships, only enums, or any mix of them.
 
 1. **Parent resources (no `parent`):**
-
    - For each top-level entity (no `parent`), the script checks if the domain file already exists.
    - If not present, it writes a transient `process-entity.json` and runs: - `generate:resource` with `DATA_FILE=.hygen-entities-generator/process-entity.json`.
    - It collects any `relations` and `enums` from the entity for later.
 
 2. **Sub-entities (with `parent`):**
-
    - For each entity with a `parent`, the script checks for existence.
    - If not present, it writes `process-entity.json` and runs: - `generate:sub-entity` with `DATA_FILE=.hygen-entities-generator/process-entity.json`.
    - It collects any `relations` and `enums` from the sub-entity for later.
 
 3. **Relationships (collected from entities, sub-entities, and top-level):**
-
    - The script gathers all `relations`:
      - from parent entities
      - from sub-entities
@@ -147,3 +144,9 @@ From the project root:
 ```bash
 npm run generate:entities
 ```
+
+---
+
+Previous: [Hygen Index](index.md)
+
+Next: [Enum generator](enum.md)

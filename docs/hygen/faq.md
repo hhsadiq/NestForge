@@ -22,4 +22,4 @@ Use services and repository ports per module; create shared utilities under `src
 
 Previous: [Version generator](version.md)
 
-Next: [Hygen Index](index.md)
+Next: [Working with database](../database.md)

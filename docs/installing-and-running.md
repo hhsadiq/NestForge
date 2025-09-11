@@ -1,4 +1,4 @@
-# Installation
+# Installation & Setup
 
 This project is using [TypeORM](https://www.npmjs.com/package/typeorm) along with [PostgreSQL](https://www.postgresql.org/).
 
@@ -8,120 +8,166 @@ Interactions with the database are implemented based on [Hexagonal Architecture]
 
 ## Table of Contents <!-- omit in toc -->
 
-- [Comfortable development (PostgreSQL + TypeORM)](#comfortable-development-postgresql--typeorm)
-- [Quick run (PostgreSQL + TypeORM)](#quick-run-postgresql--typeorm)
-  - [Video guideline](#video-guideline)
-- [Debugging](#debugging)
-- [Links](#links)
+- [📋 Setup Prerequisites](#-setup-prerequisites)
+  - [Prerequisites Documentation](#prerequisites-documentation)
+- [🚀 Using Setup Script](#-using-setup-script)
+- [🔧 Manual Setup](#-manual-setup)
+  - [📦 Boilerplate Setup](#-boilerplate-setup)
+  - [🎯 Custom Project Setup](#-custom-project-setup)
+- [🔗 Links](#-links)
+  - [Development URLs](#development-urls)
+  - [Documentation](#documentation)
+  - [Key Commands](#key-commands)
 
 ---
 
-## Comfortable development (PostgreSQL + TypeORM)
+## 📋 Setup Prerequisites
 
-1. Clone repository
+Before starting, ensure you have:
 
-   ```bash
-   git clone --depth 1 git@github.com:hhsadiq/nestforge.git my-app
-   ```
+1. **Docker & Docker Compose** installed and running
+2. **Node.js** (v20 or higher) installed
+3. **Git** installed
+4. **PostgreSQL Database** created and configured
 
-1. Go to folder, and copy `env-example-relational` as `.env`.
+### Prerequisites Documentation
 
-   ```bash
-   cd my-app/
-   cp env-example-relational .env
-   ```
+📖 **[Docker Setup Guide](docker.md)** - Install Docker and start containers
 
-1. Change `DATABASE_HOST=postgres` to `DATABASE_HOST=localhost`
+📖 **[Database Creation Guide](database.md#database-creation)** - Create PostgreSQL database and configure environment
 
-   Change `MAIL_HOST=maildev` to `MAIL_HOST=localhost`
+> **⚠️ Important**: If you plan to use `setup.sh` for project setup, make sure to update the database credentials in `env-example-relational` file **before** running the script, as `setup.sh` copies this file to `.env` during execution.
 
-1. Run additional container:
+---
 
-   ```bash
-   docker compose up -d postgres adminer maildev
-   ```
+## 🚀 Using Setup Script
 
-1. Install dependency
+📖 **[Setup Script Documentation](setup-script.md)** - Complete guide for automated project setup
+
+The setup script handles everything automatically:
+
+- Environment configuration
+- Dependency installation
+- Database setup
+- Project customization
+- Entity generation (for custom projects)
+- Application startup
+
+---
+
+## 🔧 Manual Setup
+
+### 📦 Boilerplate Setup
+
+Get the base boilerplate application running with default modules (User, Role, Status, File, Session, Biometric, Social).
+
+1. **Install Dependencies:**
 
    ```bash
    npm install
    ```
 
-1. Run migrations
+2. **Run Migrations:**
 
    ```bash
    npm run migration:run
    ```
 
-1. Run seeds
+3. **Run Seeders:**
 
    ```bash
    npm run seed:run:relational
    ```
 
-1. Update the auth secret keys in the .env files as per the guidelines outlined in the [auth section](auth.md#configure-auth)
-
-1. Run app in dev mode
+4. **Start Application:**
 
    ```bash
    npm run start:dev
    ```
 
-1. Open <http://localhost:3000>
+### 🎯 Custom Project Setup
+
+Add your own entities and schema to create a custom application.
+
+**Prerequisites:**
+
+1. **Custom Migration File**: Add your schema to a new migration file
+2. **Entity Schema JSON**: Create `.hygen-entities-generator/entities-generator.json`
+
+**Setup Steps:**
+
+1. **Install Dependencies:**
+
+   ```bash
+   npm install
+   ```
+
+2. **Run Migrations:**
+
+   ```bash
+   npm run migration:run
+   ```
+
+3. **Run Seeders:**
+
+   ```bash
+   npm run seed:run:relational
+   ```
+
+4. **Generate Custom Entities:**
+
+   ```bash
+   npm run generate:entities
+   ```
+
+5. **Start Application:**
+
+   ```bash
+   npm run start:dev
+   ```
 
 ---
 
-## Quick run (PostgreSQL + TypeORM)
+## 🔗 Links
 
-If you want quick run your app, you can use following commands:
+### Development URLs
 
-1. Clone repository
+- **API Server**: <http://localhost:3000>
+- **Swagger Documentation**: <http://localhost:3000/docs>
+- **Database Admin (Adminer)**: <http://localhost:8080>
+- **Email Testing (Maildev)**: <http://localhost:1080>
 
-   ```bash
-   git clone --depth 1 git@github.com:hhsadiq/nestforge.git my-app
-   ```
+### Documentation
 
-1. Go to folder, and copy `env-example-relational` as `.env`.
+📖 **[Complete Documentation](readme.md)** - Full documentation with table of contents
 
-   ```bash
-   cd my-app/
-   cp env-example-relational .env
-   ```
+### Key Commands
 
-1. Run containers
+```bash
+# Setup & Development
+npm run setup                    # Complete project setup
+npm run start:dev               # Development server
+npm run build                   # Production build
 
-   ```bash
-   docker compose up -d
-   ```
+# Database
+npm run migration:run           # Run migrations
+npm run seed:run:relational     # Run seeders
 
-1. For check status run
+# Code Generation
+npm run generate:entities         # Generate from JSON schema
+npm run generate:resource         # Interactive resource generation
+npm run generate:sub-entity       # Interactive sub-entities generation
+npm run generate:enum             # Interactive enum generation
+npm run generate:relationship     # Interactive relationship generation
 
-   ```bash
-   docker compose logs
-   ```
-
-1. Open <http://localhost:3000>
-
-### Video guideline
-
-<https://user-images.githubusercontent.com/6001723/235758846-d7d97de8-dea9-46d8-ae12-8cc6b76df03d.mp4>
-
----
-
-## Debugging
-
-After you app is up and running, [follow this video tutorial](https://www.youtube.com/watch?v=QL3KXE1hOgA) to configure the debugging in vs code.
-
----
-
-## Links
-
-- Swagger (API docs): <http://localhost:3000/docs>
-- Adminer (client for DB): <http://localhost:8080>
-- Maildev: <http://localhost:1080>
+# Testing
+npm run test                    # Unit tests
+npm run test:e2e                # End-to-end tests
+npm run lint                    # Code linting
+```
 
 ---
 
 Previous: [Introduction](introduction.md)
 
-Next: [Architecture](architecture.md)
+Next: [Setup Script](setup-script.md)

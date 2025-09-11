@@ -6,6 +6,8 @@
 
 - [Introduction](introduction.md)
 - [Installing and Running](installing-and-running.md)
+- [Setup Script](setup-script.md)
+- [Docker](docker.md)
 - [Architecture](architecture.md)
 - [Hygen](hygen/index.md)
   - [Entities (Batch)](hygen/entities.md)

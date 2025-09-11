@@ -19,7 +19,6 @@ npm run generate:resource -- Category
 This command will trigger a terminal prompt with the following options:
 
 1. **Functionality Selection**: You can choose which functionalities (CRUD operations) you want to generate for the resource. The available functionalities are:
-
    - Create
    - Find All
    - Find One
@@ -29,7 +28,6 @@ This command will trigger a terminal prompt with the following options:
    Use the arrow keys to navigate and the spacebar to select multiple options. Press Enter key to move to next step.
 
 2. **Add Test Case**: You will be prompted with a confirmation question:
-
    - "Do you want to add test cases and mock data?"
 
    If you choose "Yes", test case structure and mock data for the resource will also be generated along with the selected functionalities.
@@ -41,6 +39,8 @@ This command will trigger a terminal prompt with the following options:
 If you want to define your entity in advance using a structured schema, you can use **Cursor AI** to help generate the schema JSON.
 
 You can then use this schema to generate the full resource without any interactive prompts.
+
+**⚠️ Important:** This command can take only one JSON object at a time.
 
 ### 👇 Prompt Template (for Cursor AI)
 
@@ -110,10 +110,9 @@ Example:
 .hygen-entities-generator/user-profile.json
 ```
 
-**Sample files:**
+**Sample file:**
 
-- `.hygen-sample-files/sample-resource-entity-generator.json` - Single resource entity example
-- `.hygen-sample-files/sample-entities-generator.json` - Multiple entities within full schema
+- `.hygen-sample-files/sample-resource-entity-generator.json`
 
 ---
 
@@ -152,6 +151,6 @@ This will generate the full resource without further prompts.
 
 ---
 
-Previous: [Entities (Batch)](entities.md)
+Previous: [Enum generator](enum.md)
 
-Next: [Sub-entity (child) generator](sub-entity.md)
+Next: [Sub-entity generator](sub-entity.md)

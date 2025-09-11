@@ -334,6 +334,6 @@ Database example: Just keep the existing approach of getting data from the datab
 
 ---
 
-Previous: [Installing and Running](installing-and-running.md)
+Previous: [Docker](docker.md)
 
-Next: [Command Line Interface](cli.md)
+Next: [Hygen](hygen/index.md)
