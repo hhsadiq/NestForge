@@ -32,35 +32,34 @@ If you want to define your enum in advance using a structured schema, you can us
 
 You can then use this schema to generate the enum without any interactive prompts.
 
-### Batch Generator Support
+**⚠️ Important:** This command can take only one JSON object at a time.
 
-Enums can also be generated as part of the **batch generator** (see [Entities (Batch)](entities.md)) alongside resources, sub-entities, and relationships. The batch generator supports:
+Save the JSON at the following path relative to the project root:
 
-- **Top-level enums**: Define enums independently in the JSON array
-- **Entity-level enums**: Define enums within entity or sub-entity objects
-- **Field association**: Link enums to specific fields using `associatedEnumName`
+```text
+.hygen-entities-generator/<enum-name-kebab-case>.json
+```
 
-### Field Association Feature
+**Sample file:**
 
-When defining fields in resources or sub-entities, you can associate an enum with a specific field by adding the `associatedEnumName` property:
+- `.hygen-sample-files/sample-enum-generator.json`
+
+Example structure:
 
 ```json
 {
-  "name": "teamLevel",
-  "type": "int",
-  "optional": false,
-  "example": 1,
-  "dto": true,
-  "associatedEnumName": "TeamLevel"
+  "entityName": "User",
+  "entityParent": null,
+  "enumName": "UserRole",
+  "enumValues": ["ADMIN", "USER"]
 }
 ```
 
-This will automatically:
+Then run:
 
-- Link the enum type in domain files
-- Apply the enum type in entity files
-- Include the enum type in DTO files
-- Generate proper TypeScript enum imports
+```bash
+DATA_FILE=.hygen-entities-generator/<enum-name-kebab-case>.json npm run generate:enum
+```
 
 ### 👇 Prompt Template (for Cursor AI)
 
@@ -121,10 +120,7 @@ Example:
 .hygen-entities-generator/user-profile.json
 ```
 
-**Sample files:**
-
-- `.hygen-sample-files/sample-enum-generator.json` - Single enum example
-- `.hygen-sample-files/sample-entities-generator.json` - Multiple enums within full schema
+Samples for reference are available under `.hygen-sample-files/`, e.g. `sample-enum-generator.json`.
 
 ---
 
@@ -163,6 +159,6 @@ This will generate the enum without further prompts.
 
 ---
 
-Previous: [Version generator](version.md)
+Previous: [Entities (Batch)](entities.md)
 
-Next: [FAQ](faq.md)
+Next: [Resource generator](resource-entity.md)

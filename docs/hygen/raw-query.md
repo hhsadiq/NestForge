@@ -20,4 +20,4 @@ Queries are placed under the module’s relational persistence layer in a `queri
 
 Previous: [Property generator](property.md)
 
-Next: [Version](version.md)
+Next: [Version generator](version.md)

@@ -5,6 +5,10 @@
 ## Table of Contents <!-- omit in toc -->
 
 - [About databases](#about-databases)
+- [Database Creation](#database-creation)
+  - [Option A - Using Docker exec](#option-a---using-docker-exec)
+  - [Option B - Using Database Tools](#option-b---using-database-tools)
+  - [Environment Configuration](#environment-configuration)
 - [DB tables naming conventions](#db-tables-naming-conventions)
   - [Reason 1: Convenience](#reason-1-convenience)
   - [Reason 2: Aesthetic and Order](#reason-2-aesthetic-and-order)
@@ -21,6 +25,13 @@
   - [Creating seeds (TypeORM)](#creating-seeds-typeorm)
   - [Run seed (TypeORM)](#run-seed-typeorm)
   - [Factory and Faker (TypeORM)](#factory-and-faker-typeorm)
+- [1. Define the SQL Query for the View](#1-define-the-sql-query-for-the-view)
+- [2. Create the View Migration](#2-create-the-view-migration)
+- [3. Add a View Entity](#3-add-a-view-entity)
+- [4. Add a Domain Class](#4-add-a-domain-class)
+- [5. Add a Mapper](#5-add-a-mapper)
+- [6. Inject the View Repository](#6-inject-the-view-repository)
+- [7. Implement View-Specific Methods](#7-implement-view-specific-methods)
 - [Performance optimization (PostgreSQL + TypeORM)](#performance-optimization-postgresql--typeorm)
   - [Indexes and Foreign Keys](#indexes-and-foreign-keys)
   - [Max connections](#max-connections)
@@ -30,6 +41,49 @@
 ## About databases
 
 This project supports PostgreSQL and uses the [Hexagonal Architecture](architecture.md#hexagonal-architecture) to work with it.
+
+## Database Creation
+
+Create a PostgreSQL database.
+
+### Option A - Using Docker exec
+
+```bash
+# Create database directly
+docker exec -it postgres createdb -U postgres your_database_name
+```
+
+### Option B - Using Database Tools
+
+**Using Adminer (Web-based):**
+
+- Open <http://localhost:8080>
+- Credentials:
+  - **System**: PostgreSQL
+  - **Server**: postgres
+  - **Username**: root
+  - **Password**: secret
+- Hit `login` button.
+
+**Using DBeaver/PGAdmin (Desktop Tools):**
+
+- Connect to `localhost:5432`
+- **Username**: root
+- **Password**: secret
+
+### Environment Configuration
+
+After creating the database, update your environment file:
+
+```env
+DATABASE_NAME=your_database_name
+DATABASE_USERNAME=root
+DATABASE_PASSWORD=secret
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+```
+
+---
 
 ## DB tables naming conventions
 
@@ -265,6 +319,7 @@ npm run seed:run:relational
    ```
 
 ---
+
 # Adding Views
 
 To create a new view in the application, follow these steps:
@@ -295,6 +350,7 @@ export const USER_SUMMARY_VIEW: ViewConst = {
   `,
 };
 ```
+
 ## 2. Create the View Migration
 
 Use the view query in a new migration to ensure it is properly created in the database. You can create the migration like this:
@@ -419,21 +475,25 @@ export class UserSummaryMapper {
   }
 }
 ```
+
 ## 6. Inject the View Repository
 
 Inject the repository for the view entity in the repository layer to interact with the view.
 For example, in view.repository.ts:
+
 ```ts
 constructor(
   @InjectRepository(UserSummaryViewEntity)
   private readonly userSummaryRepository: Repository<UserSummaryViewEntity>,
 ) {}
 ```
+
 ## 7. Implement View-Specific Methods
 
 Finally, add the necessary methods to the abstract repository and implement them in the corresponding relational repository class.
 
 For example, add specific methods to the abstract class:
+
 ```ts
 export abstract class AbstractViewRepository {
   abstract findActiveUsers(): Promise<UserSummaryViewEntity[]>;
@@ -441,6 +501,7 @@ export abstract class AbstractViewRepository {
 ```
 
 Then implement them in your concrete repository:
+
 ```ts
 export class ViewRelationalRepository implements AbstractViewRepository {
   constructor(
@@ -449,7 +510,9 @@ export class ViewRelationalRepository implements AbstractViewRepository {
   ) {}
 
   async findActiveUsers(): Promise<UserSummaryViewEntity[]> {
-    return this.userSummaryRepository.find({ where: { status_name: 'Active' } });
+    return this.userSummaryRepository.find({
+      where: { status_name: 'Active' },
+    });
   }
 }
 ```
@@ -472,6 +535,6 @@ You can think of this parameter as how many concurrent database connections your
 
 ---
 
-Previous: [Command Line Interface](cli.md)
+Previous: [Hygen](hygen/index.md)
 
 Next: [Auth](auth.md)

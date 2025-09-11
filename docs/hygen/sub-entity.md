@@ -23,16 +23,17 @@ The generator will scaffold the sub-entity across domain, DTOs, service/controll
 
 If you want to define your sub-entity in advance using a structured schema, you can use **Cursor AI** to help generate the schema JSON. You can then use this schema to generate the full sub-entity without any interactive prompts.
 
+**⚠️ Important:** This command can take only one JSON object at a time.
+
 Save the JSON at the following path relative to the project root:
 
 ```text
 .hygen-entities-generator/<sub-entity-name-kebab-case>.json
 ```
 
-**Sample files:**
+**Sample file:**
 
-- `.hygen-sample-files/sample-sub-entity-generator.json` - Single sub-entity example
-- `.hygen-sample-files/sample-entities-generator.json` - Multiple sub-entities within full schema
+- `.hygen-sample-files/sample-sub-entity-generator.json`
 
 Example structure:
 
