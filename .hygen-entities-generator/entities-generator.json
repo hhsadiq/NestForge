@@ -1,0 +1,219 @@
+[
+  {
+    "name": "Language",
+    "parent": null,
+    "isAddTestCase": true,
+    "functionalities": ["create", "findAll", "findOne", "update", "delete"],
+    "fields": [
+      {
+        "name": "code",
+        "type": "varchar",
+        "optional": false,
+        "example": "en",
+        "dto": true
+      },
+      {
+        "name": "name",
+        "type": "varchar",
+        "optional": false,
+        "example": "English",
+        "dto": true
+      },
+      {
+        "name": "direction",
+        "type": "varchar",
+        "optional": false,
+        "example": "LTR",
+        "dto": true,
+        "associatedEnumName": "LanguageDirection"
+      },
+      {
+        "name": "slug",
+        "type": "varchar",
+        "optional": false,
+        "example": "english",
+        "dto": true
+      }
+    ],
+    "relations": [],
+    "enums": [
+      {
+        "entityName": "Language",
+        "entityParent": null,
+        "enumName": "LanguageDirection",
+        "enumValues": ["LTR", "RTL"]
+      }
+    ]
+  },
+  {
+    "name": "Author",
+    "parent": null,
+    "isAddTestCase": true,
+    "functionalities": ["create", "findAll", "findOne", "update", "delete"],
+    "fields": [
+      {
+        "name": "display_name",
+        "type": "text",
+        "customType": "",
+        "optional": false,
+        "example": "John Doe",
+        "dto": true
+      },
+      {
+        "name": "sort_name",
+        "type": "text",
+        "customType": "",
+        "optional": true,
+        "example": "Doe, John",
+        "dto": true
+      },
+      {
+        "name": "bio",
+        "type": "text",
+        "customType": "",
+        "optional": true,
+        "example": "A noted contemporary author.",
+        "dto": true
+      },
+      {
+        "name": "slug",
+        "type": "text",
+        "customType": "",
+        "optional": false,
+        "example": "john-doe",
+        "dto": true
+      },
+      {
+        "name": "email",
+        "type": "text",
+        "customType": "",
+        "optional": true,
+        "example": "john@example.com",
+        "dto": true
+      }
+    ],
+    "relations": []
+  },
+  {
+    "name": "Book",
+    "parent": null,
+    "isAddTestCase": true,
+    "functionalities": ["create", "findAll", "findOne", "update", "delete"],
+    "fields": [
+      {
+        "name": "title",
+        "type": "text",
+        "customType": "",
+        "optional": false,
+        "example": "Ulysses",
+        "dto": true
+      },
+      {
+        "name": "original_language_id",
+        "type": "int",
+        "customType": "",
+        "optional": true,
+        "example": 1,
+        "dto": true
+      },
+      {
+        "name": "description",
+        "type": "text",
+        "customType": "",
+        "optional": true,
+        "example": "A modernist novel.",
+        "dto": true
+      },
+      {
+        "name": "published_year",
+        "type": "int",
+        "customType": "",
+        "optional": true,
+        "example": 1922,
+        "dto": true
+      },
+      {
+        "name": "slug",
+        "type": "text",
+        "customType": "",
+        "optional": false,
+        "example": "ulysses",
+        "dto": true
+      }
+    ],
+    "relations": [
+      {
+        "sourceEntityName": "Book",
+        "sourceEntityParent": null,
+        "fieldName": "originalLanguage",
+        "relationType": "ManyToOne",
+        "relationEntityParent": null,
+        "relationEntityName": "Language",
+        "sourceColumnName": "original_language_id",
+        "relationFieldName": null
+      }
+    ]
+  },
+  {
+    "name": "BookAuthor",
+    "parent": "Book",
+    "isAddTestCase": true,
+    "functionalities": ["create", "findAll", "findOne", "update", "delete"],
+    "fields": [
+      {
+        "name": "book_id",
+        "type": "int",
+        "customType": "",
+        "optional": false,
+        "example": 1,
+        "dto": true
+      },
+      {
+        "name": "author_id",
+        "type": "int",
+        "customType": "",
+        "optional": false,
+        "example": 1,
+        "dto": true
+      },
+      {
+        "name": "position",
+        "type": "int",
+        "customType": "",
+        "optional": false,
+        "example": 1,
+        "dto": true
+      },
+      {
+        "name": "role",
+        "type": "text",
+        "customType": "",
+        "optional": true,
+        "example": "Editor",
+        "dto": true
+      }
+    ],
+    "relations": [
+      {
+        "sourceEntityName": "BookAuthor",
+        "sourceEntityParent": "Book",
+        "fieldName": "book",
+        "relationType": "ManyToOne",
+        "relationEntityParent": null,
+        "relationEntityName": "Book",
+        "sourceColumnName": "book_id",
+        "relationFieldName": null
+      },
+      {
+        "sourceEntityName": "BookAuthor",
+        "sourceEntityParent": "Book",
+        "fieldName": "author",
+        "relationType": "ManyToOne",
+        "relationEntityParent": null,
+        "relationEntityName": "Author",
+        "sourceColumnName": "author_id",
+        "relationFieldName": null
+      }
+    ]
+  }
+]

@@ -1,0 +1,55 @@
+{
+  "name": "Language",
+  "parent": null,
+  "isAddTestCase": true,
+  "functionalities": [
+    "create",
+    "findAll",
+    "findOne",
+    "update",
+    "delete"
+  ],
+  "fields": [
+    {
+      "name": "code",
+      "type": "varchar",
+      "optional": false,
+      "example": "en",
+      "dto": true
+    },
+    {
+      "name": "name",
+      "type": "varchar",
+      "optional": false,
+      "example": "English",
+      "dto": true
+    },
+    {
+      "name": "direction",
+      "type": "varchar",
+      "optional": false,
+      "example": "LTR",
+      "dto": true,
+      "associatedEnumName": "LanguageDirection"
+    },
+    {
+      "name": "slug",
+      "type": "varchar",
+      "optional": false,
+      "example": "english",
+      "dto": true
+    }
+  ],
+  "relations": [],
+  "enums": [
+    {
+      "entityName": "Language",
+      "entityParent": null,
+      "enumName": "LanguageDirection",
+      "enumValues": [
+        "LTR",
+        "RTL"
+      ]
+    }
+  ]
+}
