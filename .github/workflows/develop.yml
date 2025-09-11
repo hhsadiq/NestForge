@@ -1,0 +1,60 @@
+name: Deploy on EC2 DEVELOP
+
+on:
+  push:
+    branches:
+      - your-branch-name # Replace with your branch name
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY_DEV }}
+
+      - name: Deploy to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER_DEV }}@${{ secrets.EC2_IP_DEV }} << 'EOF'
+            set -e  # Exit if any command fails
+            echo "Loading NVM..."
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads NVM
+            echo "After Loading NVM..."
+            # Navigate to your app directory
+            cd visit-malaysia
+            echo "before pulling code..."
+            git pull origin develop
+            echo "Before npm i"
+            if [ -f package-lock.json ]; then
+              npm ci
+            else
+              npm install
+            fi
+            echo "After npm i"
+            
+            # Stop the application before updating environment variables
+            #pm2 stop visit-malaysia
+            pm2 delete visit-malaysia
+            
+            # Get environment variables from AWS Secrets Manager
+            echo "Fetching environment variables from AWS Secrets Manager..."
+            aws secretsmanager get-secret-value --secret-id "develop/visit-malaysia" --query 'SecretString' --output text | jq -r 'to_entries[] | "\(.key)=\(.value | @json)"' | sed 's/^"\(.*\)"$/\1/' > .env
+            echo "Environment variables updated."
+            
+            echo "Running npm run build..."
+            npm run build
+            echo "After npm run build"
+            
+            #pm2 restart visit-malaysia
+            pm2 start dist/src/main.js --name visit-malaysia -i max
+            pm2 list
+            echo "server is running..."
+            pm2 save
+            echo "Deployment completed successfully."
+          EOF

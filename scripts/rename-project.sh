@@ -29,8 +29,8 @@ OLD_KEBAB=$(echo "$OLD_NAME" | tr '[:upper:]' '[:lower:]' | sed -r 's/[^a-z0-9]+
 OLD_PASCAL=$(echo "$OLD_NAME" | sed -r 's/(^|-)([a-zA-Z])/\U\2/g')
 
 echo "Replacing:"
-echo "  $OLD_KEBAB -> $KEBAB_NAME (in JSON files)"
-echo "  $OLD_PASCAL -> $PASCAL_NAME (in Markdown files)"
+echo "  $OLD_KEBAB -> $KEBAB_NAME (in JSON/YML)"
+echo "  $OLD_PASCAL -> $PASCAL_NAME (in Markdown)"
 
 # ✅ Base dir = project root (one up from script’s dir)
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -46,7 +46,11 @@ sed -i.mybak "s/$OLD_PASCAL/$PASCAL_NAME/g" \
   "$PROJECT_ROOT/README.md" \
   "$PROJECT_ROOT/docs/readme.md"
 
+# Replace in GitHub workflow (kebab-case only)
+sed -i.mybak "s/$OLD_KEBAB/$KEBAB_NAME/g" \
+  "$PROJECT_ROOT/.github/workflows/develop.yml"
+
 # Cleanup backups
-rm -f "$PROJECT_ROOT"/*.mybak "$PROJECT_ROOT/docs"/*.mybak
+rm -f "$PROJECT_ROOT"/*.mybak "$PROJECT_ROOT/docs"/*.mybak "$PROJECT_ROOT/.github/workflows"/*.mybak
 
 echo "Project renamed to $NEW_NAME successfully!"
