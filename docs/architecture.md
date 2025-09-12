@@ -334,6 +334,6 @@ Database example: Just keep the existing approach of getting data from the datab
 
 ---
 
-Previous: [Docker](docker.md)
+Previous: [Setup Script](setup-script.md)
 
 Next: [Hygen](hygen/index.md)

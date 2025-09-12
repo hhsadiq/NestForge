@@ -6,4 +6,4 @@ If you want to automatically update dependencies, you can connect [Renovate](htt
 
 Previous: [Benchmarking](benchmarking.md)
 
-Next: [Project Rename](project-rename.md)
+Next: [Table of Contents](readme.md)

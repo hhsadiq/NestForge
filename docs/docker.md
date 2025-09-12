@@ -42,6 +42,6 @@ All services should show "Up" status.
 
 ---
 
-Previous: [Setup Script](setup-script.md)
+Previous: [Installing and Running](installing-and-running.md)
 
-Next: [Architecture](architecture.md)
+Next: [Project Rename](project-rename.md)

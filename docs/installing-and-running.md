@@ -168,6 +168,6 @@ npm run lint                    # Code linting
 
 ---
 
-Previous: [Introduction](introduction.md)
+Previous: [Table of Contents](readme.md)
 
-Next: [Setup Script](setup-script.md)
+Next: [Docker](docker.md)

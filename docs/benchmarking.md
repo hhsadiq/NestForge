@@ -12,6 +12,6 @@ docker run --rm jordi/ab -n 100 -c 100 -T application/json -H "Authorization: Be
 
 ---
 
-Previous: [Tests](tests.md)
+Previous: [Load Testing](artillery.md)
 
 Next: [Automatic update of dependencies](automatic-update-dependencies.md)

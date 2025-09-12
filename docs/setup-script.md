@@ -123,6 +123,6 @@ You can test the project by logging in with these credentials.
 
 ---
 
-Previous: [Installing and Running](installing-and-running.md)
+Previous: [Project Rename](project-rename.md)
 
-Next: [Docker](docker.md)
+Next: [Architecture](architecture.md)
