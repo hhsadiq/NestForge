@@ -91,7 +91,6 @@ module.exports = async (args, prompter) => {
           { name: 'ManyToOne', value: 'ManyToOne' },
           { name: 'OneToMany', value: 'OneToMany' },
           { name: 'OneToOne', value: 'OneToOne' },
-          { name: 'ManyToMany', value: 'ManyToMany' },
         ],
       },
     ]);

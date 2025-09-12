@@ -95,6 +95,10 @@ The batch generator supports comprehensive code generation from a single JSON fi
 - Idempotent runs - skips existing files
 - Automatic cleanup and linting after generation
 
+#### SQL to JSON Conversion
+
+When users provide SQL `CREATE TABLE` statements and ask to create JSON schemas, use the [SQL to JSON Entities Prompt](docs/hygen/sql-to-json-entities-prompt.md) to generate complex or simple JSON based on the provided SQL and use it in `.hygen-entities-generator/entities-generator.json`
+
 ### Individual Generators
 
 Each generator supports both interactive prompts and JSON-driven generation:
@@ -119,12 +123,22 @@ Each generator supports both interactive prompts and JSON-driven generation:
 Cursor should validate/generate json objects based on following schema examples:
 
 ```jsonc
-// Resource
+// Resource-Entity
 {
+  "parent": null,
   "name": "EntityName",
   "functionalities": ["create","findAll","findOne","update","delete"],
-  "fields": [{ "name": "field_name", "type": "varchar", "dto": true }],
-  "relations": []
+  "fields": [{
+        "name": "name",
+        "type": "varchar",
+        "customType": "",
+        "optional": false,
+        "example": "League",
+        "dto": true,
+        "associatedEnumName": "MatchCategory"
+      }],
+  "relations": [], // may have values depending upon the requirements
+  "enums": [] // may have values depending upon the requirements
 }
 
 // Sub-entity
@@ -132,7 +146,17 @@ Cursor should validate/generate json objects based on following schema examples:
   "parent": "ParentEntityName",
   "name": "ChildEntityName",
   "functionalities": ["create","findAll","findOne","update","delete"],
-  "fields": []
+  "fields": [{
+        "name": "name",
+        "type": "varchar",
+        "customType": "",
+        "optional": false,
+        "example": "League",
+        "dto": true,
+        "associatedEnumName": "MatchCategory"
+      }],
+  "enums": [], // may have values depending upon the requirements
+  "relations": [] // may have values depending upon the requirements
 }
 
 // Relationship
@@ -178,6 +202,11 @@ The setup script provides **end-to-end project initialization** from clone to ru
 
 - **Boilerplate**: Base application with default modules
 - **Custom**: Add your own entities via migration file + JSON schema
+  - **Custom Migration File**: Add your custom schema to a new migration file
+    - Reference: [create-a-new-migration-file](docs/database.md#create-a-new-migration-without-existing-entities)
+  - **Entity Schema JSON**: Create `.hygen-entities-generator/entities-generator.json`
+    - Sample: `.hygen-sample-files/sample-entities-generator.json`
+    - Reference Prompt: [SQL to JSON Conversion](#sql-to-json-conversion)
 
 ## 6. 🧪 Testing Rules
 
@@ -242,6 +271,7 @@ When users need complete project setup from clone to running server:
 
 - Architecture: [docs/architecture.md](docs/architecture.md)
 - Hygen: [docs/hygen/index.md](docs/hygen/index.md)
+  - SQL to JSON Entities Prompt: [docs/hygen/sql-to-json-entities-prompt.md](docs/hygen/sql-to-json-entities-prompt.md)
   - Entities (Batch): [docs/hygen/entities.md](docs/hygen/entities.md)
   - Resource: [docs/hygen/resource-entity.md](docs/hygen/resource-entity.md)
   - Sub-entity: [docs/hygen/sub-entity.md](docs/hygen/sub-entity.md)
@@ -258,6 +288,21 @@ When users need complete project setup from clone to running server:
 ---
 
 ## 9. 🚨 Critical Items
+
+**MANDATORY: ALWAYS review `.cursorrules` before executing ANY user request:**
+
+- **BEFORE** responding to any user question, query, or request
+- **READ** the complete `.cursorrules` context and all linked documentation
+- **FOLLOW** the specific workflows and rules outlined in this document
+- **NEVER** proceed without understanding the project's architecture and requirements
+
+**SQL to JSON Conversion MUST follow the exact prompt:**
+
+- **ALWAYS** read and follow [SQL to JSON Entities Prompt](docs/hygen/sql-to-json-entities-prompt.md)
+- **NEVER** generate JSON from SQL without following the prompt's exact specifications
+- **USE** the prompt's field naming conventions (snake_case), relation structures, and required keys
+- **INCLUDE** all required keys: name, parent, isAddTestCase, functionalities, fields, relations, enums
+- **VALIDATE** against the prompt's specifications before proceeding
 
 **ALL commands involving `npm run` MUST be executed using bash login shell:**
 

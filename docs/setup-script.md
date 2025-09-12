@@ -68,7 +68,9 @@ The script will ask you:
 You need to prepare these files before running the script:
 
 1. **Custom Migration File**: Add your schema to a new migration file
+   - Reference: [Create a new migration](database.md#create-a-new-migration-without-existing-entities)
 2. **Entity Schema JSON**: Create `.hygen-entities-generator/entities-generator.json`
+   - Sample: `.hygen-sample-files/sample-entities-generator.json`
 
 ---
 
@@ -121,6 +123,6 @@ You can test the project by logging in with these credentials.
 
 ---
 
-Previous: [Installing and Running](installing-and-running.md)
+Previous: [Project Rename](project-rename.md)
 
-Next: [Docker](docker.md)
+Next: [Architecture](architecture.md)

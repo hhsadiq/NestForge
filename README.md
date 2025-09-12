@@ -1,34 +1,243 @@
-# NestForge
+# 🚀 NestForge
 
-NestForge is a complete automated boilerplate built with NestJS, TypeORM, and PostgreSQL, following Hexagonal Architecture.  
-It provides out-of-the-box integrations for configuration, testing, CI/CD, and other essential backend features to help you kickstart projects quickly and efficiently.
+<div align="center">
 
-## Documentation <!-- omit in toc -->
+![NestForge Logo](https://img.shields.io/badge/NestForge-v1.2.0-blue?style=for-the-badge&logo=nestjs)
 
-[Full documentation here](/docs/readme.md)
+**A Complete AI-Powered NestJS Boilerplate with Hexagonal Architecture**
 
-## Features
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![NestJS](https://img.shields.io/badge/NestJS-E0234E?style=flat-square&logo=nestjs&logoColor=white)](https://nestjs.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=flat-square&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white)](https://www.docker.com/)
+[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 
-- [x] TypeORM with [PostgreSQL](https://www.postgresql.org/).
-- [x] Seeding.
-- [x] Example Database Views:
-  - Includes a sample structure of DB views for better query abstraction and reporting.
-- [x] Config Service ([@nestjs/config](https://www.npmjs.com/package/@nestjs/config)).
-- [x] Mailing ([nodemailer](https://www.npmjs.com/package/nodemailer)).
-- [x] Internationalization/Translations (I18N) ([nestjs-i18n](https://www.npmjs.com/package/nestjs-i18n)).
-- [x] File uploads with support for local and Amazon S3 drivers.
-- [x] Swagger API documentation.
-- [x] E2E and unit tests support.
-- [x] Load Testing with Artillery for performance benchmarking.
-- [x] Docker support.
-- [x] CI/CD with GitHub Actions.
-- [x] Absolute Path in Imports for cleaner project structure.
-- [x] Hygen Scripting for Resource Management:
-  - Template Automation: Automate repetitive code generation tasks.
-  - Resource Generation: Generate resource files including test structures.
-  - Versioning of Resources: Ensure backward compatibility and smooth upgrades.
-  - Property Management: Add or modify properties for specific versions of a resource.
-  - Raw Query Management: Handle complex database queries effectively.
-- [x] Biometric Authentication Structure:
-  - Challenge-Based Authentication with secure, time-bound challenge validation.
-  - Server-Side Validation with cryptographic signing and verification.
+_Built with enterprise-grade architecture patterns and automated code generation_
+
+</div>
+
+---
+
+## 🎯 What is NestForge?
+
+NestForge is a **production-ready AI-powered NestJS boilerplate** that eliminates the tedious setup process and architectural decisions. It provides a complete backend foundation with **Hexagonal Architecture**, AI-driven code generation, comprehensive testing, and enterprise features out of the box.
+
+**Why NestForge?**
+
+- ⚡ **Zero Configuration Setup** - Get a full API running in minutes
+- 🏗️ **Hexagonal Architecture** - Clean, maintainable, and testable code structure
+- 🤖 **AI-Powered Code Generation** - Generate entire modules from JSON schemas
+- 🧪 **Complete Testing Suite** - Unit, E2E, and Load testing included
+- 🔒 **Enterprise Security** - JWT, Social Auth, Biometric challenges
+
+## ✨ Key Features
+
+### 🏛️ **Hexagonal Architecture**
+
+Clean separation of business logic from infrastructure concerns with consistent module structure and absolute path imports for cleaner project organization.
+
+### 🗄️ **Database & ORM**
+
+TypeORM with PostgreSQL integration, comprehensive seeding system, and example database views for better query abstraction and reporting.
+
+### 🤖 **Automated Code Generation (Hygen)**
+
+Generate entire modules from JSON schemas or SQL with batch and interactive generators. Includes template automation, resource generation, versioning, property management, and raw query handling.
+
+### 🤖 **AI-Powered Development with Cursor**
+
+Comprehensive `.cursorrules` configuration that trains Cursor AI to understand hexagonal architecture patterns, Hygen generator commands, JSON schema validation, and architecture enforcement for domain-aware development assistance.
+
+### 🚀 **One-Command Setup**
+
+Complete project initialization from clone to running server with automated configuration and environment setup.
+
+### 🔐 **Authentication & Security**
+
+- JWT authentication, social login (Apple, Google, Facebook, Twitter),
+- `Biometric` Feature with challenge-based authentication and server-side validation using cryptographic signing.
+
+### 📁 **File Management**
+
+Multi-driver support (Local, S3, S3-Presigned URLs) with automatic optimization and secure upload validation.
+
+### 🌐 **Internationalization**
+
+Multi-language support with dynamic translations and localized error messages using nestjs-i18n.
+
+### 📧 **Mailing System**
+
+Comprehensive email system with nodemailer integration for transactional emails and notifications.
+
+### 📚 **API Documentation**
+
+Swagger API documentation with automatic generation and comprehensive endpoint coverage.
+
+### 🧪 **Comprehensive Testing**
+
+Unit tests (Jest), E2E tests (Dockerized), and load testing (Artillery) with automated seeding and performance benchmarking.
+
+### 🐳 **DevOps & Docker**
+
+Docker support, containerization, and development environment management with comprehensive Docker Compose configurations.
+
+### 🚀 **Production & CI/CD**
+
+CI/CD workflows with GitHub Actions, database management, and Sentry monitoring integration for production deployments.
+
+## 🛠️ Build Custom Projects
+
+NestForge isn't just a boilerplate—it's a complete development platform that empowers you to build custom features with minimal effort. Here's how our features work together to accelerate your development:
+
+### 🎯 **The Custom Development Workflow**
+
+**Step 1: Database Design** → **Step 2: Code Generation** → **Step 3: AI-Assisted Development**
+
+1. **Create Migration File** - Define your database schema using TypeORM migrations
+2. **Generate JSON Schema** - Convert your SQL schema to Hygen-compatible JSON using our AI-powered prompts
+3. **Run Hygen Commands** - Generate complete modules with tests, DTOs, services, controllers, and repositories
+4. **AI-Enhanced Development** - Use Cursor AI with our comprehensive `.cursorrules` training material
+
+### 🤖 **AI-Powered Development with Cursor**
+
+NestForge includes extensive `.cursorrules` configuration that trains Cursor AI to understand:
+
+- **Hexagonal Architecture Patterns** - AI knows the exact module structure and boundaries
+- **Hygen Generator Commands** - AI can run the correct generators automatically
+- **JSON Schema Validation** - AI validates and generates proper entity schemas
+- **Architecture Enforcement** - AI ensures services don't import persistence entities
+- **Type Safety** - AI enforces strict TypeScript patterns throughout
+
+**Result:** Cursor becomes your domain-aware development assistant, not just a generic code generator.
+
+### 🚀 **What You Get**
+
+- **Complete Modules** - Full CRUD operations with validation, error handling, and tests
+- **Consistent Architecture** - Every generated module follows hexagonal patterns
+- **Type Safety** - Full TypeScript support with explicit types (no `any`)
+- **Testing Suite** - Unit tests, E2E tests, and load tests automatically generated
+- **Documentation** - Swagger endpoints and comprehensive API documentation
+- **Production Ready** - Docker support, CI/CD workflows, and monitoring integration
+
+### 💡 **Example: Building a Product Catalog**
+
+1. **Migration**: Create `product` and `category` tables
+2. **JSON Schema**: Generate entity definitions with relationships
+3. **Single Script**: Run `npm run setup`.
+4. **Result**: Complete product management system with:
+   - Product & Category entities with relationships
+   - Full CRUD APIs with validation
+   - Unit tests
+   - Swagger documentation
+   - Type-safe DTOs and services.
+   - **Swagger Documentation**: `<http://localhost:3000/docs>`
+   - Credentials for user:
+     - **Email**: `admin@example.com`
+     - **Password**: `secret`
+
+**Time to Production**: From database design to working API in minutes, not hours.
+
+## 🚀 Quick Start
+
+Get NestForge running in minutes with our automated setup script. Clone the repository and run `npm run setup` for complete initialization from database setup to running server.
+
+📖 **[Installation Guide](docs/installing-and-running.md)** - Manual setup and troubleshooting
+
+## ⚙️ Automated Setup
+
+NestForge includes a powerful automated setup script that handles everything from environment configuration to database initialization and server startup. Perfect for quick project initialization and consistent development environments.
+
+📖 **[Setup Script Guide](docs/setup-script.md)** - Complete automated setup documentation
+
+## 🏗️ Architecture Overview
+
+NestForge implements **Hexagonal Architecture** (Ports & Adapters) with clean separation between business logic and infrastructure concerns. Each module follows a consistent structure ensuring maintainability and testability.
+
+📖 **[Complete Architecture Guide](docs/architecture.md)** - Deep dive into hexagonal patterns, module structure, and architectural principles
+
+## 🤖 Code Generation
+
+NestForge provides powerful code generation capabilities through Hygen generators. Create entire modules from JSON schemas, SQL statements, or interactive prompts with support for entities, relationships, and enums.
+
+📖 **[Complete Hygen Documentation](docs/hygen/index.md)** - All generators, JSON schemas, and usage examples
+📖 **[SQL to JSON Conversion](docs/hygen/sql-to-json-entities-prompt.md)** - Convert SQL schemas to NestJS modules
+
+## 🧪 Testing
+
+Comprehensive testing suite with unit tests (Jest), E2E tests (Dockerized), and load testing (Artillery). All tests include automated seeding and detailed reporting for complete application validation.
+
+📖 **[Complete Testing Guide](docs/tests.md)** - Unit, E2E, and Docker testing
+📖 **[Load Testing Guide](docs/artillery.md)** - Performance benchmarking with Artillery
+
+## 📚 Documentation
+
+Complete documentation covering architecture, development workflows, and production deployment. Each feature has dedicated guides with examples and best practices.
+
+📖 **[Full Documentation Index](docs/readme.md)** - Comprehensive guide with table of contents
+
+## 🌟 What Makes NestForge Special?
+
+### 🎯 **Developer Experience**
+
+- **Zero Decision Fatigue**: Pre-configured architecture and patterns
+- **AI-Assisted Development**: Smart code generation and Cursor AI integration
+- **Comprehensive Documentation**: Every feature thoroughly documented
+- **Hot Reload**: Instant feedback during development
+
+### 🏢 **Enterprise Ready**
+
+- **Scalable Architecture**: Hexagonal patterns for large applications
+- **Security First**: Industry-standard authentication and authorization
+- **Production Monitoring**: Sentry integration and error tracking
+- **CI/CD Pipeline**: Automated testing and deployment
+
+### 🔄 **Maintainable Codebase**
+
+- **Consistent Structure**: Enforced patterns across all modules
+- **Type Safety**: Full TypeScript support with strict typing
+- **Clean Code**: ESLint, Prettier, and architectural guidelines
+- **Version Management**: Automated dependency updates
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guidelines](CODE_OF_CONDUCT.md) for details.
+
+### Development Workflow
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests for new functionality
+5. Ensure all tests pass
+6. Submit a pull request
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+- **[NestJS Team](https://nestjs.com/)** for the amazing framework
+- **[TypeORM](https://typeorm.io/)** for excellent database integration
+- **[Hygen](https://github.com/jondot/hygen)** for powerful code generation
+- **[Cursor AI](https://cursor.com)** for AI-powered development assistance
+- **Community Contributors** for feedback and improvements
+
+---
+
+<div align="center">
+
+**⭐ Star this repository if you find it helpful!**
+
+[![GitHub stars](https://img.shields.io/github/stars/hhsadiq/NestForge?style=social)](https://github.com/hhsadiq/NestForge)
+[![GitHub forks](https://img.shields.io/github/forks/hhsadiq/NestForge?style=social)](https://github.com/hhsadiq/NestForge)
+
+**Built with ❤️ by the NestForge Team**
+
+</div>

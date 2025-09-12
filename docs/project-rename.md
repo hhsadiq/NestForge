@@ -85,6 +85,6 @@ This allows you to rename from any existing project name to a new one.
 
 ---
 
-Previous: [Automatic update of dependencies](automatic-update-dependencies.md)
+Previous: [Docker](docker.md)
 
-Next: [Introduction](introduction.md)
+Next: [Setup Script](setup-script.md)

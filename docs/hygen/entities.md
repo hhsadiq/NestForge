@@ -147,6 +147,6 @@ npm run generate:entities
 
 ---
 
-Previous: [Hygen Index](index.md)
+Previous: [SQL to JSON Entities Prompt](sql-to-json-entities-prompt.md)
 
 Next: [Enum generator](enum.md)

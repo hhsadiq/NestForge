@@ -4,12 +4,13 @@
 
 ## Table of Contents
 
-- [Introduction](introduction.md)
 - [Installing and Running](installing-and-running.md)
-- [Setup Script](setup-script.md)
 - [Docker](docker.md)
+- [Project Rename](project-rename.md)
+- [Setup Script](setup-script.md)
 - [Architecture](architecture.md)
 - [Hygen](hygen/index.md)
+  - [SQL to JSON Prompt](hygen/sql-to-json-entities-prompt.md)
   - [Entities (Batch)](hygen/entities.md)
   - [Resource](hygen/resource-entity.md)
   - [Sub-entity](hygen/sub-entity.md)
@@ -27,4 +28,3 @@
 - [Load Testing](artillery.md)
 - [Benchmarking](benchmarking.md)
 - [Automatic update of dependencies](automatic-update-dependencies.md)
-- [Project Rename](project-rename.md)
