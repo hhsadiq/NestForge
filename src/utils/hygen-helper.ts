@@ -1,4 +1,4 @@
-import { existsSync } from "fs";
+import { existsSync } from 'fs';
 
 const customTypeMapping: { [key: string]: string } = {
   int4: 'number',
@@ -113,12 +113,11 @@ export const getValue = (data: any) => {
 };
 
 export const exists = (path) => {
-
-  console.log("path: ", path)
-    const pathExists = existsSync(path);
-    console.log("pathExists: ", pathExists)
-    if(pathExists){
-      return true;
-    }
-    return false;
-}
+  console.log('path: ', path);
+  const pathExists = existsSync(path);
+  console.log('pathExists: ', pathExists);
+  if (pathExists) {
+    return true;
+  }
+  return false;
+};
