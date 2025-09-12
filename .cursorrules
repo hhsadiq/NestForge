@@ -178,6 +178,12 @@ The setup script provides **end-to-end project initialization** from clone to ru
 
 - **Boilerplate**: Base application with default modules
 - **Custom**: Add your own entities via migration file + JSON schema
+  - **Custom Migration File**: Add your custom schema to a new migration file
+    - Reference: [create-a-new-migration-file](docs/database.md#create-a-new-migration-without-existing-entities)
+  - **Entity Schema JSON**: Create `.hygen-entities-generator/entities-generator.json`
+    - Sample: `.hygen-sample-files/sample-entities-generator.json`
+
+**SQL to JSON Conversion**: When users provide SQL `CREATE TABLE` statements and ask to create JSON schemas, use the [SQL to JSON Entities Prompt](docs/hygen/sql-to-json-entities-prompt.md) to generate complex or simple JSON based on the provided SQL and use it in `.hygen-entities-generator/entities-generator.json`
 
 ## 6. 🧪 Testing Rules
 
@@ -242,6 +248,7 @@ When users need complete project setup from clone to running server:
 
 - Architecture: [docs/architecture.md](docs/architecture.md)
 - Hygen: [docs/hygen/index.md](docs/hygen/index.md)
+  - SQL to JSON Entities Prompt: [docs/hygen/sql-to-json-entities-prompt.md](docs/hygen/sql-to-json-entities-prompt.md)
   - Entities (Batch): [docs/hygen/entities.md](docs/hygen/entities.md)
   - Resource: [docs/hygen/resource-entity.md](docs/hygen/resource-entity.md)
   - Sub-entity: [docs/hygen/sub-entity.md](docs/hygen/sub-entity.md)

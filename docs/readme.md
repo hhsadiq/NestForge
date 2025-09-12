@@ -10,6 +10,7 @@
 - [Docker](docker.md)
 - [Architecture](architecture.md)
 - [Hygen](hygen/index.md)
+  - [SQL to JSON Prompt](hygen/sql-to-json-entities-prompt.md)
   - [Entities (Batch)](hygen/entities.md)
   - [Resource](hygen/resource-entity.md)
   - [Sub-entity](hygen/sub-entity.md)

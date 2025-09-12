@@ -59,7 +59,7 @@ The setup script handles everything automatically:
 
 ### 📦 Boilerplate Setup
 
-Get the base boilerplate application running with default modules (User, Role, Status, File, Session, Biometric, Social).
+Get the base boilerplate application running with default modules (User, User-Device, Role, Status, File, Session, Biometric-Challenge, Social).
 
 1. **Install Dependencies:**
 

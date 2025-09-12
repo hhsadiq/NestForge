@@ -4,6 +4,7 @@
 
 ## Table of Contents
 
+- [SQL to JSON Entities Prompt](sql-to-json-entities-prompt.md)
 - [Entities (Batch) generator](entities.md)
 - [Enum generator](enum.md)
 - [Resource generator](resource-entity.md)

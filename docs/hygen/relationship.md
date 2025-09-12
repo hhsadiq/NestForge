@@ -16,7 +16,7 @@ Interactive prompts will ask for the following details:
 2. Source Entity Parent: parent module of the source entity (optional)
 3. Related Entity Name: target entity to relate to (required)
 4. Related Entity Parent: parent module of the related entity (optional)
-5. Relation Type: one of `ManyToOne`, `OneToMany`, `OneToOne`, `ManyToMany` (required)
+5. Relation Type: one of `ManyToOne`, `OneToMany`, `OneToOne` (required)
 6. Related Entity Field Name: only required for `OneToMany`
 7. Field Name on Source: the property name to add on the source entity (required)
 8. Source Column Name: foreign key column on source (required for all except `OneToMany`)
