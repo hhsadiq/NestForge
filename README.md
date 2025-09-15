@@ -20,15 +20,22 @@ _Built with enterprise-grade architecture patterns and automated code generation
 
 ## 🎯 What is NestForge?
 
-NestForge is a **production-ready AI-powered NestJS boilerplate** that eliminates the tedious setup process and architectural decisions. It provides a complete backend foundation with **Hexagonal Architecture**, AI-driven code generation, comprehensive testing, and enterprise features out of the box.
+NestForge is more than a boilerplate — it's a **complete AI-powered development platform** that takes you from database schema to production-ready API in minutes.
 
-**Why NestForge?**
+### 🚀 Why It Stands Out
 
-- ⚡ **Zero Configuration Setup** - Get a full API running in minutes
-- 🏗️ **Hexagonal Architecture** - Clean, maintainable, and testable code structure
-- 🤖 **AI-Powered Code Generation** - Generate entire modules from JSON schemas
-- 🧪 **Complete Testing Suite** - Unit, E2E, and Load testing included
-- 🔒 **Enterprise Security** - JWT, Social Auth, Biometric challenges
+Unlike traditional boilerplates, NestForge doesn’t just give you a starting point — it uses **AI-assistance generators** to create **production-ready CRUD modules** for your custom projects and then guides you in extending them with business logic while keeping your code fully aligned with architectural standards.
+
+### ⚡ Core Capabilities
+
+- ⚡ **Zero-Config Setup** – Spin up a full API instantly
+- 🏗️ **Hexagonal Architecture** – Clean, maintainable, testable
+- 📦 **Enterprise Features** – JWT, Biometric login, Social Auth, File Management, Mailing System, i18n, GitHub Actions
+- 🎯 **Hygen Code Generation** – Create modules from JSON/SQL in seconds
+- 🤖 **AI that codes with you** – automates setup, validates code, and helps you add business logic that stays perfectly aligned with your architecture.
+- 🧪 **Full Testing Suite** – Unit, E2E, and Load tests ready-to-run
+
+**AI + automation handle the busywork, letting you focus on real business logic.**
 
 ## ✨ Key Features
 
