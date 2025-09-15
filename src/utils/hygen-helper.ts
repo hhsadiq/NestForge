@@ -113,9 +113,7 @@ export const getValue = (data: any) => {
 };
 
 export const exists = (path) => {
-  console.log('path: ', path);
   const pathExists = existsSync(path);
-  console.log('pathExists: ', pathExists);
   if (pathExists) {
     return true;
   }
