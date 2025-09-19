@@ -6,7 +6,6 @@ The `scripts/setup.sh` script provides an automated way to set up your NestForge
 
 ## Table of Contents
 
-- [Table of Contents](#table-of-contents)
 - [Prerequisites](#prerequisites)
 - [What the Script Does](#what-the-script-does)
 - [Interactive Prompts](#interactive-prompts)

@@ -2,12 +2,11 @@
 
 ## Table of Contents <!-- omit in toc -->
 
-- [Artillery Load Testing](#artillery-load-testing)
-  - [Installation](#installation)
-  - [Setup](#setup)
-  - [Module Specific Files](#module-specific-files)
-  - [How to Run the File](#how-to-run-the-files)
-  - [How to Increase the Load](#how-to-increase-the-load)
+- [Installation](#installation)
+- [Setup](#setup)
+- [Module Specific Files](#module-specific-files)
+- [How to Run the Files](#how-to-run-the-files)
+- [How to Increase the Load](#how-to-increase-the-load)
 
 ---
 
