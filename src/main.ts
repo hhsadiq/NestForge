@@ -24,8 +24,10 @@ async function bootstrap() {
 
   // Enhanced CORS configuration for multi-client support
   app.enableCors({
-    origin: (origin: string, callback: (err: Error | null, success: boolean) => void) => {
-
+    origin: (
+      origin: string,
+      callback: (err: null, success: boolean) => void,
+    ) => {
       // Allow requests with no origin (mobile apps, desktop apps, Postman, etc.)
       if (!origin) {
         return callback(null, true);
@@ -62,12 +64,9 @@ async function bootstrap() {
   });
 
   app.enableShutdownHooks();
-  app.setGlobalPrefix(
-    appConfig.apiPrefix,
-    {
-      exclude: ['/'],
-    },
-  );
+  app.setGlobalPrefix(appConfig.apiPrefix, {
+    exclude: ['/'],
+  });
   app.enableVersioning({
     type: VersioningType.URI,
   });
