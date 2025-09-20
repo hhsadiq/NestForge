@@ -55,6 +55,10 @@ class EnvironmentVariablesValidator {
 
   @IsString()
   SWAGGER_PASSWORD: string;
+
+  @IsString()
+  @IsOptional()
+  ALLOWED_ORIGINS: string;
 }
 
 export default registerAs<AppConfig>('app', () => {
@@ -76,5 +80,6 @@ export default registerAs<AppConfig>('app', () => {
     headerLanguage: process.env.APP_HEADER_LANGUAGE || 'x-custom-lang',
     swaggerUsername: process.env.SWAGGER_USERNAME || 'admin',
     swaggerPassword: process.env.SWAGGER_PASSWORD || 'password',
+    allowedOrigins: process.env.ALLOWED_ORIGINS?.split(',') || [],
   };
 });
