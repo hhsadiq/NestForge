@@ -294,7 +294,7 @@ File Management APIs
 
 ### Getting specific API details
 - Whenever we need specific API details, make sure you must use operationId of that specific API from the memorized operationIds from listing tool response object.
-- If you still can't find operationId from memorized operationIds then find the operationId using find tool.
+- If listing tool hasn't been called before and you don't have the operationIds, then find the operationId using find tool.
 - Don't generate operationId yourself. 
  
 ### API Information Priority
