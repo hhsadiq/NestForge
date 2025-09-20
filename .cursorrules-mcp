@@ -1,0 +1,64 @@
+# Swagger MCP API-Only Rules
+
+# Cursor Rules for API Information Handling
+
+## MCP Server Configuration
+- If MCP server is configured in Cursor, use MCP server as the primary source for API-related information
+- Prioritize MCP server tools over direct codebase searches for API details
+- Use MCP server tools for:
+  - Listing all available APIs
+  - Getting specific API details
+  - Calling API endpoints
+
+## Listing all available APIs: 
+- List tool returns a list of all APIs, in the list we have multiple objects, each object reffering to a API, and it contains API details like operationId, method, path, requestSchema, responseSchema, summary, required, query parameters and path parameters. 
+- **CRITICAL** Each API in the response list has its own unique operationId that's in format [ControllerName]_[APIName] e.g. CurrenciesController_getExchangeRate. **Memorize all operationIds so we can use these later for the chat session** so we can use the memorized operationIds later for get details tool.
+- **Listing tool response summary format** After getting the response from list tool, in chat display the list of all APIs fetched in listing tool response in following format:
+  **[Controller name]:**
+  1. **[API name with path e.g. api/v1/auth/login]: [method e.g. GET/POST etc], [operationId e.g. AuthCOntroller_Login]**
+  ... list of all this specific controller APIs
+
+  For example:
+  AuthController:
+  1. api/v1/auth/login: POST, [AuthCOntroller_Login]
+
+- **Remember all operationIds as it will be used later for get details tool.** 
+
+
+## Getting specific API details
+- Whenever we need specific API details, **make sure you must use operationId of that specific API from the memorized operationIds from listing tool response object called previously in the same chat session**.
+- Don't generate operationId yourself. 
+
+
+## CRITICAL: Memory and OperationId Management
+### OperationId Usage Protocol:
+- **NEVER** guess or generate operationIds
+- **ALWAYS** use exact operationIds from the listing response
+- **WHEN** user asks for specific API details, first check if you have the operationId from recent listing
+- **IF** you don't have the operationId, call listing tool again and acknowledge the inefficiency
+
+### Error Prevention:
+- **BEFORE** calling get details tool, verify you have the correct operationId
+- **IF** you need to call listing tool again, explain why to the user
+- **ALWAYS** acknowledge when you're not following the memory rule properly
+
+## API Information Priority
+1. **Primary**: MCP server tools (if configured)
+2. **Secondary**: PowerShell commands (syntax from mcp-setup.md) - if MCP server doesn't work
+3. **Tertiary**: Direct codebase inspection (if PowerShell commands fail)
+4. **Fallback**: Manual code analysis
+
+## Best Practices
+- Always check if MCP server is available before falling back to codebase searches
+- Maintain context of previous API listings within the same chat session
+- Use operation IDs consistently across API detail requests
+- Avoid redundant tool calls when information is already available in the chat context
+
+
+## Critical Points
+Create a Mental Checklist, when you see a task, check following:
+- The points I have mentioned above, ensure them all one by one
+- You must have complete context of all cursor rules before executing any request by the user 
+- Are there any CRITICAL/MANDATORY requirements?
+- Is there a specific format template I must follow?
+- Are there any examples I should copy exactly?
