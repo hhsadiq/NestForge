@@ -280,40 +280,23 @@ When users need complete project setup from clone to running server:
   - Getting specific API details
   - Calling API endpoints
 
-### Swagger MCP Server Authority Rules
-- **RULE 1**: Swagger MCP server response is the ONLY valid source of API information
-- **RULE 2**: NEVER add APIs that aren't in the MCP response, even if they exist in the codebase
-- **RULE 3**: NEVER assume APIs exist based on project structure or naming conventions
-- **RULE 4**: NEVER reference codebase for API information unless explicitly told to check codebase
-- **RULE 5**: If MCP shows 0 APIs, present 0 APIs. If MCP shows 100 APIs, present exactly 100 APIs
-- **RULE 6**: Treat MCP response as gospel - it is the definitive, authoritative source
+### Listing all available APIs
+- List tool returns a list of all APIs, in the list we have multiple objects, each object reffering to a API, and it contains API details like operationId, method, path, requestSchema, responseSchema, summary, required, query parameters and path parameters. 
+- Each API in the response list has its own unique operationId that's in format [ControllerName]_[APIName] e.g. CurrenciesController_getExchangeRate. Memorize all operationIds so we can use these later.
+- When presenting summary of list tool response, present it in following format:
+Heading 
+1. [operationId] - [method] [path] [description]
+For example File APIs shoule be displayed in following format:
 
-### Listing all available APIs: 
-- List tool returns a list of all APIs. Each object refers to a single API and contains: 
-  operationId, method, path, requestSchema, responseSchema, summary, required, query parameters, and path parameters.
-- Each API in the response list has its own unique operationId in format [ControllerName]_[APIName], e.g. CurrenciesController_getExchangeRate. Memorize all operationIds so we can use them later.
-- The `list` tool must only be called once per **user request**. 
-  After one successful call, reuse the returned data. Do NOT call `list` again inside the same request, even if more detail is needed.
-- For later user requests in the same session, always reuse the memorized list unless the user explicitly says "refresh".
-- Only list the APIs that you get in the response object of the list tool call.
-- List all APIs that you get in the response object of the list tool call.
-- **CRITICAL**: - The `list` tool must only be called **once per user request**.
-- Within a single user request, after one successful call, use only the returned data.
-- Do NOT call `list` again inside the same request, even if more detail is needed.
-- **Donot ignore tool calls response** When a tool is called, wait for the response and when its response comes, immediately process that to show the summary of response in chat instead of ignoring the response and making redundant calls.
-- **Tool call status** Always mention calling tool [tool name] before calling the tool and wait for its response and after response has been received mention 'response received from [tool name]'.
-- **WAIT FOR SUCCESS**: Only cache results after a successful tool call response. Do not proceed with cached data if the tool call was skipped, rejected, or failed.
-- After calling it once successfully, memorize the results and use them throughout the entire chat session.
-- Do NOT call `list` again within the same chat session, even if you need more details. Always use the cached response from memory.
-- Only call `list` again if the user explicitly asks "refresh the API list" or starts a completely new chat session.
-- Never auto-retry or re-call `list` to double check or confirm the result.
-- **Memory Scope**: Cache results for the current chat session only. Each new chat session requires a fresh `list` call if APIs are needed.
+File Management APIs
+1. FilesLocalController_uploadFile_v1 - POST /api/v1/files/upload - Upload file
 
 
 ### Getting specific API details
 - Whenever we need specific API details, make sure you must use operationId of that specific API from the memorized operationIds from listing tool response object.
+- If you still can't find operationId from memorized operationIds then find the operationId using find tool.
 - Don't generate operationId yourself. 
-
+ 
 ### API Information Priority
 1. **Primary**: Swagger MCP server tools (if configured)
 2. **Secondary**: PowerShell commands (syntax from mcp-setup.md) - if MCP server doesn't work
@@ -405,60 +388,9 @@ source ~/.bashrc && npm run lint --fix
 - The points I have mentioned above in Cursor Rules for API Information Handling section, ensure them all one by one
 - You must have complete context of all cursor rules before executing any request by the user
 
-**CRITICAL: MCP Tool Call Violations - IMMEDIATE FAILURE:**
-
-- **VIOLATION CONSEQUENCE**: Any redundant MCP tool calls = immediate session termination
-- **ZERO TOLERANCE**: Second call to same MCP tool = critical failure
-- **MANDATORY ACKNOWLEDGMENT**: Must explicitly state "Tool call successful" before proceeding
-- **MEMORY ENFORCEMENT**: Cache results immediately after successful tool call
-
-**MANDATORY: Tool Call Logging:**
-
-- Before ANY tool call, state: "Making tool call #X"
-- After successful call, state: "Tool call #X successful - caching results"
-- If considering second call to same tool, state: "VIOLATION DETECTED - stopping"
-
-**SESSION STATE TRACKING:**
-
-- Track all successful tool calls in current session
-- Before each tool call, check if same tool was already called successfully
-- If yes, use cached results instead of making new call
-
-**REQUIRED SUCCESS PATTERN:**
-
-1. Execute tool call
-2. If successful: "Tool call successful" → Process results → Use data in response
-3. If failed: Explain failure → Suggest alternatives
-4. Never repeat successful tool calls without explicit user request
-
-**PRE-TOOL-CALL CHECKLIST:**
-
-- [ ] Is this the first call to this tool in this session?
-- [ ] If not, do I have cached results from previous call?
-- [ ] Am I about to violate the "one call per request" rule?
-- [ ] Have I acknowledged the previous successful call?
-
-**IMMEDIATE SELF-CORRECTION:**
-
-- If I detect I'm about to make a redundant tool call, I must:
-  1. Stop immediately
-  2. Acknowledge the violation
-  3. Use cached results instead
-  4. Apologize for the near-violation
-
-**USER FEEDBACK INTEGRATION:**
-
-- If user points out a rule violation, I must:
-  1. Acknowledge the violation immediately
-  2. Explain what went wrong
-  3. Correct the behavior
-  4. Thank user for the correction
-
 **CRITICAL: Tool Call Memory and Response Handling:**
 
 - **MANDATORY**: After ANY successful tool call, IMMEDIATELY acknowledge and utilize the results
-- **Acknowledge Success**: When a tool call succeeds, explicitly state "Tool call successful" and reference the results
-- **Process Results Immediately**: Use the returned data in your response - don't just call tools and ignore the output
 - **Memory Enforcement**: For tools that return data to be cached (like API listings), immediately store and reference that data
 - **No Redundant Calls**: If a tool already returned the requested information, present that information instead of calling the tool again
 - **Result Validation**: Before making additional tool calls, verify that previous calls haven't already provided the needed information
@@ -468,17 +400,6 @@ source ~/.bashrc && npm run lint --fix
 - Store all operationIds in memory for the session
 - Never call the list tool again unless explicitly requested to refresh
 - Always reference the cached results when discussing APIs
-
-**CRITICAL: MCP Response Accuracy - ZERO TOLERANCE POLICY:**
-
-- **ABSOLUTE RULE**: Present ONLY the exact APIs returned by the MCP listing tool response
-- **FORBIDDEN**: Adding any APIs not explicitly present in the tool response
-- **FORBIDDEN**: Making assumptions about what APIs should exist based on project structure
-- **FORBIDDEN**: Supplementing MCP response with codebase knowledge unless explicitly told to check codebase
-- **REQUIRED**: Read the tool response character-by-character and present exactly what was returned
-- **REQUIRED**: If the response shows only 1 API, present only that 1 API - nothing more
-- **REQUIRED**: If the response shows 10 APIs, present exactly those 10 APIs - nothing more, nothing less
-- **VIOLATION CONSEQUENCE**: Any deviation from exact MCP response is a critical failure that must be acknowledged and corrected immediately
 
 **Failure Pattern to Avoid:**
 - ❌ Calling a tool successfully → Ignoring results → Calling the same tool again
