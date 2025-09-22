@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const pluralize = require('pluralize');
 
 module.exports = async (args, prompter) => {
   const dataFilePath = args.dataFile || process.env.DATA_FILE;

@@ -98,9 +98,11 @@ describe('<%= h.inflection.transform(name, ['pluralize']) %>Service', () => {
 
   <% if (functionalities.includes('delete')) { %>
   it('should remove a <%= name.toLowerCase() %> by ID', async () => {
-    const id = 'testId';
+    const id = 1;
     await service.remove(id);
     expect(<%= h.inflection.camelize(name, true) %>Repository.remove).toHaveBeenCalledWith(id);
   });
   <% } %>
+
+  // @childCasesHere
 });

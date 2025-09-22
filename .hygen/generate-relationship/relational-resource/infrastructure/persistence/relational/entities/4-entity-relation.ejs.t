@@ -9,7 +9,9 @@ after: "export class"
 
 <% if (relationType === 'OneToOne') { -%>
 @OneToOne(() => <%= h.inflection.classify(relationEntityName) %>Entity)
+<% if (sourceColumnName) { -%>
 @JoinColumn({ name: '<%= sourceColumnName %>' })
+<% }  %>
 <%= fieldName %>: <%= h.inflection.classify(relationEntityName) %>Entity;
 <% } else if (relationType === 'ManyToOne') { -%>
 @ManyToOne(() => <%= h.inflection.classify(relationEntityName) %>Entity)
