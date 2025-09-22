@@ -14,7 +14,6 @@ module.exports = async (args, prompter) => {
         isAddTestCase: parsed.isAddTestCase ?? true,
         functionalities: parsed.functionalities ?? ['create', 'findAll', 'findOne', 'update', 'delete'],
         name: parsed.name,
-        enums: parsed.enums ?? [],
         fields: Array.isArray(parsed.fields)
           ? parsed.fields.map(field => ({
               name: field.name,

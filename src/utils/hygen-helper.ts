@@ -1,5 +1,3 @@
-import { existsSync } from 'fs';
-
 const customTypeMapping: { [key: string]: string } = {
   int4: 'number',
   int8: 'number',
@@ -72,50 +70,4 @@ export const getPropertyType = (type: string): string => {
     default:
       return type;
   }
-};
-
-export const getValue = (data: any) => {
-  if (data.associatedEnumName) {
-    const res = data.associatedEnumName + 'Enum[0]';
-
-    return res;
-  }
-  switch (data.type) {
-    case 'varchar':
-    case 'text':
-    case 'uuid':
-    case 'custom':
-      if (data.customType === 'bit(1)') {
-        return true; // boolean for bit(1)
-      }
-
-      return `'example_${data.name}'`; // string
-
-    case 'int':
-    case 'float':
-    case 'double':
-    case 'decimal':
-      return 123; // number
-
-    case 'boolean':
-      return true;
-
-    case 'timestamp':
-    case 'date':
-      return 'new Date()';
-
-    case 'json':
-      return '{}'; // empty object
-
-    default:
-      return 'null';
-  }
-};
-
-export const exists = (path) => {
-  const pathExists = existsSync(path);
-  if (pathExists) {
-    return true;
-  }
-  return false;
 };

@@ -11,11 +11,6 @@ import { Create<%= name %>Dto } from '@src/<%= h.inflection.transform(name, ['pl
 import { Update<%= name %>Dto } from '@src/<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>/dto/update-<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.dto';
 <% } %>
 import { <%= name %> } from '@src/<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>/domain/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>';
-<% if (enums?.length) { %>
-<% enums.forEach(enumDef => { %>
-import { <%= enumDef.enumName %>Enum } from '../enums/<%= h.inflection.dasherize(h.inflection.underscore(enumDef.enumName)) %>.enum';
-<% }) %>
-<% } %>
 // __mock__/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.mock.ts
 <% if (functionalities.includes('findAll')) { %>
 export const paginationOptions: IPaginationOptions = {
@@ -25,24 +20,16 @@ export const paginationOptions: IPaginationOptions = {
 <% } %>
 <% if (functionalities.includes('create')) { %>
 export const mockCreate<%= name %>Dto: Create<%= name %>Dto = {
-    <% fields.forEach(field => { %>
-        <%= h.inflection.camelize(field.name, true) %>: <%- h.getValue(field) %>,
-    <% }) %>
-
+    // provide necessary fields here @create-dto
 };
 <% } %>
 <% if (functionalities.includes('update')) { %>
 export const mockUpdate<%= name %>Dto: Update<%= name %>Dto = {
-    <% fields.forEach(field => { %>
-        <%= h.inflection.camelize(field.name, true) %>: <%- h.getValue(field) %>,
-    <% }) %>
+    // provide necessary fields here @update-dto
 };
 <% } %>
 export const mock<%= name %>: <%= name %> = {
-    id: 123,
-    <% fields.forEach(field => { %>
-        <%= h.inflection.camelize(field.name, true) %>: <%- h.getValue(field) %>,
-    <% }) %>
+    id: '<%= Math.floor(Math.random() * 100) %>',
     createdAt: new Date('<%= new Date().toISOString() %>'),
     updatedAt: new Date('<%= new Date().toISOString() %>'),
     // provide necessary fields here @mock-obj

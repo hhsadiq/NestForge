@@ -19,7 +19,6 @@ module.exports = async (args, prompter) => {
       const result = {
         parent: parsed.parent,
         name: parsed.name,
-        isAddTestCase: parsed.isAddTestCase,
         functionalities: parsed.functionalities ?? [
           'create',
           'findAll',
@@ -27,7 +26,6 @@ module.exports = async (args, prompter) => {
           'update',
           'delete',
         ],
-        enums: parsed.enums ?? [],
         fields: Array.isArray(parsed.fields)
           ? parsed.fields.map((field) => ({
               name: field.name,

@@ -3,8 +3,8 @@ const fs = require('fs');
 const path = require('path');
 const { exec } = require('child_process');
 const util = require('util');
+const pluralize = require('pluralize');
 const readline = require('readline');
-const inflection = require('inflection');
 
 const execAsync = util.promisify(exec);
 const processingFilePath = path.join(__dirname, 'process-entity.json');
@@ -21,12 +21,12 @@ function toKebabCase(str) {
 // Path rules
 const pathRules = {
   entity: ({ moduleName }) => {
-    const folder = inflection.pluralize(toKebabCase(moduleName));
+    const folder = pluralize(toKebabCase(moduleName));
     return path.join('src', folder, 'domain', `${toKebabCase(moduleName)}.ts`);
   },
   'sub-entity': ({ moduleName, parentModule }) => {
     if (!parentModule) throw new Error('Sub-entity requires a parentModule.');
-    const parentFolder = inflection.pluralize(toKebabCase(parentModule));
+    const parentFolder = pluralize(toKebabCase(parentModule));
     return path.join(
       'src',
       parentFolder,
@@ -37,7 +37,7 @@ const pathRules = {
   enum: ({ enumName, moduleName }) => {
     if (!enumName) throw new Error('Enum requires enumName.');
     const transformedEnumName = toKebabCase(enumName);
-    const folder = inflection.pluralize(toKebabCase(moduleName));
+    const folder = pluralize(toKebabCase(moduleName));
     return path.join('src', folder, 'enums', `${transformedEnumName}.enum.ts`);
   },
 };
@@ -216,7 +216,7 @@ async function ensureEntitiesFile() {
 
       if (!fs.existsSync(sourcePath)) {
         skipped.relations.push(
-          `${sourceEntityName} → ${relationEntityName} (sourceEntity ${sourceEntityName} not found, ${sourcePath})`,
+          `${sourceEntityName} → ${relationEntityName} (sourceEntity ${sourceEntityName} not found)`,
         );
         continue;
       }
