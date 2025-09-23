@@ -28,3 +28,4 @@
 - [Load Testing](artillery.md)
 - [Benchmarking](benchmarking.md)
 - [Automatic update of dependencies](automatic-update-dependencies.md)
+- [Swagger MCP Setup](mcp-setup.md)
