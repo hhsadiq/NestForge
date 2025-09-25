@@ -113,19 +113,18 @@ export class BaseSchema1756810370971 implements MigrationInterface {
         CONSTRAINT "FK_biometric_challenge_user_device_id" FOREIGN KEY ("user_device_id") REFERENCES "user_device"("id") ON DELETE NO ACTION ON UPDATE NO ACTION
       )`,
     );
+
+    // Please add your custom schema tables below this line
+    await queryRunner.query(`
+          -- =========================
+          -- Paste your schema here --
+          -- =========================
+      `);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`DROP TABLE "biometric_challenge"`);
-    await queryRunner.query(`DROP TABLE "user_device"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_session_user_id"`);
-    await queryRunner.query(`DROP TABLE "session"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_user_last_name"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_user_first_name"`);
-    await queryRunner.query(`DROP INDEX "public"."IDX_user_social_id"`);
-    await queryRunner.query(`DROP TABLE "user"`);
-    await queryRunner.query(`DROP TABLE "file"`);
-    await queryRunner.query(`DROP TABLE "status"`);
-    await queryRunner.query(`DROP TABLE "role"`);
+    await queryRunner.query(
+      `DROP SCHEMA public CASCADE; CREATE SCHEMA public;`,
+    );
   }
 }

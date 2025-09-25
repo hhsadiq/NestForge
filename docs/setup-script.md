@@ -67,8 +67,8 @@ The script will ask you:
 
 You need to prepare these files before running the script:
 
-1. **Custom Migration File**: Add your schema to a new migration file
-   - Reference: [Create a new migration](database.md#create-a-new-migration-without-existing-entities)
+1. **Custom Migration File**: Please add your schema where the comment says `-- Paste your schema here --` into `src/database/migrations/1756810370971-BaseSchema.ts` file.
+
 2. **Entity Schema JSON**: Create `.hygen-entities-generator/entities-generator.json`
    - Sample: `.hygen-sample-files/sample-entities-generator.json`
 
