@@ -5,6 +5,30 @@ const util = require('util');
 
 const execAsync = util.promisify(exec);
 
+/**
+ * Extract table names from CREATE TABLE statements in SQL content
+ * @param {string} sqlContent - The SQL content to parse
+ * @returns {string[]} Array of table names
+ */
+function extractTableNames(sqlContent) {
+  const tableNames = [];
+  
+  // Regex to match CREATE TABLE statements (case insensitive)
+  const createTableRegex = /CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?([a-zA-Z_][a-zA-Z0-9_]*)/gi;
+  
+  let match;
+  while ((match = createTableRegex.exec(sqlContent)) !== null) {
+    const tableName = match[1];
+    if (tableName && !tableNames.includes(tableName)) {
+      tableNames.push(tableName);
+    }
+  }
+  
+  // Sort tables in reverse order to handle foreign key dependencies
+  // Tables with foreign keys should be dropped first
+  return tableNames.reverse();
+}
+
 async function generateMigration() {
   try {
     const sqlScriptPath = path.join(__dirname, '..', 'sql-script.sql');
@@ -89,10 +113,21 @@ ${sqlContent}
     
     migrationContent = migrationContent.replace(upMethodRegex, upReplacement);
 
-    // Replace the down method with the schema drop command
+    // Parse SQL to extract table names for DROP statements
+    const tableNames = extractTableNames(sqlContent);
+    console.log('📋 Found tables to drop:', tableNames);
+    
+    // Generate DROP TABLE statements with CASCADE
+    const dropStatements = tableNames.map(tableName => 
+      `DROP TABLE IF EXISTS ${tableName} CASCADE;`
+    ).join('\n    ');
+
+    // Replace the down method with proper DROP TABLE statements
     const downMethodRegex = /public async down\(queryRunner: QueryRunner\): Promise<void> \{\s*\}/;
     const downReplacement = `public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(\`DROP SCHEMA public CASCADE; CREATE SCHEMA public\`);
+    await queryRunner.query(\`
+${dropStatements}
+    \`);
   }`;
 
     console.log('🔍 Testing down method regex...');
