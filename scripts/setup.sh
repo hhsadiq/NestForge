@@ -48,19 +48,29 @@ npm install
 npm run build
 
 # ---------------------------
-# Step 5: Run migrations
+# Step 5: Generate migration from SQL script (if exists)
+# ---------------------------
+if [ -f ".hygen/generate-migration/sql-script.sql" ]; then
+  echo "⚡ Generating migration from SQL script..."
+  npm run generate:migration-from-sql
+else
+  echo "⏭️  No SQL script found, skipping migration generation"
+fi
+
+# ---------------------------
+# Step 6: Run migrations
 # ---------------------------
 echo "🗄️  Running migrations..."
 npm run migration:run
 
 # ---------------------------
-# Step 6: Run seeders
+# Step 7: Run seeders
 # ---------------------------
 echo "🗄️  Running seeders..."
 npm run seed:run:relational
 
 # ---------------------------
-# Step 7: Generate entities (only if custom schema chosen)
+# Step 8: Generate entities (only if custom schema chosen)
 # ---------------------------
 if [ "$SETUP_CHOICE" == "2" ]; then
   echo "⚡ Generating entities from schema..."
@@ -70,13 +80,13 @@ else
 fi
 
 # ---------------------------
-# Step 8: Build project
+# Step 9: Build project
 # ---------------------------
 echo "🚀  Creating Build..."
 npm run build
 
 # ---------------------------
-# Step 9: Start project
+# Step 10: Start project
 # ---------------------------
 echo "🚀  Starting project..."
 npm run start

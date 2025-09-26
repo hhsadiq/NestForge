@@ -45,6 +45,7 @@
     "project:rename": "chmod +x scripts/rename-project.sh && bash scripts/rename-project.sh",
     "generate:entities": "node .hygen-entities-generator/index.js",
     "generate:enum": "hygen generate-enum relational-resource",
+    "generate:migration-from-sql": "node .hygen/generate-migration/relational-resource/migration-generator.js",
     "setup": "chmod +x scripts/setup.sh && bash scripts/setup.sh"
   },
   "dependencies": {
