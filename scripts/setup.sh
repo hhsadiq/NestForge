@@ -58,19 +58,42 @@ else
 fi
 
 # ---------------------------
-# Step 6: Run migrations
+# Step 6: Review entities and migration (if custom schema chosen)
+# ---------------------------
+if [ "$SETUP_CHOICE" == "2" ]; then
+  echo ""
+  echo "📋 Entities and sql script files to review:"
+  echo "   • Entities JSON: .hygen-entities-generator/entities-generator.json"
+  echo "   • SQL script: .hygen/generate-migration/sql-script.sql"
+  echo ""
+  echo "📋 Generated files to review:"
+  echo "   • Migration files: src/database/migrations/"
+  echo ""
+  echo "🔍 Please review the entities and migration files above."
+  echo ""
+  read -p "👉 Do you want to proceed with the setup? [y/N]: " PROCEED_CHOICE
+  
+  if [[ ! "$PROCEED_CHOICE" =~ ^[Yy]$ ]]; then
+    echo "❌ Setup cancelled by user. Please review the files and run the setup again when ready."
+    exit 0
+  fi
+  echo "✅ Proceeding with setup..."
+fi
+
+# ---------------------------
+# Step 7: Run migrations
 # ---------------------------
 echo "🗄️  Running migrations..."
 npm run migration:run
 
 # ---------------------------
-# Step 7: Run seeders
+# Step 8: Run seeders
 # ---------------------------
 echo "🗄️  Running seeders..."
 npm run seed:run:relational
 
 # ---------------------------
-# Step 8: Generate entities (only if custom schema chosen)
+# Step 9: Generate entities (only if custom schema chosen)
 # ---------------------------
 if [ "$SETUP_CHOICE" == "2" ]; then
   echo "⚡ Generating entities from schema..."
@@ -80,13 +103,13 @@ else
 fi
 
 # ---------------------------
-# Step 9: Build project
+# Step 10: Build project
 # ---------------------------
 echo "🚀  Creating Build..."
 npm run build
 
 # ---------------------------
-# Step 10: Start project
+# Step 11: Start project
 # ---------------------------
 echo "🚀  Starting project..."
 npm run start
