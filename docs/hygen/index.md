@@ -12,6 +12,7 @@
 - [Relationship generator](relationship.md)
 - [Property generator](property.md)
 - [Raw queries generator](raw-query.md)
+- [Migration automation](migration-automation.md)
 - [Version generator](version.md)
 - [FAQ](faq.md)
 

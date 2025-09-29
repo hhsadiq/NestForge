@@ -48,19 +48,52 @@ npm install
 npm run build
 
 # ---------------------------
-# Step 5: Run migrations
+# Step 5: Generate migration from SQL script (if exists)
+# ---------------------------
+if [ -f ".hygen/generate-migration/sql-script.sql" ]; then
+  echo "⚡ Generating migration from SQL script..."
+  npm run generate:migration-from-sql
+else
+  echo "⏭️  No SQL script found, skipping migration generation"
+fi
+
+# ---------------------------
+# Step 6: Review entities and migration (if custom schema chosen)
+# ---------------------------
+if [ "$SETUP_CHOICE" == "2" ]; then
+  echo ""
+  echo "📋 Entities and sql script files to review:"
+  echo "   • Entities JSON: .hygen-entities-generator/entities-generator.json"
+  echo "   • SQL script: .hygen/generate-migration/sql-script.sql"
+  echo ""
+  echo "📋 Generated files to review:"
+  echo "   • Migration files: src/database/migrations/"
+  echo ""
+  echo "🔍 Please review the entities and migration files above."
+  echo ""
+  read -p "👉 Do you want to proceed with the setup? [y/N]: " PROCEED_CHOICE
+  
+  if [[ ! "$PROCEED_CHOICE" =~ ^[Yy]$ ]]; then
+    echo "❌ Setup cancelled by user. Please review the files and run the setup again when ready."
+    exit 0
+  fi
+  echo "✅ Proceeding with setup..."
+fi
+
+# ---------------------------
+# Step 7: Run migrations
 # ---------------------------
 echo "🗄️  Running migrations..."
 npm run migration:run
 
 # ---------------------------
-# Step 6: Run seeders
+# Step 8: Run seeders
 # ---------------------------
 echo "🗄️  Running seeders..."
 npm run seed:run:relational
 
 # ---------------------------
-# Step 7: Generate entities (only if custom schema chosen)
+# Step 9: Generate entities (only if custom schema chosen)
 # ---------------------------
 if [ "$SETUP_CHOICE" == "2" ]; then
   echo "⚡ Generating entities from schema..."
@@ -70,13 +103,13 @@ else
 fi
 
 # ---------------------------
-# Step 8: Build project
+# Step 10: Build project
 # ---------------------------
 echo "🚀  Creating Build..."
 npm run build
 
 # ---------------------------
-# Step 9: Start project
+# Step 11: Start project
 # ---------------------------
 echo "🚀  Starting project..."
 npm run start
