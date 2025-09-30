@@ -51,6 +51,28 @@ function extractFunctionNames(sqlContent) {
   return functionNames;
 }
 
+/**
+ * Strip comments from SQL content
+ * @param {string} sqlContent - The SQL content to clean
+ * @returns {string} SQL content without comments
+ */
+function stripComments(sqlContent) {
+  // Remove single-line comments (-- comment)
+  let cleaned = sqlContent.replace(/--.*$/gm, '');
+  
+  // Remove multi-line comments (/* comment */)
+  cleaned = cleaned.replace(/\/\*[\s\S]*?\*\//g, '');
+  
+  // Remove empty lines and trim whitespace
+  cleaned = cleaned
+    .split('\n')
+    .map(line => line.trim())
+    .filter(line => line.length > 0)
+    .join('\n');
+  
+  return cleaned;
+}
+
 async function generateMigration() {
   try {
     const sqlScriptPath = path.join(__dirname, '..', 'sql-script.sql');
@@ -123,8 +145,9 @@ async function generateMigration() {
     console.log(migrationContent);
 
     // Replace the up method with our SQL script
-    // Escape $$ delimiters for PostgreSQL functions in template literals
-    const escapedSqlContent = sqlContent.replace(/\$\$/g, '\\$\\$');
+    // Strip comments from SQL content and escape $$ delimiters for PostgreSQL functions
+    const cleanedSqlContent = stripComments(sqlContent);
+    const escapedSqlContent = cleanedSqlContent.replace(/\$\$/g, '\\$\\$');
     
     const upMethodRegex = /public async up\(queryRunner: QueryRunner\): Promise<void> \{\s*\}/;
     const upReplacement = `public async up(queryRunner: QueryRunner): Promise<void> {
