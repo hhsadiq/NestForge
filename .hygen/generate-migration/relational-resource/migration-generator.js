@@ -29,6 +29,50 @@ function extractTableNames(sqlContent) {
   return tableNames.reverse();
 }
 
+/**
+ * Extract function names from CREATE FUNCTION statements in SQL content
+ * @param {string} sqlContent - The SQL content to parse
+ * @returns {string[]} Array of function names
+ */
+function extractFunctionNames(sqlContent) {
+  const functionNames = [];
+  
+  // Regex to match CREATE FUNCTION statements (case insensitive)
+  const createFunctionRegex = /CREATE\s+(?:OR\s+REPLACE\s+)?FUNCTION\s+([a-zA-Z_][a-zA-Z0-9_]*)/gi;
+  
+  let match;
+  while ((match = createFunctionRegex.exec(sqlContent)) !== null) {
+    const functionName = match[1];
+    if (functionName && !functionNames.includes(functionName)) {
+      functionNames.push(functionName);
+    }
+  }
+  
+  return functionNames;
+}
+
+/**
+ * Strip comments from SQL content
+ * @param {string} sqlContent - The SQL content to clean
+ * @returns {string} SQL content without comments
+ */
+function stripComments(sqlContent) {
+  // Remove single-line comments (-- comment)
+  let cleaned = sqlContent.replace(/--.*$/gm, '');
+  
+  // Remove multi-line comments (/* comment */)
+  cleaned = cleaned.replace(/\/\*[\s\S]*?\*\//g, '');
+  
+  // Remove empty lines and trim whitespace
+  cleaned = cleaned
+    .split('\n')
+    .map(line => line.trim())
+    .filter(line => line.length > 0)
+    .join('\n');
+  
+  return cleaned;
+}
+
 async function generateMigration() {
   try {
     const sqlScriptPath = path.join(__dirname, '..', 'sql-script.sql');
@@ -105,10 +149,14 @@ async function generateMigration() {
     console.log(migrationContent);
 
     // Replace the up method with our SQL script
+    // Strip comments from SQL content and escape $$ delimiters for PostgreSQL functions
+    const cleanedSqlContent = stripComments(sqlContent);
+    const escapedSqlContent = cleanedSqlContent.replace(/\$\$/g, '\\$\\$');
+    
     const upMethodRegex = /public async up\(queryRunner: QueryRunner\): Promise<void> \{\s*\}/;
     const upReplacement = `public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(\`
-${sqlContent}
+${escapedSqlContent}
     \`);
   }`;
 
@@ -117,20 +165,30 @@ ${sqlContent}
     
     migrationContent = migrationContent.replace(upMethodRegex, upReplacement);
 
-    // Parse SQL to extract table names for DROP statements
+    // Parse SQL to extract table names and function names for DROP statements
     const tableNames = extractTableNames(sqlContent);
+    const functionNames = extractFunctionNames(sqlContent);
     console.log('📋 Found tables to drop:', tableNames);
+    console.log('📋 Found functions to drop:', functionNames);
     
     // Generate DROP TABLE statements with CASCADE
-    const dropStatements = tableNames.map(tableName => 
+    const dropTableStatements = tableNames.map(tableName => 
       `DROP TABLE IF EXISTS ${tableName} CASCADE;`
     ).join('\n    ');
+    
+    // Generate DROP FUNCTION statements
+    const dropFunctionStatements = functionNames.map(funcName => 
+      `DROP FUNCTION IF EXISTS ${funcName} CASCADE;`
+    ).join('\n    ');
+    
+    // Combine all DROP statements (functions first, then tables)
+    const allDropStatements = dropFunctionStatements + (dropFunctionStatements && dropTableStatements ? '\n    ' : '') + dropTableStatements;
 
-    // Replace the down method with proper DROP TABLE statements
+    // Replace the down method with proper DROP statements
     const downMethodRegex = /public async down\(queryRunner: QueryRunner\): Promise<void> \{\s*\}/;
     const downReplacement = `public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(\`
-${dropStatements}
+${allDropStatements}
     \`);
   }`;
 
