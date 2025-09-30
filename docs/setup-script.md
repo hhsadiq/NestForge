@@ -27,30 +27,40 @@ The `scripts/setup.sh` script provides an automated way to set up your NestForge
 
 ## What the Script Does
 
-The setup script performs these steps automatically:
+Here's what happens when you run the setup script:
 
-1. **📄 Environment Setup**
-   - Creates `.env` file from `env-example-relational`
-   - Ensures proper configuration
+1. **Pick Your Setup Style**
+   - You'll choose between a quick boilerplate setup or a custom schema setup (where you add your own entities).
 
-2. **📦 Dependencies Installation**
-   - Runs `npm install` to install all dependencies
+2. **Name Your Project**
+   - Enter your new project name (in kebab-case, like `my-cool-app`). The script will handle renaming everything for you.
 
-3. **🗄️ Database Setup**
-   - Runs migrations to create base schema + your project schema
-   - Executes seeders to populate initial data
+3. **Environment Setup**
+   - If you don't already have a `.env` file, the script will create one for you from the `env-example-relational`.
 
-4. **🔄 Project Customization**
-   - Prompts for project name (kebab-case)
-   - Renames the project using `npm run project:rename`
+4. **Install & Build**
+   - All dependencies are installed, and the project is built so you're ready to go.
 
-5. **⚡ Entity Generation** (Custom Project only)
-   - Runs `npm run generate:entities` to create your custom entities
-   - Generates controllers, services, DTOs, and database entities
+5. **Migration from SQL Script (if you have one)**
+   - If you’ve prepared a SQL script, the script will generate a migration from it automatically. Make sure to add your custom sql script to `.hygen/generate-migration/sql-script.sql`
 
-6. **🚀 Build & Start**
-   - Creates production build
-   - Starts the application server
+6. **Review Time (Custom schema only)**
+   - If you chose custom schema, you'll get a chance to review your entities and migration files before moving forward. You can pause here if you want to double-check anything.
+
+7. **Run Migrations**
+   - The database schema is set up for you.
+
+8. **Seed the Database**
+   - Initial data is loaded in so you can start testing right away.
+
+9. **Generate Entities (Custom schema only)**
+   - Your custom entities are generated from your schema.
+
+10. **Build Again**
+    - The project is rebuilt to include any new changes.
+
+11. **Start the Server**
+    - Your app launches and is ready for development!
 
 ---
 
@@ -67,8 +77,7 @@ The script will ask you:
 
 You need to prepare these files before running the script:
 
-1. **Custom Migration File**: Add your schema to a new migration file
-   - Reference: [Create a new migration](database.md#create-a-new-migration-without-existing-entities)
+1. **Custom Migration File**: Add your custom SQL schema to the `.hygen/generate-migration/sql-script.sql` file
 2. **Entity Schema JSON**: Create `.hygen-entities-generator/entities-generator.json`
    - Sample: `.hygen-sample-files/sample-entities-generator.json`
 

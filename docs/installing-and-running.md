@@ -91,7 +91,7 @@ Add your own entities and schema to create a custom application.
 
 **Prerequisites:**
 
-1. **Custom Migration File**: Add your schema to a new migration file
+1. **Custom SQL Schema**: Add your custom SQL schema to the `.hygen/generate-migration/sql-script.sql` file
 2. **Entity Schema JSON**: Create `.hygen-entities-generator/entities-generator.json`
 
 **Setup Steps:**
@@ -102,25 +102,31 @@ Add your own entities and schema to create a custom application.
    npm install
    ```
 
-2. **Run Migrations:**
+2. **Generate Migration from SQL File:**
+
+   ```bash
+   npm run generate:migration-from-sql
+   ```
+
+3. **Run Migrations:**
 
    ```bash
    npm run migration:run
    ```
 
-3. **Run Seeders:**
+4. **Run Seeders:**
 
    ```bash
    npm run seed:run:relational
    ```
 
-4. **Generate Custom Entities:**
+5. **Generate Custom Entities:**
 
    ```bash
    npm run generate:entities
    ```
 
-5. **Start Application:**
+6. **Start Application:**
 
    ```bash
    npm run start:dev
