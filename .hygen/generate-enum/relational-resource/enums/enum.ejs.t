@@ -6,7 +6,7 @@ to: "src/<%= h.inflection.transform(moduleName, ['pluralize', 'underscore', 'das
 export enum <%= h.inflection.classify(enumName) %>Enum {
 <% if (Array.isArray(enumValues)) { -%>
 <% enumValues.forEach((value, index) => { -%>
-  <%= value %> = '<%= value %>'<%= index < enumValues.length - 1 ? ',' : '' %>
+  <%= value.replace(/[^a-zA-Z0-9]/g, '') %> = '<%= value %>'<%= index < enumValues.length - 1 ? ',' : '' %>
 <% }); -%>
 <% } else { -%>
   // No values defined
