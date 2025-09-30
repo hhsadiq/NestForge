@@ -75,9 +75,13 @@ async function generateMigration() {
     
     const { stdout, stderr } = await execAsync(`npm run migration:create ${migrationPath}`);
     
-    if (stderr && !stderr.includes('Migration has been generated successfully')) {
-      console.error('❌ Error creating migration:', stderr);
-      return;
+    if (stderr) {
+      if (stderr.includes('ExperimentalWarning: Importing JSON modules')) {
+        console.warn('⚠️ Ignoring Node.js warning:', stderr);
+      } else if (!stderr.includes('Migration has been generated successfully')) {
+        console.error('❌ Error creating migration:', stderr);
+        return;
+      }
     }
 
     console.log('✅ Migration file created successfully');
