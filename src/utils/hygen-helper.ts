@@ -95,6 +95,7 @@ export const getValue = (data: any) => {
     case 'float':
     case 'double':
     case 'decimal':
+    case 'numeric':
       return 123; // number
 
     case 'boolean':
