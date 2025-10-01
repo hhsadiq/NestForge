@@ -51,7 +51,7 @@ export class <%= name %>Entity extends EntityRelationalHelper {
       columnType = 'varchar';
     } else if (field.type === 'int') {
       columnType = 'int';
-    } else if (field.type === 'float' || field.type === 'double') {
+    } else if (field.type === 'float' || field.type === 'double' || field.type === 'numeric') {
       columnType = 'float';
     } else if (field.type === 'decimal') {
       columnType = 'decimal';
@@ -74,7 +74,7 @@ export class <%= name %>Entity extends EntityRelationalHelper {
     type: '<%= columnType %>',
     nullable: <%= field.optional %>, 
   })
-  <%= propertyName %><%= field.optional ? '?' : '' %>: <%- field.associatedEnumName ? h.inflection.classify(field.associatedEnumName) + 'Enum' : field.type === 'int' || field.type === 'float' || field.type === 'double' || field.type === 'decimal' ? 'number' : field.type === 'boolean' ? 'boolean' : field.type === 'json' ? 'Record<string, any>' : field.type === 'timestamp' ? 'Date' : field.type === 'date' ? 'Date' : 'string' %>;
+  <%= propertyName %><%= field.optional ? '?' : '' %>: <%- field.associatedEnumName ? h.inflection.classify(field.associatedEnumName) + 'Enum' : field.type === 'int' || field.type === 'float' || field.type === 'double' || field.type === 'decimal' || field.type === 'numeric' ? 'number' : field.type === 'boolean' ? 'boolean' : field.type === 'json' ? 'Record<string, any>' : field.type === 'timestamp' ? 'Date' : field.type === 'date' ? 'Date' : 'string' %>;
   <% }) %>
   <% } %>
   @CreateDateColumn()
