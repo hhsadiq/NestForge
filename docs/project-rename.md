@@ -49,7 +49,7 @@ The script performs the following operations:
 2. **Converts naming conventions**:
    - kebab-case for JSON files (e.g., `my-awesome-app`)
    - PascalCase for Markdown files (e.g., `MyAwesomeApp`)
-3. **Updates files**: Modifies package.json, package-lock.json, README.md, and docs/readme.md
+3. **Updates files**: Modifies package.json, package-lock.json, README.md, env-example-relational and docs/readme.md
 4. **Cleans up**: Removes temporary backup files
 
 ## File modifications
@@ -60,6 +60,7 @@ The script updates references in these files:
 - `package-lock.json` - Package references
 - `README.md` - Project title and references
 - `docs/readme.md` - Documentation title and references
+- `env-example-relational` - Updates APP_NAME value according to the new project name
 
 ## Examples
 
