@@ -49,6 +49,12 @@ class EnvironmentVariablesValidator {
   @IsString()
   @IsOptional()
   APP_HEADER_LANGUAGE: string;
+
+  @IsString()
+  SWAGGER_USERNAME: string;
+
+  @IsString()
+  SWAGGER_PASSWORD: string;
 }
 
 export default registerAs<AppConfig>('app', () => {
@@ -68,5 +74,7 @@ export default registerAs<AppConfig>('app', () => {
     apiPrefix: process.env.API_PREFIX || 'api',
     fallbackLanguage: process.env.APP_FALLBACK_LANGUAGE || 'en',
     headerLanguage: process.env.APP_HEADER_LANGUAGE || 'x-custom-lang',
+    swaggerUsername: process.env.SWAGGER_USERNAME || 'admin',
+    swaggerPassword: process.env.SWAGGER_PASSWORD || 'password',
   };
 });
