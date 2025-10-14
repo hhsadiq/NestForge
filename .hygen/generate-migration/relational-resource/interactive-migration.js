@@ -13,8 +13,9 @@ const execAsync = util.promisify(exec);
 function extractTableNames(sqlContent) {
   const tableNames = [];
   
-  // Regex to match CREATE TABLE statements (case insensitive)
-  const createTableRegex = /CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?([a-zA-Z_][a-zA-Z0-9_]*)/gi;
+  // Regex to match CREATE TABLE statements with or without quotes (case insensitive)
+  // Matches: CREATE TABLE "table_name" or CREATE TABLE table_name
+  const createTableRegex = /CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?"?([a-zA-Z_][a-zA-Z0-9_]*)"?/gi;
   
   let match;
   while ((match = createTableRegex.exec(sqlContent)) !== null) {
