@@ -151,20 +151,22 @@ Add your own entities and schema to create a custom application.
 
 ```bash
 # Setup & Development
-npm run setup                    # Complete project setup
-npm run start:dev               # Development server
-npm run build                   # Production build
+npm run setup                       # Complete project setup
+npm run start:dev                   # Development server
+npm run build                       # Production build
 
 # Database
-npm run migration:run           # Run migrations
-npm run seed:run:relational     # Run seeders
+npm run generate:migration-from-sql # create migrations from sql file
+npm run migration:run               # Run migrations
+npm run seed:run:relational         # Run seeders
 
 # Code Generation
-npm run generate:entities         # Generate from JSON schema
-npm run generate:resource         # Interactive resource generation
-npm run generate:sub-entity       # Interactive sub-entities generation
-npm run generate:enum             # Interactive enum generation
-npm run generate:relationship     # Interactive relationship generation
+npm run generate:migration          # Generate migrations from sql in interactive mode
+npm run generate:entities           # Generate from JSON schema
+npm run generate:resource           # Interactive resource generation
+npm run generate:sub-entity         # Interactive sub-entities generation
+npm run generate:enum               # Interactive enum generation
+npm run generate:relationship       # Interactive relationship generation
 
 # Testing
 npm run test                    # Unit tests

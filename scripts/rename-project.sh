@@ -22,35 +22,43 @@ if [ -z "$OLD_NAME" ]; then
 fi
 
 # Derive lowercase/kebab from names
-KEBAB_NAME=$(echo "$NEW_NAME" | tr '[:upper:]' '[:lower:]' | sed -r 's/[^a-z0-9]+/-/g')
-PASCAL_NAME=$(echo "$NEW_NAME" | sed -r 's/(^|-)([a-zA-Z])/\U\2/g')
+KEBAB_NAME=$(echo "$NEW_NAME" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g')
+PASCAL_NAME=$(echo "$NEW_NAME" | sed -E 's/(^|-)([a-zA-Z])/\U\2/g')
 
-OLD_KEBAB=$(echo "$OLD_NAME" | tr '[:upper:]' '[:lower:]' | sed -r 's/[^a-z0-9]+/-/g')
-OLD_PASCAL=$(echo "$OLD_NAME" | sed -r 's/(^|-)([a-zA-Z])/\U\2/g')
+OLD_KEBAB=$(echo "$OLD_NAME" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g')
+OLD_PASCAL=$(echo "$OLD_NAME" | sed -E 's/(^|-)([a-zA-Z])/\U\2/g')
 
-echo "Replacing:"
+echo "🔄 Replacing project references:"
 echo "  $OLD_KEBAB -> $KEBAB_NAME (in JSON/YML)"
-echo "  $OLD_PASCAL -> $PASCAL_NAME (in Markdown)"
+echo "  $OLD_PASCAL -> $PASCAL_NAME (in Markdown and env)"
+
+# ✅ Detect platform-specific sed command
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  SED_CMD="sed -i ''"
+else
+  SED_CMD="sed -i"
+fi
 
 # ✅ Base dir = project root (one up from script’s dir)
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
 # Replace in JSON files (kebab-case)
-sed -i.mybak "s/$OLD_KEBAB/$KEBAB_NAME/g" \
-  "$PROJECT_ROOT/package.json" \
-  "$PROJECT_ROOT/package-lock.json"
+$SED_CMD "s/$OLD_KEBAB/$KEBAB_NAME/g" "$PROJECT_ROOT/package.json" "$PROJECT_ROOT/package-lock.json" 2>/dev/null || true
 
 # Replace in Markdown files (PascalCase)
-sed -i.mybak "s/$OLD_PASCAL/$PASCAL_NAME/g" \
-  "$PROJECT_ROOT/README.md" \
-  "$PROJECT_ROOT/docs/readme.md"
+$SED_CMD "s/$OLD_PASCAL/$PASCAL_NAME/g" "$PROJECT_ROOT/README.md" "$PROJECT_ROOT/docs/readme.md" 2>/dev/null || true
 
 # Replace in GitHub workflow (kebab-case only)
-sed -i.mybak "s/$OLD_KEBAB/$KEBAB_NAME/g" \
-  "$PROJECT_ROOT/.github/workflows/develop.yml"
+$SED_CMD "s/$OLD_KEBAB/$KEBAB_NAME/g" "$PROJECT_ROOT/.github/workflows/develop.yml" 2>/dev/null || true
 
-# Cleanup backups
-rm -f "$PROJECT_ROOT"/*.mybak "$PROJECT_ROOT/docs"/*.mybak "$PROJECT_ROOT/.github/workflows"/*.mybak
+# ✅ Update APP_NAME in env-example-relational
+ENV_FILE="$PROJECT_ROOT/env-example-relational"
+if [ -f "$ENV_FILE" ]; then
+  echo "🛠 Updating APP_NAME in env-example-relational..."
+  $SED_CMD "s/^APP_NAME=.*/APP_NAME=\"$PASCAL_NAME\"/" "$ENV_FILE"
+else
+  echo "⚠️  env-example-relational file not found, skipping APP_NAME update."
+fi
 
-echo "Project renamed to $NEW_NAME successfully!"
+echo "✅ Project renamed to $NEW_NAME successfully!"
