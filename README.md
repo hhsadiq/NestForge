@@ -22,11 +22,11 @@ _Built with enterprise-grade architecture patterns and automated code generation
 
 <div align="center">
 
-**🚀 See NestForge in Action - Complete Platform Walkthrough**
+**🚀 NestForge - Complete Platform Walkthrough**
 
-<https://github.com/hhsadiq/NestForge/assets/NestForge_AI_NestJS_Platform-Details.mp4>
+Experience the full power of NestForge from setup to code generation to AI-assisted development
 
-\_Experience the full power of NestForge: from setup to code generation to AI-assisted development_guide
+![NestForge Platform Demo](https://github.com/hhsadiq/NestForge/assets/NestForge_AI_NestJS_Platform_Details.mp4)
 
 </div>
 
