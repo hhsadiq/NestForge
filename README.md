@@ -18,6 +18,20 @@ _Built with enterprise-grade architecture patterns and automated code generation
 
 ---
 
+## 🎬 Platform Overview
+
+<div align="center">
+
+**🚀 See NestForge in Action - Complete Platform Walkthrough**
+
+<https://github.com/hhsadiq/NestForge/assets/NestForge_AI_NestJS_Platform-Details.mp4>
+
+\_Experience the full power of NestForge: from setup to code generation to AI-assisted development_guide
+
+</div>
+
+---
+
 ## 🎯 What is NestForge?
 
 NestForge is more than a boilerplate — it's a **complete AI-powered development platform** that takes you from database schema to production-ready API in minutes.
@@ -101,7 +115,9 @@ NestForge isn't just a boilerplate—it's a complete development platform that e
 **Step 1: Database Design** → **Step 2: Code Generation** → **Step 3: AI-Assisted Development**
 
 1. **Create Migration File** - Define your database schema using TypeORM migrations
+   - 🤖 **[NestForge Schema Architect](https://chatgpt.com/g/g-68c7c2d593348191beb9ffa8db839f2f-nestforge-schema-architect)** - This custom GPTs will help you generate complete database schemas from your requirements in 3 simple steps (Requirements → Overview → SQL)
 2. **Generate JSON Schema** - Convert your SQL schema to Hygen-compatible JSON using our AI-powered prompts
+   - 🤖 **[NestForge SQL to JSON](https://chatgpt.com/g/g-68c93a7fdb0c819184b9eb4cb038b866-nestforge-sql-to-json)** - This custom GPTs will help you generate NestForge-compatible JSON files from your PostgreSQL SQL schemas for seamless code generation
 3. **Run Hygen Commands** - Generate complete modules with tests, DTOs, services, controllers, and repositories
 4. **AI-Enhanced Development** - Use Cursor AI with our comprehensive `.cursorrules` training material
 
@@ -165,6 +181,8 @@ NestForge implements **Hexagonal Architecture** (Ports & Adapters) with clean se
 ## 🤖 Code Generation
 
 NestForge provides powerful code generation capabilities through Hygen generators. Create entire modules from JSON schemas, SQL statements, or interactive prompts with support for entities, relationships, and enums.
+
+### 📚 **Documentation & Guides**
 
 📖 **[Complete Hygen Documentation](docs/hygen/index.md)** - All generators, JSON schemas, and usage examples
 📖 **[SQL to JSON Conversion](docs/hygen/sql-to-json-entities-prompt.md)** - Convert SQL schemas to NestJS modules
