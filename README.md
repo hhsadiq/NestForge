@@ -26,7 +26,7 @@ _Built with enterprise-grade architecture patterns and automated code generation
 
 Experience the full power of NestForge from setup to code generation to AI-assisted development
 
-![NestForge Platform Demo](https://github.com/hhsadiq/NestForge/assets/NestForge_AI_NestJS_Platform_Details.mp4)
+**[🎬 Watch Full Demo on Google Drive](https://drive.google.com/file/d/1jtVNdjAuZmNmv6f1Q648GIEpcexElle-/view?usp=sharing)**
 
 </div>
 
