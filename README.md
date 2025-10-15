@@ -26,7 +26,7 @@ _Built with enterprise-grade architecture patterns and automated code generation
 
 Experience the full power of NestForge from setup to code generation to AI-assisted development
 
-**[🎬 Watch Full Demo on Google Drive](https://drive.google.com/file/d/1jtVNdjAuZmNmv6f1Q648GIEpcexElle-/view?usp=sharing)**
+https://github.com/user-attachments/assets/8db02e0b-f3a0-475d-a535-01ed7068cbe0
 
 </div>
 
