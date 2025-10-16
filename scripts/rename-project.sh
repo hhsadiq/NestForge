@@ -36,21 +36,43 @@ echo "  $OLD_PASCAL -> $PASCAL_NAME (in Markdown)"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
+# Cross-platform sed function
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  # macOS sed - use temp file approach
+  sed_replace() {
+    local pattern="$1"
+    shift
+    for file in "$@"; do
+      if [ -f "$file" ]; then
+        sed "$pattern" "$file" > "$file.tmp" && mv "$file.tmp" "$file"
+      fi
+    done
+  }
+else
+  # Linux/Windows sed
+  sed_replace() {
+    local pattern="$1"
+    shift
+    for file in "$@"; do
+      if [ -f "$file" ]; then
+        sed -i "$pattern" "$file"
+      fi
+    done
+  }
+fi
+
 # Replace in JSON files (kebab-case)
-sed -i.mybak "s/$OLD_KEBAB/$KEBAB_NAME/g" \
+sed_replace "s/$OLD_KEBAB/$KEBAB_NAME/g" \
   "$PROJECT_ROOT/package.json" \
   "$PROJECT_ROOT/package-lock.json"
 
 # Replace in Markdown files (PascalCase)
-sed -i.mybak "s/$OLD_PASCAL/$PASCAL_NAME/g" \
+sed_replace "s/$OLD_PASCAL/$PASCAL_NAME/g" \
   "$PROJECT_ROOT/README.md" \
   "$PROJECT_ROOT/docs/readme.md"
 
 # Replace in GitHub workflow (kebab-case only)
-sed -i.mybak "s/$OLD_KEBAB/$KEBAB_NAME/g" \
+sed_replace "s/$OLD_KEBAB/$KEBAB_NAME/g" \
   "$PROJECT_ROOT/.github/workflows/develop.yml"
-
-# Cleanup backups
-rm -f "$PROJECT_ROOT"/*.mybak "$PROJECT_ROOT/docs"/*.mybak "$PROJECT_ROOT/.github/workflows"/*.mybak
 
 echo "Project renamed to $NEW_NAME successfully!"
