@@ -32,31 +32,54 @@ echo "🔄 Replacing project references:"
 echo "  $OLD_KEBAB -> $KEBAB_NAME (in JSON/YML)"
 echo "  $OLD_PASCAL -> $PASCAL_NAME (in Markdown and env)"
 
-# ✅ Detect platform-specific sed command
+# ✅ Cross-platform sed function
 if [[ "$OSTYPE" == "darwin"* ]]; then
-  SED_CMD="sed -i ''"
+  # macOS sed - use temp file approach to avoid backup files
+  sed_replace() {
+    local pattern="$1"
+    shift
+    for file in "$@"; do
+      if [ -f "$file" ]; then
+        sed "$pattern" "$file" > "$file.tmp" && mv "$file.tmp" "$file"
+      fi
+    done
+  }
 else
-  SED_CMD="sed -i"
+  # Linux/Windows sed
+  sed_replace() {
+    local pattern="$1"
+    shift
+    for file in "$@"; do
+      if [ -f "$file" ]; then
+        sed -i "$pattern" "$file"
+      fi
+    done
+  }
 fi
 
-# ✅ Base dir = project root (one up from script’s dir)
+# ✅ Base dir = project root (one up from script's dir)
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
 # Replace in JSON files (kebab-case)
-$SED_CMD "s/$OLD_KEBAB/$KEBAB_NAME/g" "$PROJECT_ROOT/package.json" "$PROJECT_ROOT/package-lock.json" 2>/dev/null || true
+sed_replace "s/$OLD_KEBAB/$KEBAB_NAME/g" \
+  "$PROJECT_ROOT/package.json" \
+  "$PROJECT_ROOT/package-lock.json"
 
 # Replace in Markdown files (PascalCase)
-$SED_CMD "s/$OLD_PASCAL/$PASCAL_NAME/g" "$PROJECT_ROOT/README.md" "$PROJECT_ROOT/docs/readme.md" 2>/dev/null || true
+sed_replace "s/$OLD_PASCAL/$PASCAL_NAME/g" \
+  "$PROJECT_ROOT/README.md" \
+  "$PROJECT_ROOT/docs/readme.md"
 
 # Replace in GitHub workflow (kebab-case only)
-$SED_CMD "s/$OLD_KEBAB/$KEBAB_NAME/g" "$PROJECT_ROOT/.github/workflows/develop.yml" 2>/dev/null || true
+sed_replace "s/$OLD_KEBAB/$KEBAB_NAME/g" \
+  "$PROJECT_ROOT/.github/workflows/develop.yml"
 
 # ✅ Update APP_NAME in env-example-relational
 ENV_FILE="$PROJECT_ROOT/env-example-relational"
 if [ -f "$ENV_FILE" ]; then
   echo "🛠 Updating APP_NAME in env-example-relational..."
-  $SED_CMD "s/^APP_NAME=.*/APP_NAME=\"$PASCAL_NAME\"/" "$ENV_FILE"
+  sed_replace "s/^APP_NAME=.*/APP_NAME=\"$PASCAL_NAME\"/" "$ENV_FILE"
 else
   echo "⚠️  env-example-relational file not found, skipping APP_NAME update."
 fi
