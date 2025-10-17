@@ -336,4 +336,4 @@ Database example: Just keep the existing approach of getting data from the datab
 
 Previous: [Setup Script](setup-script.md)
 
-Next: [Hygen](hygen/index.md)
+Next: [Documentation Standards](documentation-standards.md)

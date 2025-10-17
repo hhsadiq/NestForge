@@ -27,6 +27,6 @@ Use these guides to scaffold modules consistently. Each page documents:
 
 ---
 
-Previous: [Architecture](../architecture.md)
+Previous: [Documentation Standards](../documentation-standards.md)
 
 Next: [Working with database](../database.md)

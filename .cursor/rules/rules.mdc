@@ -1,5 +1,8 @@
-what is convention to write cursor rules file structure. these are my cursor rules:
-
+---
+description: project rules
+globs:
+alwaysApply: true
+---
 # Cursor Rules
 
 ---

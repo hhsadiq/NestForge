@@ -105,3 +105,9 @@ Next: [Next Document](next-doc.md)
 ---
 
 *This document should be updated as new standards are established.*
+
+---
+
+Previous: [Architecture](architecture.md)
+
+Next: [Hygen](hygen/index.md)
