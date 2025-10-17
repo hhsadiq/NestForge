@@ -9,7 +9,6 @@
   - [scripts-index](#scripts-index)
   - [lint-fix](#lint-fix)
   - [add-documentation](#add-documentation)
-- [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -41,13 +40,6 @@ This document describes the `.cursor/commands` folder, which contains curated co
 - File: `.cursor/commands/add-documentation.md`
 - Usage:
   - Follow the steps and checklist; reference [Documentation Standards](../documentation-standards.md).
-
-## Troubleshooting
-
-- PowerShell parsing errors (e.g., `&&` not recognized): run scripts using bash as shown above.
-- Hygen inputs for custom schema:
-  - SQL script: `.hygen/generate-migration/sql-script.sql`
-  - Entities JSON: `.hygen-entities-generator/entities-generator.json`
 
 ---
 
