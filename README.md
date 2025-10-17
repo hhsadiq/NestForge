@@ -252,6 +252,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **[TypeORM](https://typeorm.io/)** for excellent database integration
 - **[Hygen](https://github.com/jondot/hygen)** for powerful code generation
 - **[Cursor AI](https://cursor.com)** for AI-powered development assistance
+- **[Cursor Commands](https://github.com/hamzafer/cursor-commands)** for cursor commands
 - **Community Contributors** for feedback and improvements
 
 ---
