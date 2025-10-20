@@ -300,7 +300,7 @@ This approach ensures a clear separation of concerns while effectively managing 
 
 While hexagonal architecture provides significant benefits, there are some considerations to keep in mind:
 
-**Initial Complexity**: Hexagonal Architecture can take more effort to implement initially, but it provides more flexibility and scalability in the long run. [You still can use Three-tier architecture](#i-dont-want-to-use-hexagonal-architecture-how-can-i-use-a-traditional-three-tier-architecture-for-nestjs), but we recommend using Hexagonal Architecture. Try to create resources via our [CLI](cli.md) - you'll find it takes the same time (maybe even less 🤔) as Three-tier architecture.
+**Initial Complexity**: Hexagonal Architecture can take more effort to implement initially, but it provides more flexibility and scalability in the long run. [You still can use Three-tier architecture](#i-dont-want-to-use-hexagonal-architecture-how-can-i-use-a-traditional-three-tier-architecture-for-nestjs), but we recommend using Hexagonal Architecture. Try to create resources via our [Resource-Entity](hygen/resource-entity.md) - you'll find it takes the same time (maybe even less 🤔) as Three-tier architecture.
 
 **Code Generation Limitations**: While we have integrated Hygen for code generation, it has its own limitations. For example:
 
@@ -318,7 +318,7 @@ While hexagonal architecture provides significant benefits, there are some consi
 
 ### Is there a way to generate a new resource (controller, service, DTOs, etc) with Hexagonal Architecture?
 
-Yes, you can use the [CLI](cli.md) to generate a new resource with Hexagonal Architecture.
+Yes, you can use the [Resource-Entity](hygen/resource-entity.md) to generate a new resource with Hexagonal Architecture.
 
 ### I don't want to use Hexagonal Architecture. How can I use a traditional (three-tier) architecture for NestJS?
 
