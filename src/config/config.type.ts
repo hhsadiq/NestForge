@@ -3,6 +3,7 @@ import { AppleConfig } from '@src/auth-apple/config/apple-config.type';
 import { FacebookConfig } from '@src/auth-facebook/config/facebook-config.type';
 import { GoogleConfig } from '@src/auth-google/config/google-config.type';
 import { TwitterConfig } from '@src/auth-twitter/config/twitter-config.type';
+import { RedisConfig } from '@src/cache/config/redis-config.type';
 import { DatabaseConfig } from '@src/database/config/database-config.type';
 import { FileConfig } from '@src/files/config/file-config.type';
 import { GenAiConfig } from '@src/gen-ai/config/gen-ai-config.type';
@@ -21,4 +22,5 @@ export type AllConfigType = {
   mail: MailConfig;
   twitter: TwitterConfig;
   genAi: GenAiConfig;
+  redis: RedisConfig;
 };
