@@ -9,7 +9,10 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
   constructor(private configService: ConfigService<AllConfigType>) {}
 
   createTypeOrmOptions(): TypeOrmModuleOptions {
-    return {
+    const readReplica = this.configService.get('database.readReplica', {
+      infer: true,
+    });
+    const baseOptions: TypeOrmModuleOptions = {
       type: this.configService.get('database.type', { infer: true }),
       url: this.configService.get('database.url', { infer: true }),
       host: this.configService.get('database.host', { infer: true }),
@@ -54,5 +57,41 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
           : undefined,
       },
     } as TypeOrmModuleOptions;
+
+    if (readReplica) {
+      return {
+        ...baseOptions,
+        replication: {
+          master: {
+            host: this.configService.get('database.host', { infer: true }),
+            port: this.configService.get('database.port', { infer: true }),
+            username: String(
+              this.configService.get('database.username', { infer: true }),
+            ),
+            password: String(
+              this.configService.get('database.password', { infer: true }),
+            ),
+            database: this.configService.get('database.name', { infer: true }),
+          },
+          slaves: [
+            {
+              host: readReplica,
+              port: this.configService.get('database.port', { infer: true }),
+              username: String(
+                this.configService.get('database.username', { infer: true }),
+              ),
+              password: String(
+                this.configService.get('database.password', { infer: true }),
+              ),
+              database: this.configService.get('database.name', {
+                infer: true,
+              }),
+            },
+          ],
+        },
+      } as TypeOrmModuleOptions;
+    }
+
+    return baseOptions;
   }
 }
