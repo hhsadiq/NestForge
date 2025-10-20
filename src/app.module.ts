@@ -8,6 +8,8 @@ import { I18nModule } from 'nestjs-i18n/dist/i18n.module';
 import { DataSource, DataSourceOptions } from 'typeorm';
 
 import { BiometricChallengeModule } from '@src/biometric-challenges/biometric-challenges.module';
+import { CacheModule } from '@src/cache/cache.module';
+import redisConfig from '@src/cache/config/redis.config';
 
 import { AuthModule } from './auth/auth.module';
 import authConfig from './auth/config/auth.config';
@@ -44,6 +46,7 @@ const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
 
 @Module({
   imports: [
+    CacheModule,
     GenAiModule,
     ViewsModule,
     ConfigModule.forRoot({
@@ -59,6 +62,7 @@ const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
         twitterConfig,
         appleConfig,
         genAiConfig,
+        redisConfig,
       ],
       envFilePath: ['.env'],
     }),
