@@ -71,6 +71,10 @@ class EnvironmentVariablesValidator {
   @IsString()
   @IsOptional()
   DATABASE_CERT: string;
+
+  @IsString()
+  @IsOptional()
+  DATABASE_READ_REPLICA: string;
 }
 
 export default registerAs<DatabaseConfig>('database', () => {
@@ -96,5 +100,6 @@ export default registerAs<DatabaseConfig>('database', () => {
     ca: process.env.DATABASE_CA,
     key: process.env.DATABASE_KEY,
     cert: process.env.DATABASE_CERT,
+    readReplica: process.env.DATABASE_READ_REPLICA,
   };
 });
