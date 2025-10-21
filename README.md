@@ -32,6 +32,20 @@ https://github.com/user-attachments/assets/8db02e0b-f3a0-475d-a535-01ed7068cbe0
 
 ---
 
+## 🎥 How to Use NestForge
+
+<div align="center">
+
+**🧭 Practical Demo – From Setup to Final Result**
+
+Watch a focused walkthrough demonstrating how to use NestForge to quickly generate outcomes.
+
+https://github.com/user-attachments/assets/5cc4b4a7-a962-4e8b-b364-9a95b185ea3f
+
+</div>
+
+---
+
 ## 🎯 What is NestForge?
 
 NestForge is more than a boilerplate — it's a **complete AI-powered development platform** that takes you from database schema to production-ready API in minutes.
