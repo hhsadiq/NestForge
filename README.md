@@ -59,7 +59,11 @@ Clean separation of business logic from infrastructure concerns with consistent 
 
 ### 🗄️ **Database & ORM**
 
-TypeORM with PostgreSQL integration, comprehensive seeding system, and example database views for better query abstraction and reporting.
+TypeORM with PostgreSQL integration, comprehensive seeding system, read replica support for improved performance, and example database views for better query abstraction and reporting.
+
+### ⚡ **Caching & Performance**
+
+Redis-powered caching system with cluster support, automatic TLS configuration, and comprehensive cache management for improved application performance and scalability.
 
 ### 🤖 **Automated Code Generation (Hygen)**
 

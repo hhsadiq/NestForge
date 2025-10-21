@@ -179,6 +179,6 @@ https://github.com/brocoders/nestjs-boilerplate/assets/6001723/f6fdcc89-5ec6-472
 
 ---
 
-Previous: [Working with database](database.md)
+Previous: [Cache](cache.md)
 
 Next: [Exceptions](exceptions.md)

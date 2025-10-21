@@ -35,6 +35,10 @@
 - [Performance optimization (PostgreSQL + TypeORM)](#performance-optimization-postgresql--typeorm)
   - [Indexes and Foreign Keys](#indexes-and-foreign-keys)
   - [Max connections](#max-connections)
+  - [Read Replica Support](#read-replica-support)
+    - [Configuration](#configuration)
+    - [Usage](#usage)
+    - [Benefits](#benefits)
 
 ---
 
@@ -533,8 +537,47 @@ DATABASE_MAX_CONNECTIONS=100
 
 You can think of this parameter as how many concurrent database connections your application can handle.
 
+### Read Replica Support
+
+The application supports PostgreSQL read replicas for improved read performance and load distribution. This feature allows you to configure a separate read-only database instance that replicates data from the master database.
+
+#### Configuration
+
+To enable read replica support, add the following environment variable to your `.env` file:
+
+```txt
+DATABASE_READ_REPLICA=your-read-replica-host
+```
+
+When this environment variable is set, TypeORM will automatically configure replication with:
+
+- **Master**: Your primary database (for write operations)
+- **Slave**: Your read replica (for read operations)
+
+#### Usage
+
+The application provides a helper function to execute raw queries specifically on the read replica:
+
+```ts
+import { runRawQueryOnReadReplica } from '@src/database-helpers/run-raw-query-on-read-replica';
+
+// Execute a raw query on the read replica
+const result = await runRawQueryOnReadReplica(
+  repository,
+  'SELECT * FROM users WHERE status = $1',
+  ['active'],
+);
+```
+
+#### Benefits
+
+- **Improved Read Performance**: Distribute read queries across multiple database instances
+- **Reduced Master Load**: Keep write operations on the master while offloading reads
+- **Better Scalability**: Handle more concurrent read operations
+- **Automatic Failover**: TypeORM handles connection management automatically
+
 ---
 
 Previous: [Hygen](hygen/index.md)
 
-Next: [Auth](auth.md)
+Next: [Cache](cache.md)
