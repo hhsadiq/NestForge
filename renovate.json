@@ -1,5 +1,36 @@
 {
-  "extends": [
-    "config:base"
-  ]
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", ":semanticCommits", "group:monorepos"],
+  "timezone": "Asia/Karachi",
+  "schedule": ["after 2am and before 6am every weekday"],
+  "prConcurrentLimit": 10,
+  "lockFileMaintenance": { "enabled": true, "automerge": true },
+  "packageRules": [
+    {
+      "groupName": "nestjs core",
+      "packagePatterns": ["^@nestjs/"],
+      "automerge": false
+    },
+    {
+      "packagePatterns": ["^@types/"],
+      "matchUpdateTypes": ["patch", "minor"],
+      "automerge": true
+    },
+    {
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["patch"],
+      "automerge": true
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["patch", "minor"],
+      "automerge": true
+    },
+    {
+      "matchManagers": ["dockerfile"],
+      "matchUpdateTypes": ["digest"],
+      "automerge": true
+    }
+  ],
+  "dependencyDashboard": true
 }
