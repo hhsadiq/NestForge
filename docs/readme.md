@@ -24,6 +24,7 @@
   - [Version](hygen/version.md)
   - [FAQ](hygen/faq.md)
 - [Working with database](database.md)
+- [Cache](cache.md)
 - [Auth](auth.md)
 - [Exceptions](exceptions.md)
 - [Serialization](serialization.md)
