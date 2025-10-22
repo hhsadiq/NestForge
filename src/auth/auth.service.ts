@@ -337,7 +337,7 @@ export class AuthService {
         secret: this.configService.getOrThrow('auth.forgotSecret', {
           infer: true,
         }),
-        expiresIn: tokenExpiresIn,
+        expiresIn: tokenExpiresIn as StringValue,
       },
     );
 
@@ -535,7 +535,7 @@ export class AuthService {
         },
         {
           secret: this.configService.getOrThrow('auth.secret', { infer: true }),
-          expiresIn: tokenExpiresIn,
+          expiresIn: tokenExpiresIn as StringValue,
         },
       ),
       await this.jwtService.signAsync(
