@@ -4,17 +4,20 @@
   "timezone": "Asia/Karachi",
   "schedule": ["after 2am and before 6am every weekday"],
   "prConcurrentLimit": 10,
-  "lockFileMaintenance": { "enabled": true, "automerge": true },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "automerge": true
+  },
   "packageRules": [
     {
       "groupName": "nestjs core",
-      "packagePatterns": ["^@nestjs/"],
-      "automerge": false
+      "automerge": false,
+      "matchPackageNames": ["/^@nestjs//"]
     },
     {
-      "packagePatterns": ["^@types/"],
       "matchUpdateTypes": ["patch", "minor"],
-      "automerge": true
+      "automerge": true,
+      "matchPackageNames": ["/^@types//"]
     },
     {
       "matchManagers": ["npm"],
