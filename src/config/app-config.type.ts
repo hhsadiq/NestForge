@@ -10,4 +10,5 @@ export type AppConfig = {
   headerLanguage: string;
   swaggerUsername: string;
   swaggerPassword: string;
+  allowedOrigins: string[];
 };

@@ -16,17 +16,58 @@ import { ResolvePromisesInterceptor } from './utils/serializer.interceptor';
 import validationOptions from './utils/validation-options';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: true });
+  const app = await NestFactory.create(AppModule);
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   const configService = app.get(ConfigService<AllConfigType>);
+  const appConfig = configService.getOrThrow('app', {
+    infer: true,
+  });
+
+  // Enhanced CORS configuration for multi-client support
+  app.enableCors({
+    origin: (
+      origin: string,
+      callback: (err: Error | null, success: boolean) => void,
+    ) => {
+      // Allow requests with no origin (mobile apps, desktop apps, Postman, etc.)
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      // Check if origin is in allowed list
+      if (appConfig.allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      // For development, allow localhost with any port
+      if (
+        appConfig.nodeEnv === 'development' &&
+        origin.match(/^https?:\/\/localhost(:\d+)?$/)
+      ) {
+        return callback(null, true);
+      }
+
+      // Reject origin
+      return callback(null, false);
+    },
+    credentials: true, // Allow cookies and authorization headers
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'x-custom-lang',
+      'X-Requested-With',
+      'Accept',
+      'Origin',
+    ],
+    exposedHeaders: ['X-Total-Count', 'X-Page-Count'], // Expose custom headers to clients
+    maxAge: 86400, // Cache preflight response for 24 hours
+  });
 
   app.enableShutdownHooks();
-  app.setGlobalPrefix(
-    configService.getOrThrow('app.apiPrefix', { infer: true }),
-    {
-      exclude: ['/'],
-    },
-  );
+  app.setGlobalPrefix(appConfig.apiPrefix, {
+    exclude: ['/'],
+  });
   app.enableVersioning({
     type: VersioningType.URI,
   });
