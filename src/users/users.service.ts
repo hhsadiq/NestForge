@@ -27,7 +27,7 @@ import { UserAbstractRepository } from './infrastructure/persistence/user.abstra
 @Injectable()
 export class UsersService {
   constructor(
-    private readonly usersRepository: UserAbstractRepository,
+    private readonly userRepository: UserAbstractRepository,
     private readonly filesService: FilesService,
     private readonly viewsService: ViewsService,
   ) {}
@@ -44,7 +44,7 @@ export class UsersService {
     }
 
     if (clonedPayload.email) {
-      const userObject = await this.usersRepository.findByEmail(
+      const userObject = await this.userRepository.findByEmail(
         clonedPayload.email,
       );
       if (userObject) {
@@ -53,7 +53,7 @@ export class UsersService {
     }
 
     if (clonedPayload.username) {
-      const userObject = await this.usersRepository.findByUsername(
+      const userObject = await this.userRepository.findByUsername(
         clonedPayload.username,
       );
       if (userObject) {
@@ -89,7 +89,7 @@ export class UsersService {
       }
     }
 
-    return this.usersRepository.create(clonedPayload);
+    return this.userRepository.create(clonedPayload);
   }
 
   findManyWithPagination({
@@ -101,7 +101,7 @@ export class UsersService {
     sortOptions?: SortUserDto[] | null;
     paginationOptions: IPaginationOptions;
   }): Promise<User[]> {
-    return this.usersRepository.findManyWithPagination({
+    return this.userRepository.findManyWithPagination({
       filterOptions,
       sortOptions,
       paginationOptions,
@@ -113,7 +113,7 @@ export class UsersService {
   }
 
   findByEmail(email: User['email']): Promise<NullableType<User>> {
-    return this.usersRepository.findByEmail(email);
+    return this.userRepository.findByEmail(email);
   }
 
   findBySocialIdAndProvider({
@@ -123,7 +123,7 @@ export class UsersService {
     socialId: User['socialId'];
     provider: User['provider'];
   }): Promise<NullableType<User>> {
-    return this.usersRepository.findBySocialIdAndProvider({
+    return this.userRepository.findBySocialIdAndProvider({
       socialId,
       provider,
     });
@@ -144,7 +144,7 @@ export class UsersService {
     }
 
     if (clonedPayload.email) {
-      const userObject = await this.usersRepository.findByEmail(
+      const userObject = await this.userRepository.findByEmail(
         clonedPayload.email,
       );
 
@@ -181,11 +181,11 @@ export class UsersService {
       }
     }
 
-    return this.usersRepository.update(id, clonedPayload);
+    return this.userRepository.update(id, clonedPayload);
   }
 
   async remove(id: User['id']): Promise<void> {
-    await this.usersRepository.remove(id);
+    await this.userRepository.remove(id);
   }
 
   // User Device
@@ -197,7 +197,7 @@ export class UsersService {
     >,
     biometricPublicKey: EnableBiometricDto,
   ): Promise<UserDevice | NullableType<UserDevice>> {
-    return this.usersRepository.addBiometricKeyInUserDevice(
+    return this.userRepository.addBiometricKeyInUserDevice(
       userDevice,
       biometricPublicKey,
     );
@@ -206,7 +206,7 @@ export class UsersService {
   removeBiometricKeyInUserDevice(
     userDevice: UserDevice,
   ): Promise<UserDevice | NullableType<UserDevice>> {
-    return this.usersRepository.removeBiometricKeyInUserDevice(userDevice);
+    return this.userRepository.removeBiometricKeyInUserDevice(userDevice);
   }
 
   createUserDevice(
@@ -215,26 +215,26 @@ export class UsersService {
       'id' | 'createdAt' | 'deletedAt' | 'updatedAt' | 'biometricPublicKey'
     >,
   ): Promise<UserDevice> {
-    return this.usersRepository.createUserDevice(data);
+    return this.userRepository.createUserDevice(data);
   }
 
   findDeviceByUserIdAndDeviceId(
     id: User['id'],
     deviceId: UserDevice['deviceId'],
   ): Promise<NullableType<UserDevice>> {
-    return this.usersRepository.findDeviceByUserIdAndDeviceId(id, deviceId);
+    return this.userRepository.findDeviceByUserIdAndDeviceId(id, deviceId);
   }
 
   async findAndValidate(field, value, fetchRelations = false) {
     const repoFunction = `findBy${field.charAt(0).toUpperCase()}${field.slice(1)}${fetchRelations ? 'WithRelations' : ''}`; // captilize first letter of the field name
-    if (typeof this.usersRepository[repoFunction] !== 'function') {
+    if (typeof this.userRepository[repoFunction] !== 'function') {
       throw UNPROCESSABLE_ENTITY(
         `Method ${repoFunction} not found on user repository.`,
         'id',
       );
     }
 
-    const user = await this.usersRepository[repoFunction](value);
+    const user = await this.userRepository[repoFunction](value);
     if (!user) {
       throw NOT_FOUND('User', { [field]: value });
     }
@@ -247,6 +247,6 @@ export class UsersService {
 
   getUserSummary(id: User['id']): Promise<NullableType<UserSummary>> {
     const userSummaryView = this.viewsService.getUsersSummaryView();
-    return this.usersRepository.getUserSummary(id, userSummaryView);
+    return this.userRepository.getUserSummary(id, userSummaryView);
   }
 }
