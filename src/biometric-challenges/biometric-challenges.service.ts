@@ -22,7 +22,7 @@ import { generateUniqueSuffix } from '@src/utils/slugify';
 @Injectable()
 export class BiometricChallengeService {
   constructor(
-    private readonly biometricRepo: BiometricChallengeAbstractRepository,
+    private readonly biometricChallengeRepository: BiometricChallengeAbstractRepository,
     private readonly authService: AuthService,
     private usersService: UsersService,
   ) {}
@@ -105,7 +105,8 @@ export class BiometricChallengeService {
       user_device: { id: userDevice.id },
     };
     try {
-      const challenge = await this.biometricRepo.getChallenge(payload);
+      const challenge =
+        await this.biometricChallengeRepository.getChallenge(payload);
       if (!challenge) {
         throw NOT_FOUND('Challenge', { userId: user.id, deviceId });
       }
@@ -140,7 +141,9 @@ export class BiometricChallengeService {
     }
 
     try {
-      const challenge = await this.biometricRepo.findChallenge(userDevice.id);
+      const challenge = await this.biometricChallengeRepository.findChallenge(
+        userDevice.id,
+      );
       if (!challenge || challenge == undefined) {
         throw NOT_FOUND('Challenge not found for', {
           deviceId: verifyBiometricDto.deviceId,
