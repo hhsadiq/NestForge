@@ -71,7 +71,7 @@
     "cache-manager-ioredis": "^2.1.0",
     "class-transformer": "0.5.1",
     "class-validator": "0.14.2",
-    "dotenv": "17.2.2",
+    "dotenv": "17.2.3",
     "express-basic-auth": "^1.2.1",
     "fb": "2.0.0",
     "google-auth-library": "10.3.0",
