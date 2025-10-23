@@ -70,7 +70,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 22.12.0
+          node-version: 22.21.0
 
       - name: Install dependencies
         run: npm install
