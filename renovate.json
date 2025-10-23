@@ -12,11 +12,13 @@
     "abandonments:recommended"
   ],
 
+  "platformAutomerge": true,
   "automergeType": "pr",
   "automergeStrategy": "merge-commit",
   "prCreation": "not-pending",
   "rebaseWhen": "conflicted",
   "rangeStrategy": "bump",
+  "ignoreTests": false,
 
   "timezone": "Asia/Karachi",
   "schedule": ["after 2am and before 6am every weekday"],
@@ -34,12 +36,6 @@
     "enabled": true,
     "automerge": true,
     "schedule": ["before 3am on monday"]
-  },
-
-  "postUpgradeTasks": {
-    "commands": ["npm run lint -- --fix", "npm run test"],
-    "fileFilters": ["**/*"],
-    "executionMode": "branch"
   },
 
   "packageRules": [
