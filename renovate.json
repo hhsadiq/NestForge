@@ -18,7 +18,6 @@
   "prCreation": "not-pending",
   "rebaseWhen": "conflicted",
   "rangeStrategy": "bump",
-  "ignoreTests": false,
 
   "timezone": "Asia/Karachi",
   "schedule": ["after 2am and before 6am every weekday"],

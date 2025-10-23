@@ -3,7 +3,7 @@ name: Run Tests on PR create & update
 on:
   pull_request:
     branches:
-      - develop
+      - your-branch-name # Replace with your branch name
 
     types:
       - opened
