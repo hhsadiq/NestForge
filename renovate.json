@@ -1,39 +1,142 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended", ":semanticCommits", "group:monorepos"],
+  "extends": [
+    "config:recommended",
+    ":semanticCommits",
+    "group:monorepos",
+    "workarounds:all",
+    "docker:pinDigests",
+    "helpers:pinGitHubActionDigests",
+    ":configMigration",
+    ":pinDevDependencies",
+    "abandonments:recommended"
+  ],
+
+  "automergeType": "pr",
+  "automergeStrategy": "merge-commit",
+  "prCreation": "not-pending",
+  "rebaseWhen": "conflicted",
+  "rangeStrategy": "bump",
+
   "timezone": "Asia/Karachi",
   "schedule": ["after 2am and before 6am every weekday"],
   "prConcurrentLimit": 10,
+  "labels": ["dependencies"],
+
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security", "priority"],
+    "automerge": true,
+    "schedule": ["at any time"]
+  },
+
   "lockFileMaintenance": {
     "enabled": true,
-    "automerge": true
+    "automerge": true,
+    "schedule": ["before 3am on monday"]
   },
+
+  "postUpgradeTasks": {
+    "commands": ["npm run lint -- --fix", "npm run test"],
+    "fileFilters": ["**/*"],
+    "executionMode": "branch"
+  },
+
   "packageRules": [
     {
+      "description": "🚫 NEVER automerge major updates (breaking changes)",
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "stabilityDays": 7,
+      "labels": ["major-update", "review-required"]
+    },
+    {
+      "description": "🚫 NEVER automerge NestJS core (framework critical)",
       "groupName": "nestjs core",
       "automerge": false,
-      "matchPackageNames": ["/^@nestjs//"]
+      "matchPackageNames": ["/^@nestjs\\//"],
+      "labels": ["nestjs-update", "review-required"]
     },
     {
+      "description": "✅ Automerge security vulnerabilities immediately",
+      "matchDatasources": ["npm"],
+      "vulnerabilityAlerts": {
+        "enabled": true
+      },
+      "automerge": true,
+      "schedule": ["at any time"]
+    },
+    {
+      "description": "✅ Automerge TypeScript type definitions (safe)",
+      "matchPackageNames": ["/^@types\\//"],
       "matchUpdateTypes": ["patch", "minor"],
       "automerge": true,
-      "matchPackageNames": ["/^@types//"]
+      "groupName": "typescript types"
     },
     {
+      "description": "✅ Automerge npm patch updates (bug fixes only)",
       "matchManagers": ["npm"],
       "matchUpdateTypes": ["patch"],
       "automerge": true
     },
     {
-      "matchManagers": ["github-actions"],
-      "matchUpdateTypes": ["patch", "minor"],
+      "description": "✅ Automerge npm minor updates for devDependencies",
+      "matchManagers": ["npm"],
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["minor"],
       "automerge": true
     },
     {
+      "description": "⚠️ Review npm minor updates for dependencies",
+      "matchManagers": ["npm"],
+      "matchDepTypes": ["dependencies"],
+      "matchUpdateTypes": ["minor"],
+      "automerge": true,
+      "stabilityDays": 3
+    },
+    {
+      "description": "✅ Automerge GitHub Actions patch and minor (CI/CD)",
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["patch", "minor"],
+      "automerge": true,
+      "groupName": "github-actions"
+    },
+    {
+      "description": "✅ Automerge Docker digest updates (security)",
       "matchManagers": ["dockerfile"],
       "matchUpdateTypes": ["digest"],
-      "automerge": true
+      "automerge": true,
+      "groupName": "docker-digests"
+    },
+    {
+      "description": "✅ Automerge ESLint and Prettier (code quality)",
+      "matchPackageNames": [
+        "eslint",
+        "prettier",
+        "/^eslint-/",
+        "/^prettier-/",
+        "/@eslint\\//"
+      ],
+      "matchUpdateTypes": ["patch", "minor"],
+      "automerge": true,
+      "groupName": "linting and formatting"
+    },
+    {
+      "description": "✅ Automerge testing libraries (Jest, etc)",
+      "matchPackageNames": [
+        "/^@types\\/jest/",
+        "jest",
+        "/^jest-/",
+        "/^@jest\\//"
+      ],
+      "matchUpdateTypes": ["patch", "minor"],
+      "automerge": true,
+      "groupName": "testing libraries"
     }
   ],
-  "dependencyDashboard": true
+
+  "dependencyDashboard": true,
+  "dependencyDashboardTitle": "🤖 Dependency Updates Dashboard",
+  "dependencyDashboardLabels": ["dependencies"],
+  "dependencyDashboardAutoclose": true
 }
