@@ -124,6 +124,10 @@ Docker support, containerization, and development environment management with co
 
 Robust scheduler module with flag-based control for managing cron jobs across different environments. Perfect for background tasks, cleanup operations, and periodic maintenance.
 
+### 🔄 **Idempotency**
+
+Request deduplication system with flag-based control to prevent duplicate processing. Ensures safe handling of retries and duplicate requests using UUID-based idempotency keys.
+
 ### 🚀 **Production & CI/CD**
 
 CI/CD workflows with GitHub Actions, database management, and Sentry monitoring integration for production deployments.

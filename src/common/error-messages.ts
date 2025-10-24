@@ -27,3 +27,5 @@ export const BIOMETRIC_VERIFICATION_FAILED = `Biometric verification failed.`;
 export const ERROR_BIOMETRIC_VERIFICATION = `Error during Biometric verification.`;
 
 export const CRON_JOB_ERROR = (item: string) => `Error in ${item} cron job`;
+
+export const UNEXPECTED_STATE_OF_IDEMPOTENCY_INTERCEPTOR = `Unexpected state of idempotency interceptor`;

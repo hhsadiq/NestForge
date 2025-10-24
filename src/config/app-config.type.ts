@@ -12,4 +12,5 @@ export type AppConfig = {
   swaggerPassword: string;
   allowedOrigins: string[];
   enableCronJobs: boolean;
+  idempotencyEnabled: boolean;
 };

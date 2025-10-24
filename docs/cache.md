@@ -37,7 +37,7 @@ REDIS_PORT=6379
 REDIS_PASSWORD=your_password_here
 
 # Cache Settings
-REDIS_DEFAULT_TTL=3600  # Default TTL in seconds (1 hour)
+REDIS_DEFAULT_TTL=3600000  # Default TTL in milliseconds (1 hour) - cache-manager v4+
 
 # Cluster Configuration
 REDIS_IS_CLUSTER_MODE=false
@@ -55,7 +55,7 @@ Retrieves a value from the cache.
 
 #### `set(key: string, value: any, ttl?: number): Promise<void>`
 
-Stores a value in the cache with optional TTL.
+Stores a value in the cache with optional TTL. **Note**: TTL is in milliseconds for cache-manager v4+.
 
 #### `del(key: string): Promise<void>`
 
@@ -63,7 +63,7 @@ Deletes a key from the cache.
 
 #### `ttl(key: string): Promise<number | undefined>`
 
-Gets the time to live for a key.
+Gets the time to live for a key. Returns TTL in milliseconds for cache-manager v4+.
 
 #### `reset(): Promise<void>`
 
@@ -85,14 +85,14 @@ export const CACHE_KEYS = {
 
 ### TTL Management
 
-Use the `TTL` constant for centralized cache key management:
+**Important**: TTL values are in milliseconds for cache-manager version 4+. Use the `TTL` constant for centralized cache key management:
 
 ```typescript
 const TTL = {
-  USER_PROFILE: 3600, // 1 hour - relatively static
-  USER_SESSION: 1800, // 30 minutes - security sensitive
-  API_RESPONSE: 300, // 5 minutes - frequently changing
-  STATIC_CONFIG: 86400, // 24 hours - rarely changes
+  USER_PROFILE: 3600000, // 1 hour in milliseconds - cache-manager v4+
+  USER_SESSION: 1800000, // 30 minutes in milliseconds
+  API_RESPONSE: 300000, // 5 minutes in milliseconds
+  STATIC_CONFIG: 86400000, // 24 hours in milliseconds
 } as const;
 ```
 
@@ -122,7 +122,7 @@ export class UserService {
     // Fetch from database
     const user = await this.userRepository.findById(id);
     if (user) {
-      // Cache for 1 hour
+      // Cache for 1 hour (TTL in milliseconds for cache-manager v4+)
       await this.cacheService.set(`user:${id}`, user, TTL.USER);
     }
 
