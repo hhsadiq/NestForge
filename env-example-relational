@@ -72,6 +72,9 @@ BIOMETRIC_CHALLENGE_EXPIRY=15
 SWAGGER_USERNAME=admin
 SWAGGER_PASSWORD=admin
 
+# Enable/disable cron jobs (default: false)
+ENABLE_CRON_JOBS=false
+
 
 #Redis
 REDIS_HOST=

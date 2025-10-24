@@ -25,3 +25,5 @@ export const BIOMETRIC_CHALLENGE_ERROR = (
   `Error occurred while getting biometric challenge for userId: ${userId} & deviceId: ${deviceId}`;
 export const BIOMETRIC_VERIFICATION_FAILED = `Biometric verification failed.`;
 export const ERROR_BIOMETRIC_VERIFICATION = `Error during Biometric verification.`;
+
+export const CRON_JOB_ERROR = (item: string) => `Error in ${item} cron job`;

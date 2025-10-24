@@ -11,4 +11,5 @@ export type AppConfig = {
   swaggerUsername: string;
   swaggerPassword: string;
   allowedOrigins: string[];
+  enableCronJobs: boolean;
 };

@@ -120,6 +120,10 @@ Unit tests (Jest), E2E tests (Dockerized), and load testing (Artillery) with aut
 
 Docker support, containerization, and development environment management with comprehensive Docker Compose configurations.
 
+### ⏰ **Scheduled Tasks**
+
+Robust scheduler module with flag-based control for managing cron jobs across different environments. Perfect for background tasks, cleanup operations, and periodic maintenance.
+
 ### 🚀 **Production & CI/CD**
 
 CI/CD workflows with GitHub Actions, database management, and Sentry monitoring integration for production deployments.
