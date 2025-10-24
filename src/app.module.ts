@@ -1,6 +1,6 @@
 import path from 'path';
 
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ScheduleModule as NestScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -11,6 +11,8 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 import { BiometricChallengeModule } from '@src/biometric-challenges/biometric-challenges.module';
 import { CacheModule } from '@src/cache/cache.module';
 import redisConfig from '@src/cache/config/redis.config';
+import { CustomHttpModule } from '@src/http/custom-http.module';
+import { CorrelationIdMiddleware } from '@src/loggings/utils/correlation-id.middleware';
 
 import { AuthModule } from './auth/auth.module';
 import authConfig from './auth/config/auth.config';
@@ -31,6 +33,7 @@ import { FilesModule } from './files/files.module';
 import genAiConfig from './gen-ai/config/gen-ai.config';
 import { GenAiModule } from './gen-ai/gen-ai.module';
 import { HomeModule } from './home/home.module';
+import { LoggingsModule } from './loggings/loggings.module';
 import mailConfig from './mail/config/mail.config';
 import { MailModule } from './mail/mail.module';
 import { MailerModule } from './mailer/mailer.module';
@@ -47,7 +50,9 @@ const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
 
 @Module({
   imports: [
+    CustomHttpModule,
     NestScheduleModule.forRoot(),
+    LoggingsModule,
     CacheModule,
     GenAiModule,
     ViewsModule,
@@ -106,4 +111,8 @@ const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
     HomeModule,
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(CorrelationIdMiddleware).forRoutes('*');
+  }
+}

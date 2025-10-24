@@ -8,6 +8,9 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { useContainer } from 'class-validator';
 
+import { LoggingsModule } from '@src/loggings/loggings.module';
+import { LoggingsService } from '@src/loggings/loggings.service';
+import { configureLogger } from '@src/loggings/utils/logger.utils';
 import { setupSwagger } from '@src/utils/swagger.utils';
 
 import { AppModule } from './app.module';
@@ -79,6 +82,8 @@ async function bootstrap() {
     new ClassSerializerInterceptor(app.get(Reflector)),
   );
   setupSwagger(app);
+  const loggerService = app.select(LoggingsModule).get(LoggingsService);
+  configureLogger(app, loggerService);
   await app.listen(configService.getOrThrow('app.port', { infer: true }));
 }
 void bootstrap();
