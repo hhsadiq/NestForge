@@ -15,6 +15,7 @@ import validateConfig from '@src/utils/validate-config';
 import { AppConfig } from './app-config.type';
 
 enum Environment {
+  Local = 'local',
   Development = 'development',
   Production = 'production',
   Test = 'test',

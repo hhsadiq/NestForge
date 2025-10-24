@@ -31,6 +31,7 @@ import { FilesModule } from './files/files.module';
 import genAiConfig from './gen-ai/config/gen-ai.config';
 import { GenAiModule } from './gen-ai/gen-ai.module';
 import { HomeModule } from './home/home.module';
+import { LoggingsModule } from './loggings/loggings.module';
 import mailConfig from './mail/config/mail.config';
 import { MailModule } from './mail/mail.module';
 import { MailerModule } from './mailer/mailer.module';
@@ -48,6 +49,7 @@ const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
 @Module({
   imports: [
     NestScheduleModule.forRoot(),
+    LoggingsModule,
     CacheModule,
     GenAiModule,
     ViewsModule,
