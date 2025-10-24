@@ -31,5 +31,6 @@
 - [File uploading](file-uploading.md)
 - [Tests](tests.md)
 - [Load Testing](artillery.md)
+- [Scheduler](scheduler.md)
 - [Benchmarking](benchmarking.md)
 - [Automatic update of dependencies](automatic-update-dependencies.md)

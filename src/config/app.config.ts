@@ -1,5 +1,6 @@
 import { registerAs } from '@nestjs/config';
 import {
+  IsBoolean,
   IsEnum,
   IsInt,
   IsOptional,
@@ -59,6 +60,10 @@ class EnvironmentVariablesValidator {
   @IsString()
   @IsOptional()
   ALLOWED_ORIGINS: string;
+
+  @IsBoolean()
+  @IsOptional()
+  ENABLE_CRON_JOBS: boolean;
 }
 
 export default registerAs<AppConfig>('app', () => {
@@ -81,5 +86,6 @@ export default registerAs<AppConfig>('app', () => {
     swaggerUsername: process.env.SWAGGER_USERNAME || 'admin',
     swaggerPassword: process.env.SWAGGER_PASSWORD || 'password',
     allowedOrigins: process.env.ALLOWED_ORIGINS?.split(',') || [],
+    enableCronJobs: process.env.ENABLE_CRON_JOBS === 'true',
   };
 });
