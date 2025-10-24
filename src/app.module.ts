@@ -1,6 +1,6 @@
 import path from 'path';
 
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ScheduleModule as NestScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -11,6 +11,8 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 import { BiometricChallengeModule } from '@src/biometric-challenges/biometric-challenges.module';
 import { CacheModule } from '@src/cache/cache.module';
 import redisConfig from '@src/cache/config/redis.config';
+import { CustomHttpModule } from '@src/http/custom-http.module';
+import { CorrelationIdMiddleware } from '@src/loggings/utils/correlation-id.middleware';
 
 import { AuthModule } from './auth/auth.module';
 import authConfig from './auth/config/auth.config';
@@ -48,6 +50,7 @@ const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
 
 @Module({
   imports: [
+    CustomHttpModule,
     NestScheduleModule.forRoot(),
     LoggingsModule,
     CacheModule,
@@ -108,4 +111,8 @@ const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
     HomeModule,
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(CorrelationIdMiddleware).forRoutes('*');
+  }
+}
