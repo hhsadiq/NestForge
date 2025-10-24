@@ -60,4 +60,4 @@ export class MyService {
 
 Previous: [Load Testing](artillery.md)
 
-Next: [Benchmarking](benchmarking.md)
+Next: [Idempotency](idempotency.md)

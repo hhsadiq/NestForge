@@ -75,6 +75,9 @@ SWAGGER_PASSWORD=admin
 # Enable/disable cron jobs (default: false)
 ENABLE_CRON_JOBS=false
 
+# Enable/disable idempotency feature (default: false)
+IDEMPOTENCY_ENABLED=false
+
 
 #Redis
 REDIS_HOST=

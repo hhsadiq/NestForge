@@ -64,6 +64,10 @@ class EnvironmentVariablesValidator {
   @IsBoolean()
   @IsOptional()
   ENABLE_CRON_JOBS: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  IDEMPOTENCY_ENABLED: boolean;
 }
 
 export default registerAs<AppConfig>('app', () => {
@@ -87,5 +91,6 @@ export default registerAs<AppConfig>('app', () => {
     swaggerPassword: process.env.SWAGGER_PASSWORD || 'password',
     allowedOrigins: process.env.ALLOWED_ORIGINS?.split(',') || [],
     enableCronJobs: process.env.ENABLE_CRON_JOBS === 'true',
+    idempotencyEnabled: process.env.IDEMPOTENCY_ENABLED === 'true',
   };
 });
