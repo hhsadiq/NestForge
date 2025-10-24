@@ -112,7 +112,7 @@ Increasing the `arrivalCount` and/or `duration` will amplify the load on the API
 
 Previous: [Tests](tests.md)
 
-Next: [Benchmarking](benchmarking.md)
+Next: [Scheduler](scheduler.md)
 
 ```
 

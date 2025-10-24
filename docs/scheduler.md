@@ -58,6 +58,6 @@ export class MyService {
 
 ---
 
-Previous: [Architecture](architecture.md)
+Previous: [Load Testing](artillery.md)
 
-Next: [Tests](tests.md)
+Next: [Benchmarking](benchmarking.md)
