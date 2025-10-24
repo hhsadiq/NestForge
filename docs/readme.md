@@ -25,6 +25,8 @@
   - [FAQ](hygen/faq.md)
 - [Working with database](database.md)
 - [Cache](cache.md)
+- [Logging](logging.md)
+- [HTTP Module](http.md)
 - [Auth](auth.md)
 - [Exceptions](exceptions.md)
 - [Serialization](serialization.md)
