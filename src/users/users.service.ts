@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import bcrypt from 'bcryptjs';
 
+import { AccessManagementService } from '@src/access-management/access-management.service';
 import { AuthProvidersEnum } from '@src/auth/auth-providers.enum';
 import { EnableBiometricDto } from '@src/biometric-challenges/dtos/enable-biometric-payload.dto';
 import { ERROR_MESSAGES } from '@src/common/error-messages';
@@ -10,7 +11,6 @@ import {
   UNPROCESSABLE_ENTITY,
 } from '@src/common/exceptions';
 import { FilesService } from '@src/files/files.service';
-import { RoleEnum } from '@src/roles/roles.enum';
 import { StatusEnum } from '@src/statuses/statuses.enum';
 import { UserDevice } from '@src/users/domain/user-device';
 import { DeepPartial } from '@src/utils/types/deep-partial.type';
@@ -21,7 +21,7 @@ import { ViewsService } from '@src/views/views.service';
 
 import { User } from './domain/user';
 import { CreateUserDto } from './dto/create-user.dto';
-import { FilterUserDto, SortUserDto } from './dto/query-user.dto';
+import { SortUserDto } from './dto/query-user.dto';
 import { UserAbstractRepository } from './infrastructure/persistence/user.abstract.repository';
 
 @Injectable()
@@ -30,6 +30,7 @@ export class UsersService {
     private readonly userRepository: UserAbstractRepository,
     private readonly filesService: FilesService,
     private readonly viewsService: ViewsService,
+    private readonly accessService: AccessManagementService,
   ) {}
 
   async create(createProfileDto: CreateUserDto): Promise<User> {
@@ -71,15 +72,6 @@ export class UsersService {
       clonedPayload.photo = fileObject;
     }
 
-    if (clonedPayload.role?.id) {
-      const roleObject = Object.values(RoleEnum)
-        .map(String)
-        .includes(String(clonedPayload.role.id));
-      if (!roleObject) {
-        throw NOT_FOUND('Role', { id: clonedPayload.role.id });
-      }
-    }
-
     if (clonedPayload.status?.id) {
       const statusObject = Object.values(StatusEnum)
         .map(String)
@@ -89,20 +81,19 @@ export class UsersService {
       }
     }
 
-    return this.userRepository.create(clonedPayload);
+    const created = await this.userRepository.create(clonedPayload);
+    await this.accessService.assignRoleByNameToUser(Number(created.id), 'User');
+    return created;
   }
 
   findManyWithPagination({
-    filterOptions,
     sortOptions,
     paginationOptions,
   }: {
-    filterOptions?: FilterUserDto | null;
     sortOptions?: SortUserDto[] | null;
     paginationOptions: IPaginationOptions;
   }): Promise<User[]> {
     return this.userRepository.findManyWithPagination({
-      filterOptions,
       sortOptions,
       paginationOptions,
     });
@@ -161,15 +152,6 @@ export class UsersService {
         throw NOT_FOUND('File', { id: clonedPayload.photo.id });
       }
       clonedPayload.photo = fileObject;
-    }
-
-    if (clonedPayload.role?.id) {
-      const roleObject = Object.values(RoleEnum)
-        .map(String)
-        .includes(String(clonedPayload.role.id));
-      if (!roleObject) {
-        throw NOT_FOUND('Role', { id: clonedPayload.role.id });
-      }
     }
 
     if (clonedPayload.status?.id) {

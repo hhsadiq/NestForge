@@ -10,7 +10,6 @@ import {
   Query,
   HttpStatus,
   HttpCode,
-  SerializeOptions,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
@@ -21,9 +20,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-import { Roles } from '@src/roles/roles.decorator';
-import { RoleEnum } from '@src/roles/roles.enum';
-import { RolesGuard } from '@src/roles/roles.guard';
+import { CheckAbility } from '@src/access-management/casl/check-ability.decorator';
+import { PoliciesGuard } from '@src/access-management/casl/policies.guard';
 import {
   InfinityPaginationResponse,
   InfinityPaginationResponseDto,
@@ -47,13 +45,10 @@ import { UsersService } from './users.service';
 })
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-  @Roles(RoleEnum.admin)
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @UseGuards(AuthGuard('jwt'), PoliciesGuard)
+  @CheckAbility({ action: 'read', subject: 'User' })
   @ApiOkResponse({
     type: User,
-  })
-  @SerializeOptions({
-    groups: ['admin'],
   })
   @Get('summary')
   @HttpCode(HttpStatus.OK)
@@ -61,13 +56,10 @@ export class UsersController {
     return this.usersService.getUsersSummary();
   }
 
-  @Roles(RoleEnum.admin)
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @UseGuards(AuthGuard('jwt'), PoliciesGuard)
+  @CheckAbility({ action: 'read', subject: 'User' })
   @ApiOkResponse({
     type: User,
-  })
-  @SerializeOptions({
-    groups: ['admin'],
   })
   @Get('summary/:id')
   @HttpCode(HttpStatus.OK)
@@ -82,13 +74,10 @@ export class UsersController {
     return this.usersService.getUserSummary(id);
   }
 
-  @Roles(RoleEnum.admin)
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @UseGuards(AuthGuard('jwt'), PoliciesGuard)
+  @CheckAbility({ action: 'create', subject: 'User' })
   @ApiCreatedResponse({
     type: User,
-  })
-  @SerializeOptions({
-    groups: ['admin'],
   })
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -96,13 +85,10 @@ export class UsersController {
     return this.usersService.create(createProfileDto);
   }
 
-  @Roles(RoleEnum.admin)
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @UseGuards(AuthGuard('jwt'), PoliciesGuard)
+  @CheckAbility({ action: 'read', subject: 'User' })
   @ApiOkResponse({
     type: InfinityPaginationResponse(User),
-  })
-  @SerializeOptions({
-    groups: ['admin'],
   })
   @Get()
   @HttpCode(HttpStatus.OK)
@@ -117,7 +103,6 @@ export class UsersController {
 
     return infinityPagination(
       await this.usersService.findManyWithPagination({
-        filterOptions: query?.filters,
         sortOptions: query?.sort,
         paginationOptions: {
           page,
@@ -128,13 +113,10 @@ export class UsersController {
     );
   }
 
-  @Roles(RoleEnum.admin)
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @UseGuards(AuthGuard('jwt'), PoliciesGuard)
+  @CheckAbility({ action: 'read', subject: 'User' })
   @ApiOkResponse({
     type: User,
-  })
-  @SerializeOptions({
-    groups: ['admin'],
   })
   @Get(':id')
   @HttpCode(HttpStatus.OK)
@@ -147,13 +129,10 @@ export class UsersController {
     return this.usersService.findById(id);
   }
 
-  @Roles(RoleEnum.admin)
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @UseGuards(AuthGuard('jwt'), PoliciesGuard)
+  @CheckAbility({ action: 'update', subject: 'User' })
   @ApiOkResponse({
     type: User,
-  })
-  @SerializeOptions({
-    groups: ['admin'],
   })
   @Patch(':id')
   @HttpCode(HttpStatus.OK)
@@ -168,8 +147,8 @@ export class UsersController {
   ): Promise<User | null> {
     return this.usersService.update(id, updateProfileDto);
   }
-  @Roles(RoleEnum.admin)
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @UseGuards(AuthGuard('jwt'), PoliciesGuard)
+  @CheckAbility({ action: 'delete', subject: 'User' })
   @Delete(':id')
   @ApiParam({
     name: 'id',

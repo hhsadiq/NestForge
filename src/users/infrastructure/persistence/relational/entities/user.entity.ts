@@ -16,7 +16,6 @@ import {
 import { AuthProvidersEnum } from '@src/auth/auth-providers.enum';
 import { TABLES } from '@src/common/constants';
 import { FileEntity } from '@src/files/infrastructure/persistence/relational/entities/file.entity';
-import { RoleEntity } from '@src/roles/infrastructure/persistence/relational/entities/role.entity';
 import { StatusEntity } from '@src/statuses/infrastructure/persistence/relational/entities/status.entity';
 import { EntityRelationalHelper } from '@src/utils/relational-entity-helper';
 
@@ -78,12 +77,6 @@ export class UserEntity extends EntityRelationalHelper {
   })
   @JoinColumn({ name: 'photo_id' })
   photo?: FileEntity | null;
-
-  @ManyToOne(() => RoleEntity, {
-    eager: true,
-  })
-  @JoinColumn({ name: 'role_id' })
-  role?: RoleEntity | null;
 
   @ManyToOne(() => StatusEntity, {
     eager: true,

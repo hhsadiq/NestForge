@@ -14,6 +14,7 @@ import redisConfig from '@src/cache/config/redis.config';
 import { CustomHttpModule } from '@src/http/custom-http.module';
 import { CorrelationIdMiddleware } from '@src/loggings/utils/correlation-id.middleware';
 
+import { AccessManagementModule } from './access-management/access-management.module';
 import { AuthModule } from './auth/auth.module';
 import authConfig from './auth/config/auth.config';
 import { AuthAppleModule } from './auth-apple/auth-apple.module';
@@ -109,6 +110,7 @@ const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
     MailModule,
     MailerModule,
     HomeModule,
+    AccessManagementModule,
   ],
 })
 export class AppModule {

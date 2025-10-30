@@ -1,6 +1,5 @@
 import { FileEntity } from '@src/files/infrastructure/persistence/relational/entities/file.entity';
 import { FileMapper } from '@src/files/infrastructure/persistence/relational/mappers/file.mapper';
-import { RoleEntity } from '@src/roles/infrastructure/persistence/relational/entities/role.entity';
 import { StatusEntity } from '@src/statuses/infrastructure/persistence/relational/entities/status.entity';
 import { User } from '@src/users/domain/user';
 import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity';
@@ -22,7 +21,6 @@ export class UserMapper {
       domainEntity.photo = FileMapper.toDomain(raw.photo);
     }
 
-    domainEntity.role = raw.role;
     domainEntity.status = raw.status;
     domainEntity.createdAt = raw.created_at;
     domainEntity.updatedAt = raw.updated_at;
@@ -31,13 +29,6 @@ export class UserMapper {
   }
 
   static toPersistence(domainEntity: User): UserEntity {
-    let role: RoleEntity | undefined = undefined;
-
-    if (domainEntity.role) {
-      role = new RoleEntity();
-      role.id = Number(domainEntity.role.id);
-    }
-
     let photo: FileEntity | undefined | null = undefined;
 
     if (domainEntity.photo) {
@@ -69,7 +60,6 @@ export class UserMapper {
     persistenceEntity.first_name = domainEntity.firstName;
     persistenceEntity.last_name = domainEntity.lastName;
     persistenceEntity.photo = photo;
-    persistenceEntity.role = role;
     persistenceEntity.status = status;
     persistenceEntity.created_at = domainEntity.createdAt;
     persistenceEntity.updated_at = domainEntity.updatedAt;

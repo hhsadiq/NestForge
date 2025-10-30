@@ -2,7 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 
 import { File } from '@src/files/domain/file';
-import { Role } from '@src/roles/domain/role';
 import { Status } from '@src/statuses/domain/status';
 
 const idType = Number;
@@ -62,11 +61,6 @@ export class User {
     type: () => File,
   })
   photo?: File | null;
-
-  @ApiProperty({
-    type: () => Role,
-  })
-  role?: Role | null;
 
   @ApiProperty({
     type: () => Status,

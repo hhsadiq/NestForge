@@ -5,9 +5,11 @@ export class BaseSchema1756810370971 implements MigrationInterface {
     // --- role table ---
     await queryRunner.query(
       `CREATE TABLE "role" (
-        "id" integer NOT NULL,
+        "id" INTEGER GENERATED ALWAYS AS IDENTITY NOT NULL,
         "name" character varying NOT NULL,
-        CONSTRAINT "PK_role_id" PRIMARY KEY ("id")
+        "description" character varying,
+        CONSTRAINT "PK_role_id" PRIMARY KEY ("id"),
+        CONSTRAINT "UQ_role_name" UNIQUE ("name")
       )`,
     );
 
@@ -44,14 +46,12 @@ export class BaseSchema1756810370971 implements MigrationInterface {
         "updated_at" TIMESTAMP NOT NULL DEFAULT now(),
         "deleted_at" TIMESTAMP,
         "photo_id" integer,
-        "role_id" integer,
         "status_id" integer,
         CONSTRAINT "UQ_user_email_unique" UNIQUE ("email"),
         CONSTRAINT "UQ_user_username_unique" UNIQUE ("username"),
         CONSTRAINT "UQ_user_photo_id_unique" UNIQUE ("photo_id"),
         CONSTRAINT "PK_user_id" PRIMARY KEY ("id"),
         CONSTRAINT "FK_user_photo_id" FOREIGN KEY ("photo_id") REFERENCES "file"("id") ON DELETE NO ACTION ON UPDATE NO ACTION,
-        CONSTRAINT "FK_user_role_id" FOREIGN KEY ("role_id") REFERENCES "role"("id") ON DELETE NO ACTION ON UPDATE NO ACTION,
         CONSTRAINT "FK_user_status_id" FOREIGN KEY ("status_id") REFERENCES "status"("id") ON DELETE NO ACTION ON UPDATE NO ACTION
       )`,
     );
@@ -113,9 +113,78 @@ export class BaseSchema1756810370971 implements MigrationInterface {
         CONSTRAINT "FK_biometric_challenge_user_device_id" FOREIGN KEY ("user_device_id") REFERENCES "user_device"("id") ON DELETE NO ACTION ON UPDATE NO ACTION
       )`,
     );
+
+    // Subject + Permission with enum action and FK
+    await queryRunner.query(
+      `CREATE TABLE "subject" (
+        "id" INTEGER GENERATED ALWAYS AS IDENTITY NOT NULL,
+        "name" character varying NOT NULL,
+        CONSTRAINT "PK_subject_id" PRIMARY KEY ("id"),
+        CONSTRAINT "UQ_subject_name" UNIQUE ("name")
+      )`,
+    );
+    await queryRunner.query(
+      `CREATE TYPE "permission_action_enum" AS ENUM ('manage','create','read','update','delete')`,
+    );
+    await queryRunner.query(
+      `CREATE TABLE "permission" (
+        "id" INTEGER GENERATED ALWAYS AS IDENTITY NOT NULL,
+        "action" "permission_action_enum" NOT NULL,
+        "subject_id" integer NOT NULL,
+        "description" character varying,
+        CONSTRAINT "PK_permission_id" PRIMARY KEY ("id"),
+        CONSTRAINT "FK_permission_subject" FOREIGN KEY ("subject_id") REFERENCES "subject"("id") ON DELETE NO ACTION,
+        CONSTRAINT "UQ_permission_action_subject" UNIQUE ("action", "subject_id")
+      )`,
+    );
+
+    await queryRunner.query(`CREATE TABLE "user_role" (
+      "id" INTEGER GENERATED ALWAYS AS IDENTITY NOT NULL,
+      "user_id" INTEGER NOT NULL,
+      "role_id" INTEGER NOT NULL,
+      CONSTRAINT "PK_user_role" PRIMARY KEY ("id"),
+      CONSTRAINT "UQ_user_role_user_id_role_id" UNIQUE ("user_id", "role_id")
+  )`);
+    await queryRunner.query(`CREATE TABLE "role_permission" (
+      "id" INTEGER GENERATED ALWAYS AS IDENTITY NOT NULL,
+      "role_id" INTEGER NOT NULL,
+      "permission_id" INTEGER NOT NULL,
+      CONSTRAINT "PK_role_permission" PRIMARY KEY ("id"),
+      CONSTRAINT "UQ_role_permission_role_id_permission_id" UNIQUE ("role_id", "permission_id")
+  )`);
+    await queryRunner.query(
+      `ALTER TABLE "user_role" ADD CONSTRAINT "FK_user_role_user" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE NO ACTION`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "user_role" ADD CONSTRAINT "FK_user_role_role" FOREIGN KEY ("role_id") REFERENCES "role"("id") ON DELETE NO ACTION`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "role_permission" ADD CONSTRAINT "FK_role_permission_role" FOREIGN KEY ("role_id") REFERENCES "role"("id") ON DELETE NO ACTION`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "role_permission" ADD CONSTRAINT "FK_role_permission_permission" FOREIGN KEY ("permission_id") REFERENCES "permission"("id") ON DELETE NO ACTION`,
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(
+      `ALTER TABLE "role_permission" DROP CONSTRAINT "FK_role_permission_permission"`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "role_permission" DROP CONSTRAINT "FK_role_permission_role"`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "user_role" DROP CONSTRAINT "FK_user_role_role"`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "user_role" DROP CONSTRAINT "FK_user_role_user"`,
+    );
+    await queryRunner.query(`DROP TABLE "role_permission"`);
+    await queryRunner.query(`DROP TABLE "user_role"`);
+    await queryRunner.query(`DROP TABLE "permission"`);
+    await queryRunner.query(`DROP TYPE "permission_action_enum"`);
+    await queryRunner.query(`DROP TABLE "subject"`);
+
     await queryRunner.query(`DROP TABLE "biometric_challenge"`);
     await queryRunner.query(`DROP TABLE "user_device"`);
     await queryRunner.query(`DROP INDEX "public"."IDX_session_user_id"`);

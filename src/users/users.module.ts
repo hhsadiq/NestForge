@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 
+import { AccessManagementModule } from '@src/access-management/access-management.module';
 import { FilesModule } from '@src/files/files.module';
 import { ViewsModule } from '@src/views/views.module';
 
@@ -10,7 +11,12 @@ import { UsersService } from './users.service';
 const infrastructurePersistenceModule = RelationalUserPersistenceModule;
 
 @Module({
-  imports: [infrastructurePersistenceModule, FilesModule, ViewsModule],
+  imports: [
+    infrastructurePersistenceModule,
+    FilesModule,
+    ViewsModule,
+    AccessManagementModule,
+  ],
   controllers: [UsersController],
   providers: [UsersService],
   exports: [UsersService, infrastructurePersistenceModule],
