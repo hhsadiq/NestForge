@@ -34,10 +34,10 @@ export class RolePermissionSeedService {
     const perms = await this.permissionRepo.find({
       where: {
         action: In([
-          PermissionActionEnum.create,
-          PermissionActionEnum.read,
-          PermissionActionEnum.update,
-          PermissionActionEnum.delete,
+          PermissionActionEnum.CREATE,
+          PermissionActionEnum.READ,
+          PermissionActionEnum.UPDATE,
+          PermissionActionEnum.DELETE,
         ]),
       },
       relations: ['subject'],
@@ -74,7 +74,7 @@ export class RolePermissionSeedService {
 
     if (userRole) {
       const readPerm = userPerms.find(
-        (p) => p.action === PermissionActionEnum.read,
+        (p) => p.action === PermissionActionEnum.READ,
       );
       if (
         readPerm &&

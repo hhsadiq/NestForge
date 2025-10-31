@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AccessManagementController } from '@src/access-management/access-management.controller';
 import { AccessManagementService } from '@src/access-management/access-management.service';
@@ -8,7 +7,7 @@ import { PoliciesGuard } from '@src/access-management/casl/policies.guard';
 import { RelationalAccessPersistenceModule } from '@src/access-management/infrastructure/persistence/relational/relational-persistence.module';
 
 @Module({
-  imports: [TypeOrmModule, RelationalAccessPersistenceModule],
+  imports: [RelationalAccessPersistenceModule],
   providers: [AccessManagementService, CaslAbilityFactory, PoliciesGuard],
   controllers: [AccessManagementController],
   exports: [AccessManagementService, CaslAbilityFactory, PoliciesGuard],

@@ -5,13 +5,14 @@ import {
 } from '@casl/ability';
 import { Injectable } from '@nestjs/common';
 
-type Actions = 'manage' | 'create' | 'read' | 'update' | 'delete';
-export type AppAbility = MongoAbility<[Actions, string]>;
+import { PermissionActionType } from '@src/access-management/types/permission-actions.type';
+
+export type AppAbility = MongoAbility<[PermissionActionType, string]>;
 
 @Injectable()
 export class CaslAbilityFactory {
   createForPermissions(
-    permissions: { action: Actions; subject: string }[],
+    permissions: { action: PermissionActionType; subject: string }[],
   ): AppAbility {
     const { can, build } = new AbilityBuilder<AppAbility>(createMongoAbility);
 

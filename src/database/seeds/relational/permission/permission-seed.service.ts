@@ -18,10 +18,10 @@ export class PermissionSeedService {
   async run() {
     const subjectNames = ['User', 'AccessManagement'];
     const actions: PermissionActionEnum[] = [
-      PermissionActionEnum.create,
-      PermissionActionEnum.read,
-      PermissionActionEnum.update,
-      PermissionActionEnum.delete,
+      PermissionActionEnum.CREATE,
+      PermissionActionEnum.READ,
+      PermissionActionEnum.UPDATE,
+      PermissionActionEnum.DELETE,
     ];
 
     for (const subjectName of subjectNames) {

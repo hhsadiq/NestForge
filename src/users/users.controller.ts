@@ -22,6 +22,7 @@ import {
 
 import { CheckAbility } from '@src/access-management/casl/check-ability.decorator';
 import { PoliciesGuard } from '@src/access-management/casl/policies.guard';
+import { PermissionActionEnum } from '@src/access-management/enums/permission-actions.enum';
 import {
   InfinityPaginationResponse,
   InfinityPaginationResponseDto,
@@ -46,7 +47,7 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
   @UseGuards(AuthGuard('jwt'), PoliciesGuard)
-  @CheckAbility({ action: 'read', subject: 'User' })
+  @CheckAbility({ action: PermissionActionEnum.READ, subject: 'User' })
   @ApiOkResponse({
     type: User,
   })
@@ -57,7 +58,7 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard('jwt'), PoliciesGuard)
-  @CheckAbility({ action: 'read', subject: 'User' })
+  @CheckAbility({ action: PermissionActionEnum.READ, subject: 'User' })
   @ApiOkResponse({
     type: User,
   })
@@ -75,7 +76,7 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard('jwt'), PoliciesGuard)
-  @CheckAbility({ action: 'create', subject: 'User' })
+  @CheckAbility({ action: PermissionActionEnum.CREATE, subject: 'User' })
   @ApiCreatedResponse({
     type: User,
   })
@@ -86,7 +87,7 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard('jwt'), PoliciesGuard)
-  @CheckAbility({ action: 'read', subject: 'User' })
+  @CheckAbility({ action: PermissionActionEnum.READ, subject: 'User' })
   @ApiOkResponse({
     type: InfinityPaginationResponse(User),
   })
@@ -114,7 +115,7 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard('jwt'), PoliciesGuard)
-  @CheckAbility({ action: 'read', subject: 'User' })
+  @CheckAbility({ action: PermissionActionEnum.READ, subject: 'User' })
   @ApiOkResponse({
     type: User,
   })
@@ -130,7 +131,7 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard('jwt'), PoliciesGuard)
-  @CheckAbility({ action: 'update', subject: 'User' })
+  @CheckAbility({ action: PermissionActionEnum.UPDATE, subject: 'User' })
   @ApiOkResponse({
     type: User,
   })
@@ -148,7 +149,7 @@ export class UsersController {
     return this.usersService.update(id, updateProfileDto);
   }
   @UseGuards(AuthGuard('jwt'), PoliciesGuard)
-  @CheckAbility({ action: 'delete', subject: 'User' })
+  @CheckAbility({ action: PermissionActionEnum.DELETE, subject: 'User' })
   @Delete(':id')
   @ApiParam({
     name: 'id',
