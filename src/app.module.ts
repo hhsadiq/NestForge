@@ -41,6 +41,7 @@ import { MailerModule } from './mailer/mailer.module';
 import { SessionModule } from './sessions/session.module';
 import { UsersModule } from './users/users.module';
 import { ViewsModule } from './views/views.module';
+import awsConfig from '@src/config/aws.config';
 
 const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
   useClass: TypeOrmConfigService,
@@ -62,6 +63,7 @@ const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
       load: [
         databaseConfig,
         authConfig,
+        awsConfig,
         appConfig,
         mailConfig,
         fileConfig,

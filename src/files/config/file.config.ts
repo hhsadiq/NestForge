@@ -13,18 +13,6 @@ class EnvironmentVariablesValidator {
     [FileDriver.S3, FileDriver.S3_PRESIGNED].includes(envValues.FILE_DRIVER),
   )
   @IsString()
-  ACCESS_KEY_ID: string;
-
-  @ValidateIf((envValues) =>
-    [FileDriver.S3, FileDriver.S3_PRESIGNED].includes(envValues.FILE_DRIVER),
-  )
-  @IsString()
-  SECRET_ACCESS_KEY: string;
-
-  @ValidateIf((envValues) =>
-    [FileDriver.S3, FileDriver.S3_PRESIGNED].includes(envValues.FILE_DRIVER),
-  )
-  @IsString()
   AWS_DEFAULT_S3_BUCKET: string;
 
   @ValidateIf((envValues) =>
@@ -32,6 +20,18 @@ class EnvironmentVariablesValidator {
   )
   @IsString()
   AWS_S3_REGION: string;
+
+  @ValidateIf((envValues) =>
+    [FileDriver.S3, FileDriver.S3_PRESIGNED].includes(envValues.FILE_DRIVER),
+  )
+  @IsString()
+  FILE_DEFAULT_S3_FOLDER: string;
+
+  @ValidateIf((envValues) =>
+    [FileDriver.S3, FileDriver.S3_PRESIGNED].includes(envValues.FILE_DRIVER),
+  )
+  @IsString()
+  FILE_S3_URL: string;
 }
 
 export default registerAs<FileConfig>('file', () => {
@@ -40,10 +40,10 @@ export default registerAs<FileConfig>('file', () => {
   return {
     driver:
       (process.env.FILE_DRIVER as FileDriver | undefined) ?? FileDriver.LOCAL,
-    accessKeyId: process.env.ACCESS_KEY_ID,
-    secretAccessKey: process.env.SECRET_ACCESS_KEY,
     awsDefaultS3Bucket: process.env.AWS_DEFAULT_S3_BUCKET,
     awsS3Region: process.env.AWS_S3_REGION,
     maxFileSize: 5242880, // 5mb
+    defaultS3Folder: process.env.FILE_DEFAULT_S3_FOLDER,
+    s3Url: process.env.FILE_S3_URL ?? '',
   };
 });

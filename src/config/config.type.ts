@@ -10,6 +10,7 @@ import { GenAiConfig } from '@src/gen-ai/config/gen-ai-config.type';
 import { MailConfig } from '@src/mail/config/mail-config.type';
 
 import { AppConfig } from './app-config.type';
+import { AwsConfig } from '@src/config/aws-config.type';
 
 export type AllConfigType = {
   app: AppConfig;
@@ -23,4 +24,5 @@ export type AllConfigType = {
   twitter: TwitterConfig;
   genAi: GenAiConfig;
   redis: RedisConfig;
+  aws: AwsConfig;
 };
