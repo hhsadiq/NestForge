@@ -14,6 +14,7 @@ import { configureLogger } from '@src/loggings/utils/logger.utils';
 import { setupSwagger } from '@src/utils/swagger.utils';
 
 import { AppModule } from './app.module';
+import { initializeSentry } from './common/sentry/sentry.init';
 import { AllConfigType } from './config/config.type';
 import { ResolvePromisesInterceptor } from './utils/serializer.interceptor';
 import validationOptions from './utils/validation-options';
@@ -21,6 +22,8 @@ import validationOptions from './utils/validation-options';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
+
+  initializeSentry(app);
   const configService = app.get(ConfigService<AllConfigType>);
   const appConfig = configService.getOrThrow('app', {
     infer: true,

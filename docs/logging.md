@@ -2,23 +2,24 @@
 
 ## Table of Contents <!-- omit in toc -->
 
-- [Overview](#overview)
-  - [Key Features](#key-features)
-- [Architecture](#architecture)
-- [Configuration](#configuration)
-  - [Environment Variables](#environment-variables)
-- [Usage Examples](#usage-examples)
-  - [Basic Logging](#basic-logging)
-  - [HTTP Request/Response Logging](#http-requestresponse-logging)
-  - [Third-Party API Logging](#third-party-api-logging)
-  - [SDK Call Logging](#sdk-call-logging)
-- [Environment Configuration](#environment-configuration)
-  - [Local Development](#local-development)
-  - [Production Environment](#production-environment)
+- [Logging System](#logging-system)
+  - [Overview](#overview)
+    - [Key Features](#key-features)
+  - [Architecture](#architecture)
+  - [Configuration](#configuration)
+    - [Environment Variables](#environment-variables)
+  - [Usage Examples](#usage-examples)
+    - [Basic Logging](#basic-logging)
+    - [HTTP Request/Response Logging](#http-requestresponse-logging)
+    - [Third-Party API Logging](#third-party-api-logging)
+    - [SDK Call Logging](#sdk-call-logging)
+  - [Environment Configuration](#environment-configuration)
+    - [Local Development](#local-development)
+    - [Production Environment](#production-environment)
 
 ## Overview
 
-NestForge includes a comprehensive logging system built on Morgan and Winston that provides structured logging, request tracing, and third-party API monitoring. The system supports both local development (console output) and production environments (AWS CloudWatch).
+This project includes a comprehensive logging system built on Morgan and Winston that provides structured logging, request tracing, and third-party API monitoring. The system supports both local development (console output) and production environments (AWS CloudWatch).
 
 ### Key Features
 

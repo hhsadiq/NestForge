@@ -14,7 +14,7 @@
 
 ## Overview
 
-The Cache Module provides Redis-powered caching for NestForge applications with support for both single-instance and cluster Redis deployments.
+The Cache Module provides Redis-powered caching for applications with support for both single-instance and cluster Redis deployments.
 
 ### Key Features
 

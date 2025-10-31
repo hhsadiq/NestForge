@@ -3,12 +3,23 @@ import {
   ArgumentsHost,
   HttpException,
   HttpStatus,
+  Injectable,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { BaseExceptionFilter } from '@nestjs/core';
+import { AbstractHttpAdapter } from '@nestjs/core';
 import * as Sentry from '@sentry/nestjs';
 
 @Catch()
+@Injectable()
 export class SentryFilter extends BaseExceptionFilter {
+  constructor(
+    adapter: AbstractHttpAdapter,
+    private configService: ConfigService,
+  ) {
+    super(adapter);
+  }
+
   /**
    * Exception handling and Sentry integration
    */
@@ -24,18 +35,30 @@ export class SentryFilter extends BaseExceptionFilter {
         return; // Skip reporting for ignored 404 errors
       }
 
-      // Use Sentry's withScope for scoped error handling
-      void Sentry.withScope(async (scope) => {
-        this.enrichScope(scope, request, exception);
-        Sentry.captureException(exception);
-
-        // Flush events to ensure they are sent to Sentry
-        try {
-          await Sentry.flush(2000);
-        } catch (flushError) {
-          console.error('Error flushing Sentry event:', flushError);
-        }
+      // Skip sending errors to Sentry in local development environment
+      const nodeEnv = this.configService.getOrThrow('app.nodeEnv', {
+        infer: true,
       });
+
+      if (nodeEnv === 'local') {
+        console.warn(
+          'Error in local environment - not sending to Sentry:',
+          exception,
+        );
+      } else {
+        // Use Sentry's withScope for scoped error handling
+        void Sentry.withScope(async (scope) => {
+          this.enrichScope(scope, request, exception);
+          Sentry.captureException(exception);
+
+          // Flush events to ensure they are sent to Sentry
+          try {
+            await Sentry.flush(2000);
+          } catch (flushError) {
+            console.error('Error flushing Sentry event:', flushError);
+          }
+        });
+      }
     } catch (sentryError) {
       console.error('Error reporting to Sentry:', sentryError);
     }
@@ -115,7 +138,10 @@ export class SentryFilter extends BaseExceptionFilter {
     );
     scope.setTag('error.status', status.toString());
 
-    exception.name = title;
+    Object.defineProperty(exception, 'name', {
+      value: title,
+      writable: true,
+    });
   }
 
   /**
@@ -130,6 +156,7 @@ export class SentryFilter extends BaseExceptionFilter {
     });
     return sanitized;
   }
+
   private shouldIgnore404(exception: unknown): boolean {
     if (
       exception instanceof HttpException &&
@@ -137,6 +164,7 @@ export class SentryFilter extends BaseExceptionFilter {
     ) {
       const exceptionResponse = exception.getResponse() as any;
       const message = exceptionResponse?.message || '';
+
       // Match any "Cannot <HTTP_METHOD>" pattern
       const cannotMethodRegex =
         /^Cannot (GET|POST|HEAD|PUT|DELETE|PATCH|OPTIONS) /;
