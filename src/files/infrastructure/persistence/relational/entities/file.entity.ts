@@ -9,11 +9,11 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { TABLES } from '@src/common/constants';
 import { AppConfig } from '@src/config/app-config.type';
 import appConfig from '@src/config/app.config';
+import { AwsConfig } from '@src/config/aws-config.type';
+import awsConfig from '@src/config/aws.config';
 import { FileConfig, FileDriver } from '@src/files/config/file-config.type';
 import fileConfig from '@src/files/config/file.config';
 import { EntityRelationalHelper } from '@src/utils/relational-entity-helper';
-import awsConfig from '@src/config/aws.config';
-import { AwsConfig } from '@src/config/aws-config.type';
 
 @Entity({ name: TABLES.file })
 export class FileEntity extends EntityRelationalHelper {
