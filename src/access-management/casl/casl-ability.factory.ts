@@ -6,7 +6,6 @@ import {
 import { Injectable } from '@nestjs/common';
 
 type Actions = 'manage' | 'create' | 'read' | 'update' | 'delete';
-// Subjects are strings from DB; we use string-based subjects for flexibility
 export type AppAbility = MongoAbility<[Actions, string]>;
 
 @Injectable()
