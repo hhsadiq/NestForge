@@ -34,5 +34,5 @@ export class PermissionEntity {
   description?: string | null;
 
   @ManyToMany(() => RoleEntity, (role) => role.permissions)
-  roles!: RoleEntity[];
+  roles: RoleEntity[];
 }

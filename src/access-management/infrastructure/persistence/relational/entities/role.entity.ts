@@ -27,5 +27,5 @@ export class RoleEntity {
     joinColumn: { name: 'role_id', referencedColumnName: 'id' },
     inverseJoinColumn: { name: 'permission_id', referencedColumnName: 'id' },
   })
-  permissions!: PermissionEntity[];
+  permissions: PermissionEntity[];
 }

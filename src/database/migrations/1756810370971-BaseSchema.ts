@@ -114,7 +114,6 @@ export class BaseSchema1756810370971 implements MigrationInterface {
       )`,
     );
 
-    // Subject + Permission with enum action and FK
     await queryRunner.query(
       `CREATE TABLE "subject" (
         "id" INTEGER GENERATED ALWAYS AS IDENTITY NOT NULL,
