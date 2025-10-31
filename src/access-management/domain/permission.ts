@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 import { Subject } from '@src/access-management/domain/subject';
-import { PermissionAction } from '@src/access-management/infrastructure/persistence/relational/entities/permission.entity';
+import { PermissionActionEnum } from '@src/access-management/enums/permission-actions.enum';
 
 export class Permission {
   @ApiProperty({
@@ -15,7 +15,7 @@ export class Permission {
     description: 'Action of the permission',
     example: 'create',
   })
-  action: PermissionAction;
+  action: PermissionActionEnum;
 
   @ApiProperty({
     type: () => Subject,

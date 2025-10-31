@@ -2,10 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import {
-  PermissionAction,
-  PermissionEntity,
-} from '@src/access-management/infrastructure/persistence/relational/entities/permission.entity';
+import { PermissionActionEnum } from '@src/access-management/enums/permission-actions.enum';
+import { PermissionEntity } from '@src/access-management/infrastructure/persistence/relational/entities/permission.entity';
 import { SubjectEntity } from '@src/access-management/infrastructure/persistence/relational/entities/subject.entity';
 
 @Injectable()
@@ -19,11 +17,11 @@ export class PermissionSeedService {
 
   async run() {
     const subjectNames = ['User', 'AccessManagement'];
-    const actions: PermissionAction[] = [
-      PermissionAction.create,
-      PermissionAction.read,
-      PermissionAction.update,
-      PermissionAction.delete,
+    const actions: PermissionActionEnum[] = [
+      PermissionActionEnum.create,
+      PermissionActionEnum.read,
+      PermissionActionEnum.update,
+      PermissionActionEnum.delete,
     ];
 
     for (const subjectName of subjectNames) {

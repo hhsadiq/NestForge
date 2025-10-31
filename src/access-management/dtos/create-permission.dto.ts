@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsOptional, IsString } from 'class-validator';
 
-import { PermissionAction } from '@src/access-management/infrastructure/persistence/relational/entities/permission.entity';
+import { PermissionActionEnum } from '@src/access-management/enums/permission-actions.enum';
 
 export class CreatePermissionDto {
-  @ApiProperty({ enum: PermissionAction })
-  @IsEnum(PermissionAction)
-  action: PermissionAction;
+  @ApiProperty({ enum: PermissionActionEnum })
+  @IsEnum(PermissionActionEnum)
+  action: PermissionActionEnum;
 
   @ApiProperty({ example: 'User' })
   @IsString()

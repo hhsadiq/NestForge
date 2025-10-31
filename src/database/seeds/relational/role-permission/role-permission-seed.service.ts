@@ -2,10 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 
-import {
-  PermissionAction,
-  PermissionEntity,
-} from '@src/access-management/infrastructure/persistence/relational/entities/permission.entity';
+import { PermissionActionEnum } from '@src/access-management/enums/permission-actions.enum';
+import { PermissionEntity } from '@src/access-management/infrastructure/persistence/relational/entities/permission.entity';
 import { RoleEntity } from '@src/access-management/infrastructure/persistence/relational/entities/role.entity';
 
 @Injectable()
@@ -36,10 +34,10 @@ export class RolePermissionSeedService {
     const perms = await this.permissionRepo.find({
       where: {
         action: In([
-          PermissionAction.create,
-          PermissionAction.read,
-          PermissionAction.update,
-          PermissionAction.delete,
+          PermissionActionEnum.create,
+          PermissionActionEnum.read,
+          PermissionActionEnum.update,
+          PermissionActionEnum.delete,
         ]),
       },
       relations: ['subject'],
@@ -76,7 +74,7 @@ export class RolePermissionSeedService {
 
     if (userRole) {
       const readPerm = userPerms.find(
-        (p) => p.action === PermissionAction.read,
+        (p) => p.action === PermissionActionEnum.read,
       );
       if (
         readPerm &&
