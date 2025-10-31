@@ -12,6 +12,8 @@ import appConfig from '@src/config/app.config';
 import { FileConfig, FileDriver } from '@src/files/config/file-config.type';
 import fileConfig from '@src/files/config/file.config';
 import { EntityRelationalHelper } from '@src/utils/relational-entity-helper';
+import awsConfig from '@src/config/aws.config';
+import { AwsConfig } from '@src/config/aws-config.type';
 
 @Entity({ name: TABLES.file })
 export class FileEntity extends EntityRelationalHelper {
@@ -31,8 +33,8 @@ export class FileEntity extends EntityRelationalHelper {
         const s3 = new S3Client({
           region: (fileConfig() as FileConfig).awsS3Region ?? '',
           credentials: {
-            accessKeyId: (fileConfig() as FileConfig).accessKeyId ?? '',
-            secretAccessKey: (fileConfig() as FileConfig).secretAccessKey ?? '',
+            accessKeyId: (awsConfig() as AwsConfig).accessKeyId ?? '',
+            secretAccessKey: (awsConfig() as AwsConfig).secretAccessKey ?? '',
           },
         });
 

@@ -8,6 +8,8 @@ import { AppConfig } from '@src/config/app-config.type';
 import appConfig from '@src/config/app.config';
 import { FileConfig, FileDriver } from '@src/files/config/file-config.type';
 import fileConfig from '@src/files/config/file.config';
+import awsConfig from '@src/config/aws.config';
+import { AwsConfig } from '@src/config/aws-config.type';
 
 export class File {
   @ApiProperty({
@@ -33,8 +35,8 @@ export class File {
         const s3 = new S3Client({
           region: (fileConfig() as FileConfig).awsS3Region ?? '',
           credentials: {
-            accessKeyId: (fileConfig() as FileConfig).accessKeyId ?? '',
-            secretAccessKey: (fileConfig() as FileConfig).secretAccessKey ?? '',
+            accessKeyId: (awsConfig() as AwsConfig).accessKeyId ?? '',
+            secretAccessKey: (awsConfig() as AwsConfig).secretAccessKey ?? '',
           },
         });
 
