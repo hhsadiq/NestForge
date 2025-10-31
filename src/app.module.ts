@@ -11,6 +11,7 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 import { BiometricChallengeModule } from '@src/biometric-challenges/biometric-challenges.module';
 import { CacheModule } from '@src/cache/cache.module';
 import redisConfig from '@src/cache/config/redis.config';
+import awsConfig from '@src/config/aws.config';
 import { CustomHttpModule } from '@src/http/custom-http.module';
 import { CorrelationIdMiddleware } from '@src/loggings/utils/correlation-id.middleware';
 
@@ -41,7 +42,6 @@ import { MailerModule } from './mailer/mailer.module';
 import { SessionModule } from './sessions/session.module';
 import { UsersModule } from './users/users.module';
 import { ViewsModule } from './views/views.module';
-import awsConfig from '@src/config/aws.config';
 
 const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
   useClass: TypeOrmConfigService,

@@ -69,11 +69,11 @@ class EnvironmentVariablesValidator {
   @IsBoolean()
   @IsOptional()
   IDEMPOTENCY_ENABLED: boolean;
-  
+
   @IsUrl({ require_tld: false })
   @IsOptional()
   SENTRY_URL: string;
-  
+
   @IsString()
   @IsOptional()
   MASKED_FIELDS: string;
