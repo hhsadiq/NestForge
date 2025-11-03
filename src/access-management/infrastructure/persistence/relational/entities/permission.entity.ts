@@ -2,13 +2,13 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
 import { PermissionActionEnum } from '@src/access-management/enums/permission-actions.enum';
-import { RoleEntity } from '@src/access-management/infrastructure/persistence/relational/entities/role.entity';
+import { RolePermissionEntity } from '@src/access-management/infrastructure/persistence/relational/entities/role-permission.entity';
 import { SubjectEntity } from '@src/access-management/infrastructure/persistence/relational/entities/subject.entity';
 import { TABLES } from '@src/common/constants';
 
@@ -31,6 +31,9 @@ export class PermissionEntity {
   @Column({ type: 'varchar', nullable: true })
   description?: string | null;
 
-  @ManyToMany(() => RoleEntity, (role) => role.permissions)
-  roles: RoleEntity[];
+  @OneToMany(
+    () => RolePermissionEntity,
+    (rolePermission) => rolePermission.permission,
+  )
+  rolePermissions: RolePermissionEntity[];
 }

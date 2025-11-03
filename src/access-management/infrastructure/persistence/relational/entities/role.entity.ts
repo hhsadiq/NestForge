@@ -1,12 +1,6 @@
-import {
-  Column,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-import { PermissionEntity } from './permission.entity';
+import { RolePermissionEntity } from './role-permission.entity';
 
 @Entity({ name: 'role' })
 export class RoleEntity {
@@ -19,13 +13,10 @@ export class RoleEntity {
   @Column({ type: 'varchar', nullable: true })
   description?: string | null;
 
-  @ManyToMany(() => PermissionEntity, (permission) => permission.roles, {
-    cascade: true,
-  })
-  @JoinTable({
-    name: 'role_permission',
-    joinColumn: { name: 'role_id', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'permission_id', referencedColumnName: 'id' },
-  })
-  permissions: PermissionEntity[];
+  @OneToMany(
+    () => RolePermissionEntity,
+    (rolePermission) => rolePermission.role,
+    { cascade: true },
+  )
+  rolePermissions: RolePermissionEntity[];
 }

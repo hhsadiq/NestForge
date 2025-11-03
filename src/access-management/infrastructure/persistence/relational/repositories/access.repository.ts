@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 import { Permission } from '@src/access-management/domain/permission';
 import { Role } from '@src/access-management/domain/role';
@@ -30,7 +30,6 @@ export class AccessRelationalRepository extends AccessAbstractRepository {
   }
 
   async findRolesByUserId(userId: number): Promise<Role[]> {
-    // Support M2M via user_role join table
     const roles = await this.roleRepo
       .createQueryBuilder('role')
       .innerJoin(
@@ -41,26 +40,29 @@ export class AccessRelationalRepository extends AccessAbstractRepository {
           userId,
         },
       )
-      .leftJoinAndSelect('role.permissions', 'permission')
       .getMany();
     return roles.map(RoleMapper.toDomain);
   }
 
   async findPermissionsByRoleIds(roleIds: number[]): Promise<Permission[]> {
-    const roles = await this.roleRepo.find({
-      where: { id: In(roleIds) },
-      relations: ['permissions'],
-    });
-    const permissions = roles.flatMap((r) => r.permissions || []);
+    if (!roleIds?.length) return [];
+    // Select distinct permissions joined via role_permission bridge
+    const qb = this.permissionRepo
+      .createQueryBuilder('permission')
+      .innerJoin('role_permission', 'rp', 'rp.permission_id = permission.id')
+      .leftJoinAndSelect('permission.subject', 'subject')
+      .where('rp.role_id IN (:...roleIds)', { roleIds });
+
+    const perms = await qb.getMany();
     // Deduplicate by id
     const unique = new Map<number, PermissionEntity>();
-    for (const p of permissions) unique.set(p.id, p);
+    for (const p of perms) unique.set(p.id, p);
     return Array.from(unique.values()).map(PermissionMapper.toDomain);
   }
 
   async findRoleByName(name: string): Promise<Role | null> {
     const r = await this.roleRepo.findOne({ where: { name } });
-    return r ? RoleMapper.toDomain({ ...r, permissions: [] }) : null;
+    return r ? RoleMapper.toDomain(r) : null;
   }
 
   async findSubjectByName(name: string): Promise<Subject | null> {
@@ -77,7 +79,7 @@ export class AccessRelationalRepository extends AccessAbstractRepository {
 
   async findAllRoles(): Promise<Role[]> {
     const roles = await this.roleRepo.find();
-    return roles.map((r) => RoleMapper.toDomain({ ...r, permissions: [] }));
+    return roles.map((r) => RoleMapper.toDomain(r));
   }
 
   async findAllPermissions(): Promise<Permission[]> {
@@ -99,7 +101,7 @@ export class AccessRelationalRepository extends AccessAbstractRepository {
   async createRole(createRole: Role): Promise<Role> {
     const entity = RoleMapper.toPersistence(createRole);
     const saved = await this.roleRepo.save(this.roleRepo.create(entity));
-    return RoleMapper.toDomain({ ...saved, permissions: [] });
+    return RoleMapper.toDomain(saved);
   }
 
   async createPermission(
@@ -168,21 +170,19 @@ export class AccessRelationalRepository extends AccessAbstractRepository {
     roleId: number,
     permissionId: number,
   ): Promise<void> {
-    await this.roleRepo
-      .createQueryBuilder()
-      .relation(RoleEntity, 'permissions')
-      .of(roleId)
-      .add(permissionId);
+    await this.roleRepo.query(
+      'INSERT INTO role_permission (role_id, permission_id) VALUES ($1, $2) ON CONFLICT DO NOTHING',
+      [roleId, permissionId],
+    );
   }
 
   async unassignPermissionFromRole(
     roleId: number,
     permissionId: number,
   ): Promise<void> {
-    await this.roleRepo
-      .createQueryBuilder()
-      .relation(RoleEntity, 'permissions')
-      .of(roleId)
-      .remove(permissionId);
+    await this.roleRepo.query(
+      'DELETE FROM role_permission WHERE role_id = $1 AND permission_id = $2',
+      [roleId, permissionId],
+    );
   }
 }

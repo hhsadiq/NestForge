@@ -4,6 +4,7 @@ import { In, Repository } from 'typeorm';
 
 import { PermissionActionEnum } from '@src/access-management/enums/permission-actions.enum';
 import { PermissionEntity } from '@src/access-management/infrastructure/persistence/relational/entities/permission.entity';
+import { RolePermissionEntity } from '@src/access-management/infrastructure/persistence/relational/entities/role-permission.entity';
 import { RoleEntity } from '@src/access-management/infrastructure/persistence/relational/entities/role.entity';
 
 @Injectable()
@@ -13,19 +14,15 @@ export class RolePermissionSeedService {
     private readonly roleRepo: Repository<RoleEntity>,
     @InjectRepository(PermissionEntity)
     private readonly permissionRepo: Repository<PermissionEntity>,
+    @InjectRepository(RolePermissionEntity)
+    private readonly rolePermissionRepo: Repository<RolePermissionEntity>,
   ) {}
 
   async run() {
     // Load roles
     const [adminRole, userRole] = await Promise.all([
-      this.roleRepo.findOne({
-        where: { name: 'Admin' },
-        relations: ['permissions'],
-      }),
-      this.roleRepo.findOne({
-        where: { name: 'User' },
-        relations: ['permissions'],
-      }),
+      this.roleRepo.findOne({ where: { name: 'Admin' } }),
+      this.roleRepo.findOne({ where: { name: 'User' } }),
     ]);
 
     if (!adminRole && !userRole) return;
@@ -49,26 +46,35 @@ export class RolePermissionSeedService {
 
     // Assign: Admin gets all CRUD, User gets read only
     if (adminRole) {
+      const existingAdminRolePerms = await this.rolePermissionRepo.find({
+        where: { role_id: adminRole.id },
+      });
+      const existingAdminPermIds = new Set(
+        existingAdminRolePerms.map((rp) => rp.permission_id),
+      );
+
       const missingUserPerms = userPerms.filter(
-        (p) => !adminRole.permissions?.some((ap) => ap.id === p.id),
+        (p) => !existingAdminPermIds.has(p.id),
       );
       for (const p of missingUserPerms) {
-        await this.roleRepo
-          .createQueryBuilder()
-          .relation(RoleEntity, 'permissions')
-          .of(adminRole.id)
-          .add(p.id);
+        await this.rolePermissionRepo.save(
+          this.rolePermissionRepo.create({
+            role_id: adminRole.id,
+            permission_id: p.id,
+          }),
+        );
       }
 
       const missingAccessPerms = accessManagementPerms.filter(
-        (p) => !adminRole.permissions?.some((ap) => ap.id === p.id),
+        (p) => !existingAdminPermIds.has(p.id),
       );
       for (const p of missingAccessPerms) {
-        await this.roleRepo
-          .createQueryBuilder()
-          .relation(RoleEntity, 'permissions')
-          .of(adminRole.id)
-          .add(p.id);
+        await this.rolePermissionRepo.save(
+          this.rolePermissionRepo.create({
+            role_id: adminRole.id,
+            permission_id: p.id,
+          }),
+        );
       }
     }
 
@@ -76,15 +82,18 @@ export class RolePermissionSeedService {
       const readPerm = userPerms.find(
         (p) => p.action === PermissionActionEnum.READ,
       );
-      if (
-        readPerm &&
-        !userRole.permissions?.some((up) => up.id === readPerm.id)
-      ) {
-        await this.roleRepo
-          .createQueryBuilder()
-          .relation(RoleEntity, 'permissions')
-          .of(userRole.id)
-          .add(readPerm.id);
+      if (readPerm) {
+        const exists = await this.rolePermissionRepo.findOne({
+          where: { role_id: userRole.id, permission_id: readPerm.id },
+        });
+        if (!exists) {
+          await this.rolePermissionRepo.save(
+            this.rolePermissionRepo.create({
+              role_id: userRole.id,
+              permission_id: readPerm.id,
+            }),
+          );
+        }
       }
     }
   }
