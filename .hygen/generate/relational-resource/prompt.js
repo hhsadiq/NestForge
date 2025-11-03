@@ -39,7 +39,7 @@ module.exports = async (args, prompter) => {
   // If no valid data file provided, use interactive prompts
   console.log('ℹ️  No valid entity definition file found, switching to interactive mode...');
   try {
-    return await prompter.prompt([
+    const answers = await prompter.prompt([
       {
         type: 'confirm',
         name: 'isAddTestCase',
@@ -59,6 +59,7 @@ module.exports = async (args, prompter) => {
         ],
       },
     ]);
+    return { ...answers, enums: [], fields: [] };
   } catch (err) {
     console.error(`❌ Error during interactive prompts: ${err}`);
     process.exit(1);
