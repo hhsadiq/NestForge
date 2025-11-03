@@ -4,6 +4,7 @@ import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ScheduleModule as NestScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { SentryModule } from '@sentry/nestjs/setup';
 import { HeaderResolver } from 'nestjs-i18n';
 import { I18nModule } from 'nestjs-i18n/dist/i18n.module';
 import { DataSource, DataSourceOptions } from 'typeorm';
@@ -11,6 +12,7 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 import { BiometricChallengeModule } from '@src/biometric-challenges/biometric-challenges.module';
 import { CacheModule } from '@src/cache/cache.module';
 import redisConfig from '@src/cache/config/redis.config';
+import awsConfig from '@src/config/aws.config';
 import { CustomHttpModule } from '@src/http/custom-http.module';
 import { CorrelationIdMiddleware } from '@src/loggings/utils/correlation-id.middleware';
 
@@ -51,6 +53,7 @@ const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
 
 @Module({
   imports: [
+    SentryModule.forRoot(),
     CustomHttpModule,
     NestScheduleModule.forRoot(),
     LoggingsModule,
@@ -62,6 +65,7 @@ const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
       load: [
         databaseConfig,
         authConfig,
+        awsConfig,
         appConfig,
         mailConfig,
         fileConfig,

@@ -1,20 +1,22 @@
 # Setup Script Documentation
 
-The `scripts/setup.sh` script provides an automated way to set up your NestForge project from scratch.
+The `scripts/setup.sh` script provides an automated way to set up your project from scratch.
 
 ---
 
 ## Table of Contents
 
-- [Prerequisites](#prerequisites)
-- [What the Script Does](#what-the-script-does)
-- [Interactive Prompts](#interactive-prompts)
-  - [For Custom Project Setup](#for-custom-project-setup)
-- [Usage](#usage)
-- [Troubleshooting](#troubleshooting)
-  - [Common Issues](#common-issues)
-- [Result](#result)
-  - [Test User Credentials](#test-user-credentials)
+- [Setup Script Documentation](#setup-script-documentation)
+  - [Table of Contents](#table-of-contents)
+  - [Prerequisites](#prerequisites)
+  - [What the Script Does](#what-the-script-does)
+  - [Interactive Prompts](#interactive-prompts)
+    - [For Custom Project Setup](#for-custom-project-setup)
+  - [Usage](#usage)
+  - [Troubleshooting](#troubleshooting)
+    - [Common Issues](#common-issues)
+  - [Result](#result)
+    - [Test User Credentials](#test-user-credentials)
 
 ---
 

@@ -25,10 +25,10 @@ const infrastructurePersistenceModule = RelationalFilePersistenceModule;
         const s3 = new S3Client({
           region: configService.get('file.awsS3Region', { infer: true }),
           credentials: {
-            accessKeyId: configService.getOrThrow('file.accessKeyId', {
+            accessKeyId: configService.getOrThrow('aws.accessKeyId', {
               infer: true,
             }),
-            secretAccessKey: configService.getOrThrow('file.secretAccessKey', {
+            secretAccessKey: configService.getOrThrow('aws.secretAccessKey', {
               infer: true,
             }),
           },

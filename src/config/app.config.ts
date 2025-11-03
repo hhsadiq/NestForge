@@ -69,6 +69,14 @@ class EnvironmentVariablesValidator {
   @IsBoolean()
   @IsOptional()
   IDEMPOTENCY_ENABLED: boolean;
+
+  @IsUrl({ require_tld: false })
+  @IsOptional()
+  SENTRY_URL: string;
+
+  @IsString()
+  @IsOptional()
+  MASKED_FIELDS: string;
 }
 
 export default registerAs<AppConfig>('app', () => {
@@ -93,5 +101,9 @@ export default registerAs<AppConfig>('app', () => {
     allowedOrigins: process.env.ALLOWED_ORIGINS?.split(',') || [],
     enableCronJobs: process.env.ENABLE_CRON_JOBS === 'true',
     idempotencyEnabled: process.env.IDEMPOTENCY_ENABLED === 'true',
+    sentryUrl: process.env.SENTRY_URL ?? '',
+    maskedFields: process.env.MASKED_FIELDS
+      ? process.env.MASKED_FIELDS.split(',')
+      : [],
   };
 });

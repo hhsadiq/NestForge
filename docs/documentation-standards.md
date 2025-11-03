@@ -1,6 +1,6 @@
 # Documentation Standards
 
-Quick reference for maintaining consistent NestForge documentation.
+Quick reference for maintaining consistent project documentation.
 
 ## 📋 Quick Reference
 

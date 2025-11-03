@@ -75,6 +75,14 @@ sed_replace "s/$OLD_PASCAL/$PASCAL_NAME/g" \
 sed_replace "s/$OLD_KEBAB/$KEBAB_NAME/g" \
   "$PROJECT_ROOT/.github/workflows/develop.yml"
 
+# Replace project name in .all-contributorsrc (kebab-case)
+sed_replace "s/\"projectName\": \"$OLD_KEBAB\"/\"projectName\": \"$KEBAB_NAME\"/g" \
+  "$PROJECT_ROOT/.all-contributorsrc"
+
+# Update repo references in jwt.strategy.ts (keep org, change repo name)
+sed_replace "s/\/nestforge\//\/$KEBAB_NAME\//g" \
+  "$PROJECT_ROOT/src/auth/strategies/jwt.strategy.ts"
+
 # ✅ Update APP_NAME in env-example-relational
 ENV_FILE="$PROJECT_ROOT/env-example-relational"
 if [ -f "$ENV_FILE" ]; then

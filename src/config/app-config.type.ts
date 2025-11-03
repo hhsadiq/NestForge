@@ -11,6 +11,8 @@ export type AppConfig = {
   swaggerUsername: string;
   swaggerPassword: string;
   allowedOrigins: string[];
+  sentryUrl: string;
   enableCronJobs: boolean;
   idempotencyEnabled: boolean;
+  maskedFields: string[];
 };

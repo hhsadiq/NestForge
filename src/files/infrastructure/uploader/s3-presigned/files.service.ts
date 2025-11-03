@@ -28,11 +28,11 @@ export class FilesS3PresignedService {
         infer: true,
       }),
       credentials: {
-        accessKeyId: configService.getOrThrow<string>('file.accessKeyId', {
+        accessKeyId: configService.getOrThrow<string>('aws.accessKeyId', {
           infer: true,
         }),
         secretAccessKey: configService.getOrThrow<string>(
-          'file.secretAccessKey',
+          'aws.secretAccessKey',
           {
             infer: true,
           },
