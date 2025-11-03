@@ -1,6 +1,10 @@
 export const TABLES = {
-  file: 'file',
   role: 'role',
+  permission: 'permission',
+  subject: 'subject',
+  userRole: 'user_role',
+  rolePermission: 'role_permission',
+  file: 'file',
   session: 'session',
   status: 'status',
   user: 'user',

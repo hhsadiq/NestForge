@@ -3,7 +3,7 @@ import { SelectQueryBuilder } from 'typeorm';
 import { EnableBiometricDto } from '@src/biometric-challenges/dtos/enable-biometric-payload.dto';
 import { User } from '@src/users/domain/user';
 import { UserDevice } from '@src/users/domain/user-device';
-import { FilterUserDto, SortUserDto } from '@src/users/dto/query-user.dto';
+import { SortUserDto } from '@src/users/dto/query-user.dto';
 import { DeepPartial } from '@src/utils/types/deep-partial.type';
 import { NullableType } from '@src/utils/types/nullable.type';
 import { IPaginationOptions } from '@src/utils/types/pagination-options';
@@ -16,11 +16,9 @@ export abstract class UserAbstractRepository {
   ): Promise<User>;
 
   abstract findManyWithPagination({
-    filterOptions,
     sortOptions,
     paginationOptions,
   }: {
-    filterOptions?: FilterUserDto | null;
     sortOptions?: SortUserDto[] | null;
     paginationOptions: IPaginationOptions;
   }): Promise<User[]>;

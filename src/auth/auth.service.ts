@@ -7,6 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcryptjs';
 import ms, { StringValue } from 'ms';
 
+import { AccessManagementService } from '@src/access-management/access-management.service';
 import { ERROR_MESSAGES } from '@src/common/error-messages';
 import {
   FORBIDDEN,
@@ -16,7 +17,6 @@ import {
 } from '@src/common/exceptions';
 import { AllConfigType } from '@src/config/config.type';
 import { MailService } from '@src/mail/mail.service';
-import { RoleEnum } from '@src/roles/roles.enum';
 import { Session } from '@src/sessions/domain/session';
 import { SessionService } from '@src/sessions/session.service';
 import { SocialInterface } from '@src/social/interfaces/social.interface';
@@ -41,6 +41,7 @@ export class AuthService {
     private sessionService: SessionService,
     private mailService: MailService,
     private configService: ConfigService<AllConfigType>,
+    private accessService: AccessManagementService,
   ) {}
 
   async validateLogin(loginDto: AuthEmailLoginDto): Promise<LoginResponseDto> {
@@ -82,9 +83,10 @@ export class AuthService {
       hash,
     });
 
+    const roles = await this.getUserRolesArray(Number(user.id));
     const { token, refreshToken, tokenExpires } = await this.getTokensData({
       id: user.id,
-      role: user.role,
+      roles,
       sessionId: session.id,
       hash,
     });
@@ -124,9 +126,10 @@ export class AuthService {
       hash,
     });
 
+    const roles = await this.getUserRolesArray(Number(user.id));
     const { token, refreshToken, tokenExpires } = await this.getTokensData({
       id: user.id,
-      role: user.role,
+      roles,
       sessionId: session.id,
       hash,
     });
@@ -166,9 +169,6 @@ export class AuthService {
     } else if (userByEmail) {
       user = userByEmail;
     } else if (socialData.id) {
-      const role = {
-        id: RoleEnum.user,
-      };
       const status = {
         id: StatusEnum.active,
       };
@@ -180,7 +180,6 @@ export class AuthService {
         username: socialData.username ?? null,
         socialId: socialData.id,
         provider: authProvider,
-        role,
         status,
       });
 
@@ -204,13 +203,14 @@ export class AuthService {
       hash,
     });
 
+    const roles = await this.getUserRolesArray(Number(user.id));
     const {
       token: jwtToken,
       refreshToken,
       tokenExpires,
     } = await this.getTokensData({
       id: user.id,
-      role: user.role,
+      roles,
       sessionId: session.id,
       hash,
     });
@@ -227,9 +227,6 @@ export class AuthService {
     const user = await this.usersService.create({
       ...dto,
       email: dto.email,
-      role: {
-        id: RoleEnum.user,
-      },
       status: {
         id: StatusEnum.inactive,
       },
@@ -477,21 +474,16 @@ export class AuthService {
       .update(randomStringGenerator())
       .digest('hex');
 
-    const user = await this.usersService.findById(session.user.id);
-
-    if (!user?.role) {
-      throw UNAUTHORIZED('User not found with the valid role', 'role');
-    }
+    await this.usersService.findById(session.user.id);
 
     await this.sessionService.update(session.id, {
       hash,
     });
 
+    const roles = await this.getUserRolesArray(Number(session.user.id));
     const { token, refreshToken, tokenExpires } = await this.getTokensData({
       id: session.user.id,
-      role: {
-        id: user.role.id,
-      },
+      roles,
       sessionId: session.id,
       hash,
     });
@@ -513,7 +505,7 @@ export class AuthService {
 
   private async getTokensData(data: {
     id: User['id'];
-    role: User['role'];
+    roles: { id: number; name: string }[];
     sessionId: Session['id'];
     hash: Session['hash'];
   }) {
@@ -530,7 +522,7 @@ export class AuthService {
       await this.jwtService.signAsync(
         {
           id: data.id,
-          role: data.role,
+          roles: data.roles,
           sessionId: data.sessionId,
         },
         {
@@ -575,5 +567,13 @@ export class AuthService {
       throw NOT_FOUND('User', { [field]: value });
     }
     return user;
+  }
+
+  private async getUserRolesArray(
+    userId: number,
+  ): Promise<{ id: number; name: string }[]> {
+    const roles = await this.accessService.getUserRoles(Number(userId));
+    if (!roles?.length) return [];
+    return roles.map((r) => ({ id: r.id, name: r.name }));
   }
 }

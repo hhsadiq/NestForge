@@ -7,16 +7,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { RoleDto } from '@src/roles/dto/role.dto';
 import { User } from '@src/users/domain/user';
-
-export class FilterUserDto {
-  @ApiPropertyOptional({ type: RoleDto })
-  @IsOptional()
-  @ValidateNested({ each: true })
-  @Type(() => RoleDto)
-  roles?: RoleDto[] | null;
-}
 
 export class SortUserDto {
   @ApiProperty()
@@ -41,15 +32,6 @@ export class QueryUserDto {
   @IsNumber()
   @IsOptional()
   limit?: number;
-
-  @ApiPropertyOptional({ type: String })
-  @IsOptional()
-  @Transform(({ value }) =>
-    value ? plainToInstance(FilterUserDto, JSON.parse(value)) : undefined,
-  )
-  @ValidateNested()
-  @Type(() => FilterUserDto)
-  filters?: FilterUserDto | null;
 
   @ApiPropertyOptional({ type: String })
   @IsOptional()

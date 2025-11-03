@@ -179,6 +179,6 @@ https://github.com/brocoders/nestjs-boilerplate/assets/6001723/f6fdcc89-5ec6-472
 
 ---
 
-Previous: [Cache](cache.md)
+Previous: [Access Management](access-management.md)
 
 Next: [Exceptions](exceptions.md)

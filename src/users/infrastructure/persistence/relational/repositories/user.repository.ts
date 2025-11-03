@@ -5,7 +5,7 @@ import { FindOptionsWhere, Repository, SelectQueryBuilder } from 'typeorm';
 import { EnableBiometricDto } from '@src/biometric-challenges/dtos/enable-biometric-payload.dto';
 import { User } from '@src/users/domain/user';
 import { UserDevice } from '@src/users/domain/user-device';
-import { FilterUserDto, SortUserDto } from '@src/users/dto/query-user.dto';
+import { SortUserDto } from '@src/users/dto/query-user.dto';
 import { UserDeviceEntity } from '@src/users/infrastructure/persistence/relational/entities/user-device.entity';
 import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity';
 import { UserDeviceMapper } from '@src/users/infrastructure/persistence/relational/mappers/user-device.mapper';
@@ -35,20 +35,13 @@ export class UsersRelationalRepository implements UserAbstractRepository {
   }
 
   async findManyWithPagination({
-    filterOptions,
     sortOptions,
     paginationOptions,
   }: {
-    filterOptions?: FilterUserDto | null;
     sortOptions?: SortUserDto[] | null;
     paginationOptions: IPaginationOptions;
   }): Promise<User[]> {
     const where: FindOptionsWhere<UserEntity> = {};
-    if (filterOptions?.roles?.length) {
-      where.role = filterOptions.roles.map((role) => ({
-        id: role.id,
-      }));
-    }
 
     const entities = await this.usersRepository.find({
       skip: (paginationOptions.page - 1) * paginationOptions.limit,
