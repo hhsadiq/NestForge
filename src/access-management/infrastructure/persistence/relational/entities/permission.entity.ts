@@ -1,7 +1,6 @@
 import {
   Column,
   Entity,
-  Index,
   JoinColumn,
   ManyToMany,
   ManyToOne,
@@ -14,7 +13,6 @@ import { SubjectEntity } from '@src/access-management/infrastructure/persistence
 import { TABLES } from '@src/common/constants';
 
 @Entity({ name: TABLES.permission })
-@Index(['action', 'subject'], { unique: true })
 export class PermissionEntity {
   @PrimaryGeneratedColumn('identity')
   id: number;

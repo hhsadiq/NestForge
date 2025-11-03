@@ -1,7 +1,6 @@
 import {
   Column,
   Entity,
-  Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -12,7 +11,6 @@ import { TABLES } from '@src/common/constants';
 import { UserEntity } from '@src/users/infrastructure/persistence/relational/entities/user.entity';
 
 @Entity({ name: TABLES.userRole })
-@Index(['user_id', 'role_id'], { unique: true })
 export class UserRoleEntity {
   @PrimaryGeneratedColumn()
   id: number;

@@ -1,7 +1,6 @@
 import {
   Column,
   Entity,
-  Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -12,7 +11,6 @@ import { RoleEntity } from '@src/access-management/infrastructure/persistence/re
 import { TABLES } from '@src/common/constants';
 
 @Entity({ name: TABLES.rolePermission })
-@Index(['role_id', 'permission_id'], { unique: true })
 export class RolePermissionEntity {
   @PrimaryGeneratedColumn()
   id: number;
