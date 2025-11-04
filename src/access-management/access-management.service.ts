@@ -9,12 +9,15 @@ import { AccessAbstractRepository } from './infrastructure/persistence/access.ab
 
 @Injectable()
 export class AccessManagementService {
-  constructor(private readonly repository: AccessAbstractRepository) {}
+  constructor(
+    private readonly accessManagementRepository: AccessAbstractRepository,
+  ) {}
 
   async getUserPermissions(roleIds: number[]) {
-    const permissions = await this.repository.findPermissionsByRoleIds(
-      roleIds ?? [],
-    );
+    const permissions =
+      await this.accessManagementRepository.findPermissionsByRoleIds(
+        roleIds ?? [],
+      );
     return permissions.map((p) => ({
       action: p.action as any,
       subject: (p as any)?.subject?.name ?? (p as any)?.subject,
@@ -22,22 +25,26 @@ export class AccessManagementService {
   }
 
   async createRole(createRole: CreateRoleDto) {
-    const existing = await this.repository.findRoleByName(createRole.name);
+    const existing = await this.accessManagementRepository.findRoleByName(
+      createRole.name,
+    );
     if (existing) {
       throw FORBIDDEN(ERROR_MESSAGES.ALREADY_EXISTS('role'), 'role');
     }
-    return this.repository.createRole(createRole);
+    return this.accessManagementRepository.createRole(createRole);
   }
 
   async createPermission(createPermission: CreatePermissionDto) {
-    const existing = await this.repository.findSubjectByName(
+    const existing = await this.accessManagementRepository.findSubjectByName(
       createPermission.subject,
     );
     const subject =
       existing ??
-      (await this.repository.createSubject(createPermission.subject));
+      (await this.accessManagementRepository.createSubject(
+        createPermission.subject,
+      ));
     const existingPermission =
-      await this.repository.findPermissionByActionAndSubject(
+      await this.accessManagementRepository.findPermissionByActionAndSubject(
         createPermission.action as any,
         subject.id,
       );
@@ -48,7 +55,7 @@ export class AccessManagementService {
       );
     }
 
-    return this.repository.createPermission({
+    return this.accessManagementRepository.createPermission({
       action: createPermission.action as any,
       subject,
       description: createPermission.description,
@@ -56,11 +63,11 @@ export class AccessManagementService {
   }
 
   getAllRoles() {
-    return this.repository.findAllRoles();
+    return this.accessManagementRepository.findAllRoles();
   }
 
   getAllPermissions() {
-    return this.repository.findAllPermissions();
+    return this.accessManagementRepository.findAllPermissions();
   }
 
   assignRoleToUser(userId: number, roleId: number) {
@@ -72,25 +79,23 @@ export class AccessManagementService {
   }
 
   private async assignRoleWithChecks(userId: number, roleId: number) {
-    const userExists = await this.repository.userExists(userId);
+    const userExists = await this.accessManagementRepository.userExists(userId);
     if (!userExists) {
       throw NOT_FOUND('User', { id: userId });
     }
 
-    const roleExists = await this.repository.roleExists(roleId);
+    const roleExists = await this.accessManagementRepository.roleExists(roleId);
     if (!roleExists) {
       throw NOT_FOUND('Role', { id: roleId });
     }
 
-    const alreadyAssigned = await this.repository.isUserRoleAssigned(
-      userId,
-      roleId,
-    );
+    const alreadyAssigned =
+      await this.accessManagementRepository.isUserRoleAssigned(userId, roleId);
     if (alreadyAssigned) {
       throw FORBIDDEN(ERROR_MESSAGES.ALREADY_EXISTS('user role'), 'userRole');
     }
 
-    return this.repository.assignRoleToUser(userId, roleId);
+    return this.accessManagementRepository.assignRoleToUser(userId, roleId);
   }
 
   assignPermissionToRole(roleId: number, permissionId: number) {
@@ -105,20 +110,22 @@ export class AccessManagementService {
     roleId: number,
     permissionId: number,
   ) {
-    const roleExists = await this.repository.roleExists(roleId);
+    const roleExists = await this.accessManagementRepository.roleExists(roleId);
     if (!roleExists) {
       throw NOT_FOUND('Role', { id: roleId });
     }
 
-    const permExists = await this.repository.permissionExists(permissionId);
+    const permExists =
+      await this.accessManagementRepository.permissionExists(permissionId);
     if (!permExists) {
       throw NOT_FOUND('Permission', { id: permissionId });
     }
 
-    const alreadyAssigned = await this.repository.isPermissionAssignedToRole(
-      roleId,
-      permissionId,
-    );
+    const alreadyAssigned =
+      await this.accessManagementRepository.isPermissionAssignedToRole(
+        roleId,
+        permissionId,
+      );
     if (alreadyAssigned) {
       throw FORBIDDEN(
         ERROR_MESSAGES.ALREADY_EXISTS('role permission'),
@@ -126,61 +133,72 @@ export class AccessManagementService {
       );
     }
 
-    return this.repository.assignPermissionToRole(roleId, permissionId);
+    return this.accessManagementRepository.assignPermissionToRole(
+      roleId,
+      permissionId,
+    );
   }
 
   private async removeRoleWithChecks(userId: number, roleId: number) {
-    const userExists = await this.repository.userExists(userId);
+    const userExists = await this.accessManagementRepository.userExists(userId);
     if (!userExists) {
       throw NOT_FOUND('User', { id: userId });
     }
 
-    const roleExists = await this.repository.roleExists(roleId);
+    const roleExists = await this.accessManagementRepository.roleExists(roleId);
     if (!roleExists) {
       throw NOT_FOUND('Role', { id: roleId });
     }
 
-    const assigned = await this.repository.isUserRoleAssigned(userId, roleId);
+    const assigned = await this.accessManagementRepository.isUserRoleAssigned(
+      userId,
+      roleId,
+    );
     if (!assigned) {
       throw NOT_FOUND('UserRole', { userId, roleId } as any);
     }
 
-    return this.repository.unassignRoleFromUser(userId, roleId);
+    return this.accessManagementRepository.unassignRoleFromUser(userId, roleId);
   }
 
   private async removePermissionWithChecks(
     roleId: number,
     permissionId: number,
   ) {
-    const roleExists = await this.repository.roleExists(roleId);
+    const roleExists = await this.accessManagementRepository.roleExists(roleId);
     if (!roleExists) {
       throw NOT_FOUND('Role', { id: roleId });
     }
 
-    const permExists = await this.repository.permissionExists(permissionId);
+    const permExists =
+      await this.accessManagementRepository.permissionExists(permissionId);
     if (!permExists) {
       throw NOT_FOUND('Permission', { id: permissionId });
     }
 
-    const assigned = await this.repository.isPermissionAssignedToRole(
-      roleId,
-      permissionId,
-    );
+    const assigned =
+      await this.accessManagementRepository.isPermissionAssignedToRole(
+        roleId,
+        permissionId,
+      );
     if (!assigned) {
       throw NOT_FOUND('RolePermission', { roleId, permissionId } as any);
     }
 
-    return this.repository.unassignPermissionFromRole(roleId, permissionId);
+    return this.accessManagementRepository.unassignPermissionFromRole(
+      roleId,
+      permissionId,
+    );
   }
 
   async assignRoleByNameToUser(userId: number, roleName: string) {
-    const role = await this.repository.findRoleByName(roleName);
+    const role = await this.accessManagementRepository.findRoleByName(roleName);
     if (role?.id) {
-      await this.repository.assignRoleToUser(userId, role.id);
+      await this.accessManagementRepository.assignRoleToUser(userId, role.id);
     }
   }
 
   getUserRoles(userId: number) {
-    return this.repository.findRolesByUserId(userId);
+    return this.accessManagementRepository.findRolesByUserId(userId);
   }
 }
