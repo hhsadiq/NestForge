@@ -18,19 +18,19 @@ import { UserEntity } from '@src/users/infrastructure/persistence/relational/ent
 export class AccessRelationalRepository extends AccessAbstractRepository {
   constructor(
     @InjectRepository(RoleEntity)
-    private readonly roleRepo: Repository<RoleEntity>,
+    private readonly roleRepository: Repository<RoleEntity>,
     @InjectRepository(PermissionEntity)
-    private readonly permissionRepo: Repository<PermissionEntity>,
+    private readonly permissionRepository: Repository<PermissionEntity>,
     @InjectRepository(SubjectEntity)
-    private readonly subjectRepo: Repository<SubjectEntity>,
+    private readonly subjectRepository: Repository<SubjectEntity>,
     @InjectRepository(UserEntity)
-    private readonly userRepo: Repository<UserEntity>,
+    private readonly userRepository: Repository<UserEntity>,
   ) {
     super();
   }
 
   async findRolesByUserId(userId: number): Promise<Role[]> {
-    const roles = await this.roleRepo
+    const roles = await this.roleRepository
       .createQueryBuilder('role')
       .innerJoin(
         'user_role',
@@ -47,7 +47,7 @@ export class AccessRelationalRepository extends AccessAbstractRepository {
   async findPermissionsByRoleIds(roleIds: number[]): Promise<Permission[]> {
     if (!roleIds?.length) return [];
     // Select distinct permissions joined via role_permission bridge
-    const qb = this.permissionRepo
+    const qb = this.permissionRepository
       .createQueryBuilder('permission')
       .innerJoin('role_permission', 'rp', 'rp.permission_id = permission.id')
       .leftJoinAndSelect('permission.subject', 'subject')
@@ -61,29 +61,31 @@ export class AccessRelationalRepository extends AccessAbstractRepository {
   }
 
   async findRoleByName(name: string): Promise<Role | null> {
-    const r = await this.roleRepo.findOne({ where: { name } });
+    const r = await this.roleRepository.findOne({ where: { name } });
     return r ? RoleMapper.toDomain(r) : null;
   }
 
   async findSubjectByName(name: string): Promise<Subject | null> {
-    const entity = await this.subjectRepo.findOne({ where: { name } });
+    const entity = await this.subjectRepository.findOne({ where: { name } });
     return entity ? SubjectMapper.toDomain(entity) : null;
   }
 
   async createSubject(name: string): Promise<Subject> {
-    const saved = await this.subjectRepo.save(
-      this.subjectRepo.create({ name }),
+    const saved = await this.subjectRepository.save(
+      this.subjectRepository.create({ name }),
     );
     return SubjectMapper.toDomain(saved);
   }
 
   async findAllRoles(): Promise<Role[]> {
-    const roles = await this.roleRepo.find();
+    const roles = await this.roleRepository.find();
     return roles.map((r) => RoleMapper.toDomain(r));
   }
 
   async findAllPermissions(): Promise<Permission[]> {
-    const perms = await this.permissionRepo.find({ relations: ['subject'] });
+    const perms = await this.permissionRepository.find({
+      relations: ['subject'],
+    });
     return perms.map(PermissionMapper.toDomain);
   }
 
@@ -91,7 +93,7 @@ export class AccessRelationalRepository extends AccessAbstractRepository {
     action: string,
     subjectId: number,
   ): Promise<Permission | null> {
-    const existing = await this.permissionRepo.findOne({
+    const existing = await this.permissionRepository.findOne({
       where: { action: action as any, subject: { id: subjectId } as any },
       relations: ['subject'],
     });
@@ -100,7 +102,9 @@ export class AccessRelationalRepository extends AccessAbstractRepository {
 
   async createRole(createRole: Role): Promise<Role> {
     const entity = RoleMapper.toPersistence(createRole);
-    const saved = await this.roleRepo.save(this.roleRepo.create(entity));
+    const saved = await this.roleRepository.save(
+      this.roleRepository.create(entity),
+    );
     return RoleMapper.toDomain(saved);
   }
 
@@ -110,24 +114,24 @@ export class AccessRelationalRepository extends AccessAbstractRepository {
     const entity = PermissionMapper.toPersistence(
       createPermission as Permission,
     );
-    const saved = await this.permissionRepo.save(
-      this.permissionRepo.create(entity),
+    const saved = await this.permissionRepository.save(
+      this.permissionRepository.create(entity),
     );
     return PermissionMapper.toDomain(saved);
   }
 
   async userExists(userId: number): Promise<boolean> {
-    const count = await this.userRepo.count({ where: { id: userId } });
+    const count = await this.userRepository.count({ where: { id: userId } });
     return count > 0;
   }
 
   async roleExists(roleId: number): Promise<boolean> {
-    const count = await this.roleRepo.count({ where: { id: roleId } });
+    const count = await this.roleRepository.count({ where: { id: roleId } });
     return count > 0;
   }
 
   async isUserRoleAssigned(userId: number, roleId: number): Promise<boolean> {
-    const rows = await this.roleRepo.query(
+    const rows = await this.roleRepository.query(
       'SELECT 1 FROM user_role WHERE user_id = $1 AND role_id = $2 LIMIT 1',
       [userId, roleId],
     );
@@ -135,7 +139,7 @@ export class AccessRelationalRepository extends AccessAbstractRepository {
   }
 
   async permissionExists(permissionId: number): Promise<boolean> {
-    const count = await this.permissionRepo.count({
+    const count = await this.permissionRepository.count({
       where: { id: permissionId },
     });
     return count > 0;
@@ -145,7 +149,7 @@ export class AccessRelationalRepository extends AccessAbstractRepository {
     roleId: number,
     permissionId: number,
   ): Promise<boolean> {
-    const rows = await this.roleRepo.query(
+    const rows = await this.roleRepository.query(
       'SELECT 1 FROM role_permission WHERE role_id = $1 AND permission_id = $2 LIMIT 1',
       [roleId, permissionId],
     );
@@ -153,14 +157,14 @@ export class AccessRelationalRepository extends AccessAbstractRepository {
   }
 
   async assignRoleToUser(userId: number, roleId: number): Promise<void> {
-    await this.roleRepo.query(
+    await this.roleRepository.query(
       'INSERT INTO user_role (user_id, role_id) VALUES ($1, $2) ON CONFLICT DO NOTHING',
       [userId, roleId],
     );
   }
 
   async unassignRoleFromUser(userId: number, roleId: number): Promise<void> {
-    await this.roleRepo.query(
+    await this.roleRepository.query(
       'DELETE FROM user_role WHERE user_id = $1 AND role_id = $2',
       [userId, roleId],
     );
@@ -170,7 +174,7 @@ export class AccessRelationalRepository extends AccessAbstractRepository {
     roleId: number,
     permissionId: number,
   ): Promise<void> {
-    await this.roleRepo.query(
+    await this.roleRepository.query(
       'INSERT INTO role_permission (role_id, permission_id) VALUES ($1, $2) ON CONFLICT DO NOTHING',
       [roleId, permissionId],
     );
@@ -180,7 +184,7 @@ export class AccessRelationalRepository extends AccessAbstractRepository {
     roleId: number,
     permissionId: number,
   ): Promise<void> {
-    await this.roleRepo.query(
+    await this.roleRepository.query(
       'DELETE FROM role_permission WHERE role_id = $1 AND permission_id = $2',
       [roleId, permissionId],
     );
