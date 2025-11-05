@@ -9,6 +9,7 @@ import { NullableType } from '@src/utils/types/nullable.type';
 <% } %>
 <% if (functionalities.includes('findAll')) { %>
 import { IPaginationOptions } from '../../../utils/types/pagination-options';
+import { <%= name %>Filters } from '../../../<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>/types/<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>.types';
 <% } %>
 <% if (functionalities.includes('update') || functionalities.includes('create') || functionalities.includes('findOne') || functionalities.includes('findAll') || functionalities.includes('delete')) { %>
 import { <%= name %> } from '../../domain/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>';
@@ -23,8 +24,10 @@ export abstract class <%= name %>AbstractRepository {
   <% if (functionalities.includes('findAll')) { %>
   abstract findAllWithPagination({
     paginationOptions,
+    filters,
   }: {
     paginationOptions: IPaginationOptions;
+    filters: <%= name %>Filters;
   }): Promise<<%= name %>[]>;
   <% } %>
 

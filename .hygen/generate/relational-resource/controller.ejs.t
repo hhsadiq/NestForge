@@ -57,6 +57,7 @@ import {
 } from '../utils/dto/infinity-pagination-response.dto';
 import { infinityPagination } from '../utils/infinity-pagination';
 import { FindAll<%= h.inflection.transform(name, ['pluralize']) %>Dto } from './dto/find-all-<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>.dto';
+import { <%= name %>Filters } from '../<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>/types/<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>.types';
 <% } %>
 
 @ApiTags('<%= h.inflection.transform(name, ['pluralize', 'dasherize', 'underscore', 'humanize']) %>')
@@ -93,12 +94,18 @@ export class <%= h.inflection.transform(name, ['pluralize']) %>Controller {
       limit = 50;
     }
 
+    // TODO: Add filters based on the query i.e. query?.name
+    const filters : <%= name %>Filters = {
+
+    };
+
     return infinityPagination(
       await this.<%= h.inflection.camelize(h.inflection.pluralize(name), true) %>Service.findAllWithPagination({
         paginationOptions: {
           page,
           limit,
         },
+        filters,
       }),
       { page, limit },
     );

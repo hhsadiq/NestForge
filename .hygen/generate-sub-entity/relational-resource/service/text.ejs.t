@@ -17,14 +17,17 @@ return this.<%= h.inflection.camelize(parent, true) %>Repository.create<%= name 
 <% if (functionalities.includes('findAll')) { %>
 findAll<%= name %>WithPagination({
 paginationOptions,
+filters,
 }: {
 paginationOptions: IPaginationOptions;
+filters: <%= name %>Filters;
 }) {
 return this.<%= h.inflection.camelize(parent, true) %>Repository.findAll<%= name %>WithPagination({
     paginationOptions: {
     page: paginationOptions.page,
     limit: paginationOptions.limit,
     },
+    filters,
 });
 }
 <% } %>

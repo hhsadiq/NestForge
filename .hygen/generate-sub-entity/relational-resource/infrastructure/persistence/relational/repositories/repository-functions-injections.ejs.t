@@ -18,9 +18,15 @@ after: '{}'
   <% if (functionalities.includes('findAll')) { %>
   async findAll<%= name %>WithPagination({
     paginationOptions,
+    filters,
   }: {
     paginationOptions: IPaginationOptions;
+    filters: <%= name %>Filters;
   }): Promise<<%= name %>[]> {
+    // you can add filters here based on the filters object
+    if (Object.keys(filters).length > 0) {
+    }
+
     const entities = await this.<%= h.inflection.camelize(name, true) %>Repository.find({
       skip: (paginationOptions.page - 1) * paginationOptions.limit,
       take: paginationOptions.limit,

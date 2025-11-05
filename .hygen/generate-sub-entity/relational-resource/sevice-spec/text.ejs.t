@@ -69,7 +69,7 @@ describe('<%= h.inflection.transform(name, ['pluralize']) %>Service', () => {
 
   <% if (functionalities.includes('findAll')) { %>
   it('should find all <%= h.inflection.pluralize(name.toLowerCase()) %> with pagination', async () => {
-    await service.findAll<%= name %>WithPagination({ paginationOptions });
+    await service.findAll<%= name %>WithPagination({ paginationOptions, filters: {} });
     expect(<%= h.inflection.camelize(parent, true) %>Repository.findAll<%= name %>WithPagination).toHaveBeenCalledWith({
       paginationOptions,
     });

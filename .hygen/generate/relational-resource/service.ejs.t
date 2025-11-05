@@ -10,6 +10,7 @@ import { Update<%= name %>Dto } from './dto/update-<%= h.inflection.transform(na
 <% } %>
 <% if (functionalities.includes('findAll')) { %>
 import { IPaginationOptions } from '../utils/types/pagination-options';
+import { <%= name %>Filters } from '../<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>/types/<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>.types';
 <% } %>
 import { <%= name %>AbstractRepository } from './infrastructure/persistence/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.abstract.repository';
 <% if (functionalities.includes('findOne') || functionalities.includes('update') || functionalities.includes('delete')) { %>
@@ -39,14 +40,17 @@ export class <%= h.inflection.transform(name, ['pluralize']) %>Service {
   <% if (functionalities.includes('findAll')) { %>
   findAllWithPagination({
     paginationOptions,
+    filters,
   }: {
-    paginationOptions: IPaginationOptions;
+    paginationOptions: IPaginationOptions;  
+    filters: <%= name %>Filters;
   }) {
     return this.<%= h.inflection.camelize(name, true) %>Repository.findAllWithPagination({
       paginationOptions: {
         page: paginationOptions.page,
         limit: paginationOptions.limit,
-      },
+      },  
+      filters,
     });
   }
   <% } %>

@@ -23,4 +23,6 @@ export class FindAll<%= h.inflection.transform(name, ['pluralize']) %>Dto {
   @IsNumber()
   @IsOptional()
   limit?: number;
+
+  // You can add filters here based on the query i.e. query?.name
 }

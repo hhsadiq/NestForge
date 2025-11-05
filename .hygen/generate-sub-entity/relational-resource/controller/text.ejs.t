@@ -31,12 +31,18 @@ after: "{}"
       limit = 50;
     }
 
+    // TODO: Add filters based on the query i.e. query?.name
+    const filters : <%= name %>Filters = {
+      
+    };
+
     return infinityPagination(
       await this.<%= h.inflection.camelize(h.inflection.pluralize(parent), true) %>Service.findAll<%= name %>WithPagination({
         paginationOptions: {
           page,
           limit,
         },
+        filters,
       }),
       { page, limit },
     );

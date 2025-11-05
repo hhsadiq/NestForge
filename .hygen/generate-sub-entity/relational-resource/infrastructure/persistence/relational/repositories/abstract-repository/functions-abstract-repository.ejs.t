@@ -13,8 +13,10 @@ after: "export abstract class"
   <% if (functionalities.includes('findAll')) { %>
   abstract findAll<%= name %>WithPagination({
     paginationOptions,
+    filters,
   }: {
     paginationOptions: IPaginationOptions;
+    filters: <%= name %>Filters;
   }): Promise<<%= name %>[]>;
   <% } %>
 

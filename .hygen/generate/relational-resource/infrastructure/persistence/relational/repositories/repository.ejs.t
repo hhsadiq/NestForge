@@ -17,6 +17,7 @@ import { <%= name %>Mapper } from '../mappers/<%= h.inflection.transform(name, [
 <% } %>
 <% if (functionalities.includes('findAll')) { %>
 import { IPaginationOptions } from '../../../../../utils/types/pagination-options';
+import { <%= name %>Filters } from '../../../../../<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>/types/<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>.types';
 <% } %>
 @Injectable()
 export class <%= name %>RelationalRepository implements <%= name %>AbstractRepository {
@@ -38,9 +39,15 @@ export class <%= name %>RelationalRepository implements <%= name %>AbstractRepos
   <% if (functionalities.includes('findAll')) { %>
   async findAllWithPagination({
     paginationOptions,
+    filters,
   }: {
     paginationOptions: IPaginationOptions;
+    filters: <%= name %>Filters;
   }): Promise<<%= name %>[]> {
+    // you can add filters here based on the filters object
+    if (Object.keys(filters).length > 0) {
+    }
+
     const entities = await this.<%= h.inflection.camelize(name, true) %>Repository.find({
       skip: (paginationOptions.page - 1) * paginationOptions.limit,
       take: paginationOptions.limit,
