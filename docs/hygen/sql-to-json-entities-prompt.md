@@ -38,7 +38,38 @@ This supports the batch generator's combined input: entities and sub-entities ma
 
 ---
 
-## 3) Field object (exact shape)
+## 3) Functionalities array (preferred shape)
+
+The `functionalities` array specifies which CRUD operations should be generated for the entity. Available values:
+
+- `"create"` - Create operation
+- `"findAll"` - Find all records (basic pagination)
+- `"findAllWithSearch"` - Find all records with search functionality
+- `"findOne"` - Find single record by ID
+- `"update"` - Update operation
+- `"delete"` - Delete operation
+
+**Important:** You can include either `"findAll"` or `"findAllWithSearch"` (or both). If both are present in the array, `findAllWithSearch` will be preferred and `findAll` will be automatically removed during processing.
+
+Example:
+
+```json
+{
+  "functionalities": ["create", "findAll", "findAllWithSearch", "findOne", "update", "delete"]
+}
+```
+
+After processing, if both `findAll` and `findAllWithSearch` are present, the result will be:
+
+```json
+{
+  "functionalities": ["create", "findAllWithSearch", "findOne", "update", "delete"]
+}
+```
+
+---
+
+## 4) Field object (exact shape)
 
 ```json
 {
@@ -59,7 +90,7 @@ This supports the batch generator's combined input: entities and sub-entities ma
 
 ---
 
-## 4) Relations — full rules & exact object shape
+## 5) Relations — full rules & exact object shape
 
 - `relations` be provided inline inside an entity object as an array.
 - Always include one relation object **per FOREIGN KEY**.
@@ -94,7 +125,7 @@ Exact relation object shape:
 
 ---
 
-## 5) Enums — full rules & exact object shape
+## 6) Enums — full rules & exact object shape
 
 - Enums can be provided **inline** inside an entity object under `enums` array.
 - Enum names must be **PascalCase**; values must be UPPER_CASE strings.
@@ -115,7 +146,7 @@ Exact enum object shape (inline or standalone):
 
 ---
 
-## 6) SQL → JSON type mapping (lowercase SQL matching)
+## 7) SQL → JSON type mapping (lowercase SQL matching)
 
 - `int`, `smallint`, `bigint` → `int` (example: `123`)
 - `float` → `float` (`12.34`)
@@ -132,7 +163,7 @@ Exact enum object shape (inline or standalone):
 
 ---
 
-## 7) Combined-object processing order (informational)
+## 8) Combined-object processing order (informational)
 
 When the batch generator consumes a combined JSON file it follows this order (this prompt should ensure the JSON contains inline `relations` and `enums` where appropriate):
 
@@ -145,12 +176,13 @@ When the batch generator consumes a combined JSON file it follows this order (th
 
 ---
 
-## 8) Quick rules & validation
+## 9) Quick rules & validation
 
 - `Unique Names`: No duplicate entity or field names.
 - `optional` must reflect column nullability.
 - `example` must strictly match the declared `type`.
 - `fields`, `relations`, and `enums` keys must always exist on entity objects (use `[]` when empty).
+- `functionalities` array: You can include either `"findAll"` or `"findAllWithSearch"` (or both, but `findAllWithSearch` will be preferred and `findAll` will be removed automatically).
 - Output must be a **single JSON array only** (no extra text), valid JSON (no comments, no trailing commas).
 - Validate the `entity`, `sub-entity`, `relation`, `enum` object keys as each explained above.
 - Final generated entities must match input schema.

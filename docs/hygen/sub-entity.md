@@ -41,7 +41,7 @@ Example structure:
 {
   "parent": "ParentEntityName",
   "name": "ChildEntityName",
-  "functionalities": ["create", "findAll", "findOne", "update", "delete"],
+  "functionalities": ["create", "findAll", "findAllWithSearch", "findOne", "update", "delete"],
   "fields": [
     {
       "name": "field_name",
@@ -54,6 +54,8 @@ Example structure:
   ]
 }
 ```
+
+**Note:** You can include either `"findAll"` or `"findAllWithSearch"` in the functionalities array. If both are present, `findAllWithSearch` will be preferred and `findAll` will be automatically removed.
 
 ### 👇 Prompt Template (for Cursor AI)
 
@@ -86,7 +88,7 @@ Then save the file at the given location and remind me of the correct CLI comman
 {
   "parent": "ParentEntityName",
   "name": "ChildEntityName",
-  "functionalities": ["create", "findAll", "findOne", "update", "delete"],
+  "functionalities": ["create", "findAll", "findAllWithSearch", "findOne", "update", "delete"],
   "fields": [
     {
       "name": "field_name",
@@ -102,6 +104,7 @@ Then save the file at the given location and remind me of the correct CLI comman
 > Notes:
 > - `parent`: PascalCase (e.g. `User`)
 > - `name`: PascalCase (e.g. `Address`)
+> - `functionalities`: Array of strings. You can include either `"findAll"` or `"findAllWithSearch"` (or both, but `findAllWithSearch` will be preferred and `findAll` will be removed automatically)
 > - `fields[].name`: snake_case
 > - `type`: must be one of the allowed values
 > - `optional`: true if nullable or optional

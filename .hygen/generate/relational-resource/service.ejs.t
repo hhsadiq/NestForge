@@ -8,8 +8,10 @@ import { Create<%= name %>Dto } from './dto/create-<%= h.inflection.transform(na
 <% if (functionalities.includes('update')) { %>
 import { Update<%= name %>Dto } from './dto/update-<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.dto';
 <% } %>
-<% if (functionalities.includes('findAll')) { %>
+<% if (functionalities.includes('findAll') || functionalities.includes('findAllWithSearch')) { %>
 import { IPaginationOptions } from '../utils/types/pagination-options';
+<% } %>
+<% if (functionalities.includes('findAllWithSearch')) { %>
 import { <%= name %>Filters } from '../<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>/types/<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>.types';
 <% } %>
 import { <%= name %>AbstractRepository } from './infrastructure/persistence/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.abstract.repository';
@@ -37,20 +39,20 @@ export class <%= h.inflection.transform(name, ['pluralize']) %>Service {
   }
   <% } %>
 
-  <% if (functionalities.includes('findAll')) { %>
+  <% if (functionalities.includes('findAll') || functionalities.includes('findAllWithSearch')) { %>
   findAllWithPagination({
     paginationOptions,
-    filters,
+    <% if (functionalities.includes('findAllWithSearch')) { %>filters, <% } %>
   }: {
-    paginationOptions: IPaginationOptions;  
-    filters: <%= name %>Filters;
+    paginationOptions: IPaginationOptions;
+    <% if (functionalities.includes('findAllWithSearch')) { %>filters: <%= name %>Filters; <% } %>
   }) {
     return this.<%= h.inflection.camelize(name, true) %>Repository.findAllWithPagination({
       paginationOptions: {
         page: paginationOptions.page,
         limit: paginationOptions.limit,
       },  
-      filters,
+      <% if (functionalities.includes('findAllWithSearch')) { %>filters,<% } %>
     });
   }
   <% } %>

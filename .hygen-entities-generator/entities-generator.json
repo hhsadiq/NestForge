@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Branch",
+    "parent": "User",
+    "isAddTestCase": true,
+    "functionalities": ["create", "findAll", "findOne","update","delete"],
+    "fields": [
+      {"name": "name","type": "text","customType": "","optional": false,"example": "longer example text","dto": true},
+      {"name": "address","type": "text","customType": "","optional": true,"example": "longer example text","dto": true},
+      {"name": "city","type": "text","customType": "","optional": true,"example": "longer example text","dto": true},
+      {"name": "country","type": "text","customType": "","optional": true,"example": "longer example text","dto": true},
+      {"name": "phone","type": "text","customType": "","optional": true,"example": "longer example text","dto": true},
+      {"name": "email","type": "text","customType": "","optional": true,"example": "longer example text","dto": true}
+    ],
+    "relations": []
+  }
+]

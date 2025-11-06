@@ -5,7 +5,7 @@ after: .mock.ts
 skip_if: "export const paginationOptions"
 
 ---
-<% if (functionalities.includes('findAll')) { %>
+<% if (functionalities.includes('findAll') || functionalities.includes('findAllWithSearch')) { %>
 export const paginationOptions: IPaginationOptions = {
     page: 1,
     limit: 10,

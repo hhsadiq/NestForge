@@ -14,20 +14,20 @@ return this.<%= h.inflection.camelize(parent, true) %>Repository.create<%= name 
 }
 <% } %>
 
-<% if (functionalities.includes('findAll')) { %>
+<% if (functionalities.includes('findAll') || functionalities.includes('findAllWithSearch')) { %>
 findAll<%= name %>WithPagination({
 paginationOptions,
-filters,
+<% if (functionalities.includes('findAllWithSearch')) { %>filters,<% } %>
 }: {
 paginationOptions: IPaginationOptions;
-filters: <%= name %>Filters;
+<% if (functionalities.includes('findAllWithSearch')) { %>filters: <%= name %>Filters;<% } %>
 }) {
 return this.<%= h.inflection.camelize(parent, true) %>Repository.findAll<%= name %>WithPagination({
     paginationOptions: {
     page: paginationOptions.page,
     limit: paginationOptions.limit,
     },
-    filters,
+    <% if (functionalities.includes('findAllWithSearch')) { %>filters,<% } %>
 });
 }
 <% } %>

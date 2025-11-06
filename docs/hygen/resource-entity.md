@@ -21,9 +21,12 @@ This command will trigger a terminal prompt with the following options:
 1. **Functionality Selection**: You can choose which functionalities (CRUD operations) you want to generate for the resource. The available functionalities are:
    - Create
    - Find All
+   - Find All With Search
    - Find One
    - Update
    - Delete
+
+   **Note:** You can add either `findAll` or `findAllWithSearch`. If both are selected, `findAllWithSearch` will be preferred and `findAll` will be automatically removed.
 
    Use the arrow keys to navigate and the spacebar to select multiple options. Press Enter key to move to next step.
 
@@ -73,7 +76,7 @@ Then save the file at the given location and remind me of the correct CLI comman
 {
   "name": "EntityName",
   "isAddTestCase": true,
-  "functionalities": ["create", "findAll", "findOne", "update", "delete"],
+  "functionalities": ["create", "findAll", "findAllWithSearch", "findOne", "update", "delete"],
   "fields": [
     {
       "name": "field_name",
@@ -88,6 +91,7 @@ Then save the file at the given location and remind me of the correct CLI comman
 
 > Notes:
 > - `name`: PascalCase (e.g. `User`, `ProductOrder`)
+> - `functionalities`: Array of strings. You can include either `"findAll"` or `"findAllWithSearch"` (or both, but `findAllWithSearch` will be preferred and `findAll` will be removed automatically)
 > - `fields[].name`: snake_case
 > - `type`: must be one of the allowed values
 > - `optional`: true if nullable or optional

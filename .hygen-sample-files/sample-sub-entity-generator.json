@@ -2,7 +2,7 @@
   "name": "MatchType",
   "parent": "Match",
   "isAddTestCase": false,
-  "functionalities": ["create", "findAll", "findOne", "update", "delete"],
+  "functionalities": ["create", "findAllWithSearch", "findOne", "update", "delete"],
   "fields": [
     {
       "name": "name",
@@ -12,5 +12,5 @@
       "example": "League",
       "dto": true
     }
-  ]
+  ] 
 }

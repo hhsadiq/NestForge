@@ -1,7 +1,7 @@
 ---
 to: "<%= isAddTestCase ? `src/${h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize'])}/__mock__/${h.inflection.transform(name, ['underscore', 'dasherize'])}.mock.ts` : null %>"
 ---
-<% if (functionalities.includes('findAll')) { %>
+<% if (functionalities.includes('findAll') || functionalities.includes('findAllWithSearch')) { %>
 import { IPaginationOptions } from "@src/utils/types/pagination-options";
 <% } %>
 <% if (functionalities.includes('create')) { %>
@@ -17,7 +17,7 @@ import { <%= enumDef.enumName %>Enum } from '../enums/<%= h.inflection.dasherize
 <% }) %>
 <% } %>
 // __mock__/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.mock.ts
-<% if (functionalities.includes('findAll')) { %>
+<% if (functionalities.includes('findAll') || functionalities.includes('findAllWithSearch')) { %>
 export const paginationOptions: IPaginationOptions = {
     page: 1,
     limit: 10,

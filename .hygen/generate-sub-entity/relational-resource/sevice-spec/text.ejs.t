@@ -4,7 +4,7 @@ to: "<%= isAddTestCase && !h.exists(`src/${h.inflection.transform(parent, ['plur
 import { Test, TestingModule } from '@nestjs/testing';
 <% if (functionalities.includes('update') || functionalities.includes('create') || functionalities.includes('findOne') || functionalities.includes('findAll')) { %>
 import {
-  <% if (functionalities.includes('findAll')) { %> 
+  <% if (functionalities.includes('findAll') || functionalities.includes('findAllWithSearch')) { %> 
   paginationOptions,
   <% } %>
   <% if (functionalities.includes('update') || functionalities.includes('findOne')) { %>
@@ -35,7 +35,7 @@ describe('<%= h.inflection.transform(name, ['pluralize']) %>Service', () => {
             <% if (functionalities.includes('create')) { %>
             create<%= name %>: jest.fn(),
             <% } %>
-            <% if (functionalities.includes('findAll')) { %>
+            <% if (functionalities.includes('findAll') || functionalities.includes('findAllWithSearch')) { %>
             findAll<%= name %>WithPagination: jest.fn(),
             <% } %>
             <% if (functionalities.includes('findOne')) { %>
@@ -67,11 +67,12 @@ describe('<%= h.inflection.transform(name, ['pluralize']) %>Service', () => {
   });
   <% } %>
 
-  <% if (functionalities.includes('findAll')) { %>
+  <% if (functionalities.includes('findAll') || functionalities.includes('findAllWithSearch')) { %>
   it('should find all <%= h.inflection.pluralize(name.toLowerCase()) %> with pagination', async () => {
-    await service.findAll<%= name %>WithPagination({ paginationOptions, filters: {} });
+    await service.findAll<%= name %>WithPagination({ paginationOptions, <% if (functionalities.includes('findAllWithSearch')) { %>filters: {},<% } %> });
     expect(<%= h.inflection.camelize(parent, true) %>Repository.findAll<%= name %>WithPagination).toHaveBeenCalledWith({
       paginationOptions,
+      <% if (functionalities.includes('findAllWithSearch')) { %>filters: {},<% } %>
     });
   });
   <% } %>

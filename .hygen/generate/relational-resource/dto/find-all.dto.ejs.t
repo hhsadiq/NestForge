@@ -1,5 +1,5 @@
 ---
-to: "<%= functionalities.includes('findAll') ? `src/${h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize'])}/dto/find-all-${h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize'])}.dto.ts` : null %>"
+to: "<%= functionalities.includes('findAll') || functionalities.includes('findAllWithSearch') ? `src/${h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize'])}/dto/find-all-${h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize'])}.dto.ts` : null %>"
 ---
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNumber, IsOptional } from 'class-validator';
@@ -24,5 +24,7 @@ export class FindAll<%= h.inflection.transform(name, ['pluralize']) %>Dto {
   @IsOptional()
   limit?: number;
 
+  <% if (functionalities.includes('findAllWithSearch')) { %>
   // You can add filters here based on the query i.e. query?.name
+  <% } %>
 }

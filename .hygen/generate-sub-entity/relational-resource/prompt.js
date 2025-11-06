@@ -1,6 +1,28 @@
 const fs = require('fs');
 const path = require('path');
 
+/**
+ * Processes functionalities array to handle findAllWithSearch preference
+ * If both findAll and findAllWithSearch exist, prefer findAllWithSearch (remove findAll)
+ * @param {string[]} functionalities - Array of functionality strings
+ * @returns {string[]} - Processed functionalities array
+ */
+function processFunctionalities(functionalities) {
+  if (!Array.isArray(functionalities)) {
+    return functionalities;
+  }
+
+  const hasFindAll = functionalities.includes('findAll');
+  const hasFindAllWithSearch = functionalities.includes('findAllWithSearch');
+
+  // If both exist, remove findAll and keep findAllWithSearch
+  if (hasFindAll && hasFindAllWithSearch) {
+    return functionalities.filter((func) => func !== 'findAll');
+  }
+
+  return functionalities;
+}
+
 module.exports = async (args, prompter) => {
   const dataFilePath = args.dataFile || process.env.DATA_FILE;
 
@@ -16,17 +38,23 @@ module.exports = async (args, prompter) => {
       );
       const parsed = JSON.parse(raw);
 
-      const result = {
-        parent: parsed.parent,
-        name: parsed.name,
-        isAddTestCase: parsed.isAddTestCase,
-        functionalities: parsed.functionalities ?? [
+      // Process functionalities to handle findAllWithSearch preference
+      const rawFunctionalities =
+        parsed.functionalities ?? [
           'create',
           'findAll',
           'findOne',
           'update',
           'delete',
-        ],
+        ];
+      const processedFunctionalities =
+        processFunctionalities(rawFunctionalities);
+
+      const result = {
+        parent: parsed.parent,
+        name: parsed.name,
+        isAddTestCase: parsed.isAddTestCase,
+        functionalities: processedFunctionalities,
         enums: parsed.enums ?? [],
         fields: Array.isArray(parsed.fields)
           ? parsed.fields.map((field) => ({

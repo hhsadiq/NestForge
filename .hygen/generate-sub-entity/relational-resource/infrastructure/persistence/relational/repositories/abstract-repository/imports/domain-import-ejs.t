@@ -4,6 +4,6 @@ to: src/<%= h.inflection.transform(parent, ['pluralize', 'underscore', 'dasheriz
 before: 'import'
 ---
 
-<% if (functionalities.includes('update') || functionalities.includes('create') || functionalities.includes('findOne') || functionalities.includes('findAll') || functionalities.includes('delete')) { %>
+<% if (functionalities.includes('update') || functionalities.includes('create') || functionalities.includes('findOne') || functionalities.includes('findAll') || functionalities.includes('findAllWithSearch') || functionalities.includes('delete')) { %>
 import { <%= name %> } from '../../domain/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>';
 <% } %>

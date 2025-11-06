@@ -15,17 +15,19 @@ after: '{}'
   }
   <% } %>
 
-  <% if (functionalities.includes('findAll')) { %>
+  <% if (functionalities.includes('findAll') || functionalities.includes('findAllWithSearch')) { %>
   async findAll<%= name %>WithPagination({
     paginationOptions,
-    filters,
+    <% if (functionalities.includes('findAllWithSearch')) { %>filters,<% } %>
   }: {
     paginationOptions: IPaginationOptions;
-    filters: <%= name %>Filters;
+    <% if (functionalities.includes('findAllWithSearch')) { %>filters: <%= name %>Filters;<% } %>
   }): Promise<<%= name %>[]> {
+    <% if (functionalities.includes('findAllWithSearch')) { %>
     // you can add filters here based on the filters object
     if (Object.keys(filters).length > 0) {
     }
+    <% } %>
 
     const entities = await this.<%= h.inflection.camelize(name, true) %>Repository.find({
       skip: (paginationOptions.page - 1) * paginationOptions.limit,

@@ -17,7 +17,7 @@ after: "{}"
   }
   <% } %>
 
-  <% if (functionalities.includes('findAll')) { %>
+  <% if (functionalities.includes('findAll') || functionalities.includes('findAllWithSearch')) { %>
   @Get('<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>')
   @ApiOkResponse({
     type: InfinityPaginationResponse(<%= name %>),
@@ -31,10 +31,12 @@ after: "{}"
       limit = 50;
     }
 
+    <% if (functionalities.includes('findAllWithSearch')) { %>  
     // TODO: Add filters based on the query i.e. query?.name
     const filters : <%= name %>Filters = {
       
     };
+    <% } %>
 
     return infinityPagination(
       await this.<%= h.inflection.camelize(h.inflection.pluralize(parent), true) %>Service.findAll<%= name %>WithPagination({
@@ -42,7 +44,7 @@ after: "{}"
           page,
           limit,
         },
-        filters,
+        <% if (functionalities.includes('findAllWithSearch')) { %>filters,<% } %>
       }),
       { page, limit },
     );

@@ -6,7 +6,7 @@ after: "useValue: {"
 <% if (functionalities.includes('create')) { %>
 create<%= name %>: jest.fn(),
 <% } %>
-<% if (functionalities.includes('findAll')) { %>
+<% if (functionalities.includes('findAll') || functionalities.includes('findAllWithSearch')) { %>
 findAll<%= name %>WithPagination: jest.fn(),
 <% } %>
 <% if (functionalities.includes('findOne')) { %>
