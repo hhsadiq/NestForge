@@ -7,10 +7,13 @@ import { DeepPartial } from '../../../utils/types/deep-partial.type';
 <% if (functionalities.includes('findOne')) { %>
 import { NullableType } from '@src/utils/types/nullable.type';
 <% } %>
-<% if (functionalities.includes('findAll')) { %>
+<% if (functionalities.includes('findAll') || functionalities.includes('findAllWithSearch')) { %>
 import { IPaginationOptions } from '../../../utils/types/pagination-options';
 <% } %>
-<% if (functionalities.includes('update') || functionalities.includes('create') || functionalities.includes('findOne') || functionalities.includes('findAll') || functionalities.includes('delete')) { %>
+<% if (functionalities.includes('findAllWithSearch')) { %>
+import { <%= name %>Filters } from '../../../<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>/types/<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>.types';
+<% } %>
+<% if (functionalities.includes('update') || functionalities.includes('create') || functionalities.includes('findOne') || functionalities.includes('findAll') || functionalities.includes('findAllWithSearch') || functionalities.includes('delete')) { %>
 import { <%= name %> } from '../../domain/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>';
 <% } %>
 export abstract class <%= name %>AbstractRepository {
@@ -20,11 +23,13 @@ export abstract class <%= name %>AbstractRepository {
   ): Promise<<%= name %>>;
   <% } %>
 
-  <% if (functionalities.includes('findAll')) { %>
+  <% if (functionalities.includes('findAll') || functionalities.includes('findAllWithSearch')) { %>
   abstract findAllWithPagination({
     paginationOptions,
+    <% if (functionalities.includes('findAllWithSearch')) { %> filters, <% } %>
   }: {
     paginationOptions: IPaginationOptions;
+    <% if (functionalities.includes('findAllWithSearch')) { %> filters: <%= name %>Filters; <% } %>
   }): Promise<<%= name %>[]>;
   <% } %>
 

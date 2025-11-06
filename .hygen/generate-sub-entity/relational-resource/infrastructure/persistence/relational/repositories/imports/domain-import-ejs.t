@@ -7,6 +7,6 @@ before: "import"
 <% if (functionalities.includes('update') || functionalities.includes('create') || functionalities.includes('findOne') || functionalities.includes('findAll') || functionalities.includes('delete')) { %>
 import { <%= name %> } from '../../../../domain/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>';
 <% } %>
-<% if (functionalities.includes('create') || functionalities.includes('findAll') || functionalities.includes('findOne') || functionalities.includes('update')) { %>
+<% if (functionalities.includes('create') || functionalities.includes('findAll') || functionalities.includes('findAllWithSearch') || functionalities.includes('findOne') || functionalities.includes('update')) { %>
 import { <%= name %>Mapper } from '../mappers/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.mapper';
 <% } %>

@@ -132,7 +132,7 @@ Cursor should validate/generate json objects based on following schema examples:
 {
   "parent": null,
   "name": "EntityName",
-  "functionalities": ["create","findAll","findOne","update","delete"],
+  "functionalities": ["create","findAll","findAllWithSearch","findOne","update","delete"],
   "fields": [{
         "name": "name",
         "type": "varchar",
@@ -150,7 +150,7 @@ Cursor should validate/generate json objects based on following schema examples:
 {
   "parent": "ParentEntityName",
   "name": "ChildEntityName",
-  "functionalities": ["create","findAll","findOne","update","delete"],
+  "functionalities": ["create","findAll","findAllWithSearch","findOne","update","delete"],
   "fields": [{
         "name": "name",
         "type": "varchar",
@@ -184,12 +184,15 @@ Cursor should validate/generate json objects based on following schema examples:
 }
 ```
 
+> **Note on Functionalities**: You can add either `"findAll"` or `"findAllWithSearch"` in the functionalities array. If both are present, `findAllWithSearch` will be used and `findAll` will be automatically removed during processing.
+
 **Validation Rules**
 
 - Resource: must have `name`, `functionalities[]`, and `fields[]` with `name` + `type`
 - Sub-entity: must have `parent` + `name`
 - Relationship: requires `sourceEntityName`, `relationEntityName`, `relationType`
 - Enum: requires `entityName`, `enumName`, and `enumValues[]` array
+- **Functionalities**: You can include either `"findAll"` or `"findAllWithSearch"` (or both, but `findAllWithSearch` will be preferred and `findAll` will be removed automatically)
 
 ---
 

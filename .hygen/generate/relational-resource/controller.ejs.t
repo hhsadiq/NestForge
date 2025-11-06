@@ -3,7 +3,7 @@ to: src/<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize'
 ---
 import {
   Controller,
-  <% if (functionalities.includes('findAll') || functionalities.includes('findOne')) { %>
+  <% if (functionalities.includes('findAll') || functionalities.includes('findAllWithSearch') || functionalities.includes('findOne')) { %>
   Get,
   <% } %>
   <% if (functionalities.includes('create')) { %>
@@ -22,7 +22,7 @@ import {
   Delete,
   <% } %>
   UseGuards,
-  <% if (functionalities.includes('findAll')) { %>
+  <% if (functionalities.includes('findAll') || functionalities.includes('findAllWithSearch')) { %>
   Query,
   <% } %>
 } from '@nestjs/common';
@@ -31,7 +31,7 @@ import {
   <% if (functionalities.includes('create')) { %>
   ApiCreatedResponse,
   <% } %>
-  <% if (functionalities.includes('findAll') || functionalities.includes('update')) { %>
+  <% if (functionalities.includes('findAll') || functionalities.includes('update') || functionalities.includes('findAllWithSearch')) { %>
   ApiOkResponse,
   <% } %>
   <% if (functionalities.includes('findOne') || functionalities.includes('update') || functionalities.includes('delete')) { %>
@@ -50,13 +50,16 @@ import { Update<%= name %>Dto } from './dto/update-<%= h.inflection.transform(na
 import { <%= name %> } from './domain/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>';
 <% } %>
 import { AuthGuard } from '@nestjs/passport';
-<% if (functionalities.includes('findAll')) { %>
+<% if (functionalities.includes('findAll') || functionalities.includes('findAllWithSearch')) { %>
 import {
   InfinityPaginationResponse,
   InfinityPaginationResponseDto,
 } from '../utils/dto/infinity-pagination-response.dto';
 import { infinityPagination } from '../utils/infinity-pagination';
 import { FindAll<%= h.inflection.transform(name, ['pluralize']) %>Dto } from './dto/find-all-<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>.dto';
+<% } %>
+<% if (functionalities.includes('findAllWithSearch')) { %>
+import { <%= name %>Filters } from '../<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>/types/<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>.types';
 <% } %>
 
 @ApiTags('<%= h.inflection.transform(name, ['pluralize', 'dasherize', 'underscore', 'humanize']) %>')
@@ -79,7 +82,7 @@ export class <%= h.inflection.transform(name, ['pluralize']) %>Controller {
   }
   <% } %>
 
-  <% if (functionalities.includes('findAll')) { %>
+  <% if (functionalities.includes('findAll') || functionalities.includes('findAllWithSearch')) { %>
   @Get()
   @ApiOkResponse({
     type: InfinityPaginationResponse(<%= name %>),
@@ -93,12 +96,20 @@ export class <%= h.inflection.transform(name, ['pluralize']) %>Controller {
       limit = 50;
     }
 
+    <% if (functionalities.includes('findAllWithSearch')) { %>
+    // TODO: Add filters based on the query i.e. query?.name
+    const filters : <%= name %>Filters = {
+      
+    };
+    <% } %>
+
     return infinityPagination(
       await this.<%= h.inflection.camelize(h.inflection.pluralize(name), true) %>Service.findAllWithPagination({
         paginationOptions: {
           page,
           limit,
         },
+        <% if (functionalities.includes('findAllWithSearch')) { %> filters,<% } %>
       }),
       { page, limit },
     );

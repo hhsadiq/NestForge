@@ -10,11 +10,12 @@ after: childCasesHere
   });
   <% } %>
 
-  <% if (functionalities.includes('findAll')) { %>
+  <% if (functionalities.includes('findAll') || functionalities.includes('findAllWithSearch')) { %>
   it('should find all <%= h.inflection.pluralize(name.toLowerCase()) %> with pagination', async () => {
-    await service.findAll<%= name %>WithPagination({ paginationOptions });
+    await service.findAll<%= name %>WithPagination({ paginationOptions, <% if (functionalities.includes('findAllWithSearch')) { %>filters: {},<% } %> });
     expect(<%= h.inflection.camelize(parent, true) %>Repository.findAll<%= name %>WithPagination).toHaveBeenCalledWith({
       paginationOptions,
+      <% if (functionalities.includes('findAllWithSearch')) { %>filters: {},<% } %>
     });
   });
   <% } %>

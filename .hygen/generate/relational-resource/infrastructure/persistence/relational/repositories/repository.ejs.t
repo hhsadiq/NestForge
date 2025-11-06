@@ -12,11 +12,14 @@ import { NullableType } from '@src/utils/types/nullable.type';
 import { <%= name %> } from '../../../../domain/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>';
 <% } %>
 import { <%= name %>AbstractRepository } from '../../<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.abstract.repository';
-<% if (functionalities.includes('create') || functionalities.includes('findAll') || functionalities.includes('findOne') || functionalities.includes('update')) { %>
+<% if (functionalities.includes('create') || functionalities.includes('findAll') || functionalities.includes('findAllWithSearch') || functionalities.includes('findOne') || functionalities.includes('update')) { %>
 import { <%= name %>Mapper } from '../mappers/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.mapper';
 <% } %>
-<% if (functionalities.includes('findAll')) { %>
+<% if (functionalities.includes('findAll') || functionalities.includes('findAllWithSearch')) { %>
 import { IPaginationOptions } from '../../../../../utils/types/pagination-options';
+<% } %>
+<% if (functionalities.includes('findAllWithSearch')) { %>
+import { <%= name %>Filters } from '../../../../../<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>/types/<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>.types';
 <% } %>
 @Injectable()
 export class <%= name %>RelationalRepository implements <%= name %>AbstractRepository {
@@ -35,12 +38,20 @@ export class <%= name %>RelationalRepository implements <%= name %>AbstractRepos
   }
   <% } %>
 
-  <% if (functionalities.includes('findAll')) { %>
+  <% if (functionalities.includes('findAll') || functionalities.includes('findAllWithSearch')) { %>
   async findAllWithPagination({
     paginationOptions,
+    <% if (functionalities.includes('findAllWithSearch')) { %>filters,<% } %>
   }: {
     paginationOptions: IPaginationOptions;
+    <% if (functionalities.includes('findAllWithSearch')) { %>filters: <%= name %>Filters;<% } %>
   }): Promise<<%= name %>[]> {
+    <% if (functionalities.includes('findAllWithSearch')) { %>
+    // you can add filters here based on the filters object
+    if (Object.keys(filters).length > 0) {
+    }
+    <% } %>
+
     const entities = await this.<%= h.inflection.camelize(name, true) %>Repository.find({
       skip: (paginationOptions.page - 1) * paginationOptions.limit,
       take: paginationOptions.limit,

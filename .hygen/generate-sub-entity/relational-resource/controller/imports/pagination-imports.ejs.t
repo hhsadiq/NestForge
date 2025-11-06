@@ -5,7 +5,7 @@ before: import
 skip_if: InfinityPaginationResponse,
 ---
 
-<% if (functionalities.includes('findAll')) { %>
+<% if (functionalities.includes('findAll') || functionalities.includes('findAllWithSearch')) { %>
 import {
   InfinityPaginationResponse,
   InfinityPaginationResponseDto,

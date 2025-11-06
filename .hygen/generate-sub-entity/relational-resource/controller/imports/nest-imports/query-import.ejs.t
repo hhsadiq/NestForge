@@ -4,6 +4,6 @@ inject: true
 after: Controller,
 skip_if: "@Query"
 ---
-<% if (functionalities.includes('findAll')) { %>
+<% if (functionalities.includes('findAll') || functionalities.includes('findAllWithSearch')) { %>
 Query,
 <% } %>

@@ -4,6 +4,6 @@ inject: true
 after: ApiBearerAuth,
 skip_if: "@ApiOkResponse"
 ---
-<% if (functionalities.includes('findAll') || functionalities.includes('update')) { %>
+<% if (functionalities.includes('findAll') || functionalities.includes('findAllWithSearch') || functionalities.includes('update')) { %>
 ApiOkResponse,
 <% } %>
