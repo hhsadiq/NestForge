@@ -17,6 +17,12 @@ export class RolePermissionMapper {
     if (raw.permission) {
       domainEntity.permission = PermissionMapper.toDomain(raw.permission);
     }
+    if (raw.created_at) {
+      domainEntity.createdAt = raw.created_at;
+    }
+    if (raw.updated_at) {
+      domainEntity.updatedAt = raw.updated_at;
+    }
     return domainEntity;
   }
 

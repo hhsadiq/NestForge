@@ -13,4 +13,16 @@ export class RolePermission {
     type: () => Permission,
   })
   permission: Permission;
+
+  @ApiProperty({
+    type: Date,
+    description: 'Timestamp when the role permission was created',
+  })
+  createdAt: Date;
+
+  @ApiProperty({
+    type: Date,
+    description: 'Timestamp when the role permission was last updated',
+  })
+  updatedAt: Date;
 }

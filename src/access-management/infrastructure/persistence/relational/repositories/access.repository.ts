@@ -2,13 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+import { Action } from '@src/access-management/domain/action';
 import { Permission } from '@src/access-management/domain/permission';
 import { Role } from '@src/access-management/domain/role';
 import { Subject } from '@src/access-management/domain/subject';
 import { AccessAbstractRepository } from '@src/access-management/infrastructure/persistence/access.abstract.repository';
+import { ActionEntity } from '@src/access-management/infrastructure/persistence/relational/entities/action.entity';
 import { PermissionEntity } from '@src/access-management/infrastructure/persistence/relational/entities/permission.entity';
 import { RoleEntity } from '@src/access-management/infrastructure/persistence/relational/entities/role.entity';
 import { SubjectEntity } from '@src/access-management/infrastructure/persistence/relational/entities/subject.entity';
+import { ActionMapper } from '@src/access-management/infrastructure/persistence/relational/mappers/action.mapper';
 import { PermissionMapper } from '@src/access-management/infrastructure/persistence/relational/mappers/permission.mapper';
 import { RoleMapper } from '@src/access-management/infrastructure/persistence/relational/mappers/role.mapper';
 import { SubjectMapper } from '@src/access-management/infrastructure/persistence/relational/mappers/subject.mapper';
@@ -23,6 +26,8 @@ export class AccessRelationalRepository extends AccessAbstractRepository {
     private readonly permissionRepository: Repository<PermissionEntity>,
     @InjectRepository(SubjectEntity)
     private readonly subjectRepository: Repository<SubjectEntity>,
+    @InjectRepository(ActionEntity)
+    private readonly actionRepository: Repository<ActionEntity>,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
   ) {
@@ -51,6 +56,7 @@ export class AccessRelationalRepository extends AccessAbstractRepository {
       .createQueryBuilder('permission')
       .innerJoin('role_permission', 'rp', 'rp.permission_id = permission.id')
       .leftJoinAndSelect('permission.subject', 'subject')
+      .leftJoinAndSelect('permission.action', 'action')
       .where('rp.role_id IN (:...roleIds)', { roleIds });
 
     const perms = await qb.getMany();
@@ -77,6 +83,13 @@ export class AccessRelationalRepository extends AccessAbstractRepository {
     return SubjectMapper.toDomain(saved);
   }
 
+  async findActionByName(name: string): Promise<Action | null> {
+    const entity = await this.actionRepository.findOne({
+      where: { name },
+    });
+    return entity ? ActionMapper.toDomain(entity) : null;
+  }
+
   async findAllRoles(): Promise<Role[]> {
     const roles = await this.roleRepository.find();
     return roles.map((r) => RoleMapper.toDomain(r));
@@ -84,18 +97,21 @@ export class AccessRelationalRepository extends AccessAbstractRepository {
 
   async findAllPermissions(): Promise<Permission[]> {
     const perms = await this.permissionRepository.find({
-      relations: ['subject'],
+      relations: ['subject', 'action'],
     });
     return perms.map(PermissionMapper.toDomain);
   }
 
   async findPermissionByActionAndSubject(
-    action: string,
+    actionId: number,
     subjectId: number,
   ): Promise<Permission | null> {
     const existing = await this.permissionRepository.findOne({
-      where: { action: action as any, subject: { id: subjectId } as any },
-      relations: ['subject'],
+      where: {
+        action_id: actionId,
+        subject_id: subjectId,
+      },
+      relations: ['subject', 'action'],
     });
     return existing ? PermissionMapper.toDomain(existing) : null;
   }

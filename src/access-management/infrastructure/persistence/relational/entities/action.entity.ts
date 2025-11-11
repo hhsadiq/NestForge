@@ -7,10 +7,12 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { RolePermissionEntity } from './role-permission.entity';
+import { TABLES } from '@src/common/constants';
 
-@Entity({ name: 'role' })
-export class RoleEntity {
+import { PermissionEntity } from './permission.entity';
+
+@Entity({ name: TABLES.action })
+export class ActionEntity {
   @PrimaryGeneratedColumn('identity')
   id: number;
 
@@ -26,10 +28,6 @@ export class RoleEntity {
   @UpdateDateColumn({ name: 'updated_at' })
   updated_at: Date;
 
-  @OneToMany(
-    () => RolePermissionEntity,
-    (rolePermission) => rolePermission.role,
-    { cascade: true },
-  )
-  rolePermissions: RolePermissionEntity[];
+  @OneToMany(() => PermissionEntity, (permission) => permission.action)
+  permissions: PermissionEntity[];
 }

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 
+import { Action } from '@src/access-management/domain/action';
 import { Subject } from '@src/access-management/domain/subject';
-import { PermissionActionEnum } from '@src/access-management/enums/permission-actions.enum';
 
 export class Permission {
   @ApiProperty({
@@ -11,11 +11,9 @@ export class Permission {
   id: number;
 
   @ApiProperty({
-    type: String,
-    description: 'Action of the permission',
-    example: 'create',
+    type: () => Action,
   })
-  action: PermissionActionEnum;
+  action: Action;
 
   @ApiProperty({
     type: () => Subject,
@@ -23,10 +21,14 @@ export class Permission {
   subject: Subject;
 
   @ApiProperty({
-    type: String,
-    description: 'Description of what the permission allows',
-    nullable: true,
-    example: 'Allows creating a new guide entry',
+    type: Date,
+    description: 'Timestamp when the permission was created',
   })
-  description?: string;
+  createdAt: Date;
+
+  @ApiProperty({
+    type: Date,
+    description: 'Timestamp when the permission was last updated',
+  })
+  updatedAt: Date;
 }

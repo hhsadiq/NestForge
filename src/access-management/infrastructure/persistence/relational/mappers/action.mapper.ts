@@ -1,9 +1,9 @@
-import { Role } from '@src/access-management/domain/role';
-import { RoleEntity } from '@src/access-management/infrastructure/persistence/relational/entities/role.entity';
+import { Action } from '@src/access-management/domain/action';
+import { ActionEntity } from '@src/access-management/infrastructure/persistence/relational/entities/action.entity';
 
-export class RoleMapper {
-  static toDomain(raw: RoleEntity): Role {
-    const domainEntity = new Role();
+export class ActionMapper {
+  static toDomain(raw: ActionEntity): Action {
+    const domainEntity = new Action();
     domainEntity.id = raw.id;
     domainEntity.name = raw.name;
     if (raw.description !== undefined) {
@@ -18,8 +18,8 @@ export class RoleMapper {
     return domainEntity;
   }
 
-  static toPersistence(domainEntity: Role): RoleEntity {
-    const persistenceEntity = new RoleEntity();
+  static toPersistence(domainEntity: Action): ActionEntity {
+    const persistenceEntity = new ActionEntity();
 
     if (domainEntity.id) {
       persistenceEntity.id = domainEntity.id;
