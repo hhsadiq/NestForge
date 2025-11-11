@@ -8,6 +8,8 @@ export class BaseSchema1756810370971 implements MigrationInterface {
         "id" INTEGER GENERATED ALWAYS AS IDENTITY NOT NULL,
         "name" character varying NOT NULL,
         "description" character varying,
+        "created_at" TIMESTAMP NOT NULL DEFAULT now(),
+        "updated_at" TIMESTAMP NOT NULL DEFAULT now(),
         CONSTRAINT "PK_role_id" PRIMARY KEY ("id"),
         CONSTRAINT "UQ_role_name" UNIQUE ("name")
       )`,
@@ -114,26 +116,40 @@ export class BaseSchema1756810370971 implements MigrationInterface {
       )`,
     );
 
+    // --- action table ---
+    await queryRunner.query(
+      `CREATE TABLE "action" (
+        "id" INTEGER GENERATED ALWAYS AS IDENTITY NOT NULL,
+        "name" character varying NOT NULL,
+        "description" character varying,
+        "created_at" TIMESTAMP NOT NULL DEFAULT now(),
+        "updated_at" TIMESTAMP NOT NULL DEFAULT now(),
+        CONSTRAINT "PK_action_id" PRIMARY KEY ("id"),
+        CONSTRAINT "UQ_action_name" UNIQUE ("name")
+      )`,
+    );
+
     await queryRunner.query(
       `CREATE TABLE "subject" (
         "id" INTEGER GENERATED ALWAYS AS IDENTITY NOT NULL,
         "name" character varying NOT NULL,
+        "created_at" TIMESTAMP NOT NULL DEFAULT now(),
+        "updated_at" TIMESTAMP NOT NULL DEFAULT now(),
         CONSTRAINT "PK_subject_id" PRIMARY KEY ("id"),
         CONSTRAINT "UQ_subject_name" UNIQUE ("name")
       )`,
     );
     await queryRunner.query(
-      `CREATE TYPE "permission_action_enum" AS ENUM ('manage','create','read','update','delete')`,
-    );
-    await queryRunner.query(
       `CREATE TABLE "permission" (
         "id" INTEGER GENERATED ALWAYS AS IDENTITY NOT NULL,
-        "action" "permission_action_enum" NOT NULL,
         "subject_id" integer NOT NULL,
-        "description" character varying,
+        "action_id" integer NOT NULL,
+        "created_at" TIMESTAMP NOT NULL DEFAULT now(),
+        "updated_at" TIMESTAMP NOT NULL DEFAULT now(),
         CONSTRAINT "PK_permission_id" PRIMARY KEY ("id"),
         CONSTRAINT "FK_permission_subject" FOREIGN KEY ("subject_id") REFERENCES "subject"("id") ON DELETE NO ACTION,
-        CONSTRAINT "UQ_permission_action_subject" UNIQUE ("action", "subject_id")
+        CONSTRAINT "FK_permission_action" FOREIGN KEY ("action_id") REFERENCES "action"("id") ON DELETE NO ACTION,
+        CONSTRAINT "UQ_permission_action_subject" UNIQUE ("action_id", "subject_id")
       )`,
     );
 
@@ -141,6 +157,8 @@ export class BaseSchema1756810370971 implements MigrationInterface {
       "id" INTEGER GENERATED ALWAYS AS IDENTITY NOT NULL,
       "user_id" INTEGER NOT NULL,
       "role_id" INTEGER NOT NULL,
+      "created_at" TIMESTAMP NOT NULL DEFAULT now(),
+      "updated_at" TIMESTAMP NOT NULL DEFAULT now(),
       CONSTRAINT "PK_user_role" PRIMARY KEY ("id"),
       CONSTRAINT "UQ_user_role_user_id_role_id" UNIQUE ("user_id", "role_id")
   )`);
@@ -148,6 +166,8 @@ export class BaseSchema1756810370971 implements MigrationInterface {
       "id" INTEGER GENERATED ALWAYS AS IDENTITY NOT NULL,
       "role_id" INTEGER NOT NULL,
       "permission_id" INTEGER NOT NULL,
+      "created_at" TIMESTAMP NOT NULL DEFAULT now(),
+      "updated_at" TIMESTAMP NOT NULL DEFAULT now(),
       CONSTRAINT "PK_role_permission" PRIMARY KEY ("id"),
       CONSTRAINT "UQ_role_permission_role_id_permission_id" UNIQUE ("role_id", "permission_id")
   )`);
@@ -180,9 +200,12 @@ export class BaseSchema1756810370971 implements MigrationInterface {
     );
     await queryRunner.query(`DROP TABLE "role_permission"`);
     await queryRunner.query(`DROP TABLE "user_role"`);
+    await queryRunner.query(
+      `ALTER TABLE "permission" DROP CONSTRAINT "FK_permission_action"`,
+    );
     await queryRunner.query(`DROP TABLE "permission"`);
-    await queryRunner.query(`DROP TYPE "permission_action_enum"`);
     await queryRunner.query(`DROP TABLE "subject"`);
+    await queryRunner.query(`DROP TABLE "action"`);
 
     await queryRunner.query(`DROP TABLE "biometric_challenge"`);
     await queryRunner.query(`DROP TABLE "user_device"`);

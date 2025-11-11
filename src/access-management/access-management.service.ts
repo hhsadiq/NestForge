@@ -6,6 +6,7 @@ import { ERROR_MESSAGES } from '@src/common/error-messages';
 import { FORBIDDEN, NOT_FOUND } from '@src/common/exceptions';
 
 import { AccessAbstractRepository } from './infrastructure/persistence/access.abstract.repository';
+import { PermissionActionType } from './types/permission-actions.type';
 
 @Injectable()
 export class AccessManagementService {
@@ -19,8 +20,8 @@ export class AccessManagementService {
         roleIds ?? [],
       );
     return permissions.map((p) => ({
-      action: p.action as any,
-      subject: (p as any)?.subject?.name ?? (p as any)?.subject,
+      action: (p.action?.name ?? p.action) as PermissionActionType,
+      subject: p.subject?.name ?? p.subject,
     }));
   }
 
@@ -35,17 +36,26 @@ export class AccessManagementService {
   }
 
   async createPermission(createPermission: CreatePermissionDto) {
-    const existing = await this.accessManagementRepository.findSubjectByName(
-      createPermission.subject,
-    );
+    const existingSubject =
+      await this.accessManagementRepository.findSubjectByName(
+        createPermission.subject,
+      );
     const subject =
-      existing ??
+      existingSubject ??
       (await this.accessManagementRepository.createSubject(
         createPermission.subject,
       ));
+
+    const actionName = createPermission.action;
+    const action =
+      await this.accessManagementRepository.findActionByName(actionName);
+    if (!action) {
+      throw NOT_FOUND('Action', { action: actionName });
+    }
+
     const existingPermission =
       await this.accessManagementRepository.findPermissionByActionAndSubject(
-        createPermission.action as any,
+        action.id,
         subject.id,
       );
     if (existingPermission) {
@@ -56,10 +66,9 @@ export class AccessManagementService {
     }
 
     return this.accessManagementRepository.createPermission({
-      action: createPermission.action as any,
+      action,
       subject,
-      description: createPermission.description,
-    } as any);
+    });
   }
 
   getAllRoles() {

@@ -19,4 +19,16 @@ export class UserRole {
     type: () => Role,
   })
   role: Role;
+
+  @ApiProperty({
+    type: Date,
+    description: 'Timestamp when the user role was created',
+  })
+  createdAt: Date;
+
+  @ApiProperty({
+    type: Date,
+    description: 'Timestamp when the user role was last updated',
+  })
+  updatedAt: Date;
 }

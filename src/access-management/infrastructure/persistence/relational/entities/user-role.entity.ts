@@ -1,9 +1,11 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 import { RoleEntity } from '@src/access-management/infrastructure/persistence/relational/entities/role.entity';
@@ -20,6 +22,12 @@ export class UserRoleEntity {
 
   @Column({ name: 'role_id', type: 'int' })
   role_id: number;
+
+  @CreateDateColumn({ name: 'created_at' })
+  created_at: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updated_at: Date;
 
   @ManyToOne(() => UserEntity)
   @JoinColumn({ name: 'user_id' })

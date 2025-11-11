@@ -7,6 +7,7 @@ import appConfig from '@src/config/app.config';
 import databaseConfig from '@src/database/config/database.config';
 import { TypeOrmConfigService } from '@src/database/typeorm-config.service';
 
+import { ActionSeedModule } from './action/action-seed.module';
 import { PermissionSeedModule } from './permission/permission-seed.module';
 import { RoleSeedModule } from './role/role-seed.module';
 import { RolePermissionSeedModule } from './role-permission/role-permission-seed.module';
@@ -18,6 +19,7 @@ import { UserSeedModule } from './user/user-seed.module';
   imports: [
     StatusSeedModule,
     RoleSeedModule,
+    ActionSeedModule,
     SubjectSeedModule,
     PermissionSeedModule,
     RolePermissionSeedModule,

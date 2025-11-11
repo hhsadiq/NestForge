@@ -21,4 +21,16 @@ export class Role {
     example: 'Allows reading data',
   })
   description?: string;
+
+  @ApiProperty({
+    type: Date,
+    description: 'Timestamp when the role was created',
+  })
+  createdAt: Date;
+
+  @ApiProperty({
+    type: Date,
+    description: 'Timestamp when the role was last updated',
+  })
+  updatedAt: Date;
 }

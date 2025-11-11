@@ -13,4 +13,16 @@ export class Subject {
     example: 'User',
   })
   name: string;
+
+  @ApiProperty({
+    type: Date,
+    description: 'Timestamp when the subject was created',
+  })
+  createdAt: Date;
+
+  @ApiProperty({
+    type: Date,
+    description: 'Timestamp when the subject was last updated',
+  })
+  updatedAt: Date;
 }

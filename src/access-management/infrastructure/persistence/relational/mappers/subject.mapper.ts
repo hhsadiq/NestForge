@@ -6,6 +6,12 @@ export class SubjectMapper {
     const domainEntity = new Subject();
     domainEntity.id = raw.id;
     domainEntity.name = raw.name;
+    if (raw.created_at) {
+      domainEntity.createdAt = raw.created_at;
+    }
+    if (raw.updated_at) {
+      domainEntity.updatedAt = raw.updated_at;
+    }
     return domainEntity;
   }
 
