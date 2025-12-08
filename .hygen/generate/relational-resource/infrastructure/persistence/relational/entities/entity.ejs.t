@@ -73,6 +73,9 @@ export class <%= name %>Entity extends EntityRelationalHelper {
     name: '<%= columnName %>',
     type: '<%= columnType %>',
     nullable: <%= field.optional %>, 
+    <% if (field.unique) { %>
+      unique: true,
+    <% } %>
   })
   <%= propertyName %><%= field.optional ? '?' : '' %>: <%- field.associatedEnumName ? h.inflection.classify(field.associatedEnumName) + 'Enum' : field.type === 'int' || field.type === 'float' || field.type === 'double' || field.type === 'decimal' || field.type === 'numeric' ? 'number' : field.type === 'boolean' ? 'boolean' : field.type === 'json' ? 'Record<string, any>' : field.type === 'timestamp' ? 'Date' : field.type === 'date' ? 'Date' : 'string' %>;
   <% }) %>

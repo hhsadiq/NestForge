@@ -51,6 +51,13 @@ module.exports = {
       initial: false,
     });
 
+    const { unique } = await prompter.prompt({
+      type: 'confirm',
+      name: 'unique',
+      message: 'Is this property unique?',
+      initial: false,
+    });
+
     // Step 5: Ask for type
     const { type } = await prompter.prompt({
       type: 'select',
@@ -122,6 +129,7 @@ module.exports = {
       isAddToDto,
       example,
       version,
+      unique,
     };
   },
 };

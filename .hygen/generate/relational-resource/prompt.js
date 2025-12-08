@@ -27,20 +27,25 @@ module.exports = async (args, prompter) => {
   const dataFilePath = args.dataFile || process.env.DATA_FILE;
 
   // If data file is provided and exists
-  if (dataFilePath && fs.existsSync(path.resolve(process.cwd(), dataFilePath))) {
+  if (
+    dataFilePath &&
+    fs.existsSync(path.resolve(process.cwd(), dataFilePath))
+  ) {
     try {
-      const raw = fs.readFileSync(path.resolve(process.cwd(), dataFilePath), 'utf8');
+      const raw = fs.readFileSync(
+        path.resolve(process.cwd(), dataFilePath),
+        'utf8',
+      );
       const parsed = JSON.parse(raw);
 
       // Process functionalities to handle findAllWithSearch preference
-      const rawFunctionalities =
-        parsed.functionalities ?? [
-          'create',
-          'findAll',
-          'findOne',
-          'update',
-          'delete',
-        ];
+      const rawFunctionalities = parsed.functionalities ?? [
+        'create',
+        'findAll',
+        'findOne',
+        'update',
+        'delete',
+      ];
       const processedFunctionalities =
         processFunctionalities(rawFunctionalities);
 
@@ -58,6 +63,7 @@ module.exports = async (args, prompter) => {
               example: field.example,
               includeInDTO: field.dto,
               associatedEnumName: field.associatedEnumName,
+              unique: field.unique,
             }))
           : [],
       };
