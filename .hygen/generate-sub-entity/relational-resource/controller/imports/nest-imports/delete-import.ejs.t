@@ -1,9 +1,9 @@
 ---
 to: src/<%= h.inflection.transform(parent, ['pluralize', 'underscore', 'dasherize']) %>/<%= h.inflection.transform(parent, ['pluralize', 'underscore', 'dasherize']) %>.controller.ts
 inject: true
-after: Controller,
+prepend: true,
 skip_if: "@Delete"
 ---
 <% if (functionalities.includes('delete')) { %>
-Delete,
+import { Delete } from '@nestjs/common';
 <% } %>

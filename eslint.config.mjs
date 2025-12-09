@@ -52,7 +52,7 @@ export default [
           message: '"it" should start with "should"',
         },
       ],
-
+      'import/no-duplicates': 'error',
       'import/no-restricted-paths': [
         'error',
         {

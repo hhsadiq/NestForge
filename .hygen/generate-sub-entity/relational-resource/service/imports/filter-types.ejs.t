@@ -1,7 +1,7 @@
 ---
 inject: true
 to: src/<%= h.inflection.transform(parent, ['pluralize', 'underscore', 'dasherize']) %>/<%= h.inflection.transform(parent, ['pluralize', 'underscore', 'dasherize']) %>.service.ts
-after: import
+before: import
 skip_if: <%= name %>Filters
 ---
 <% if (functionalities.includes('findAllWithSearch')) { %>
