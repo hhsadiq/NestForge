@@ -3,7 +3,14 @@
     "name": "Team",
     "parent": null,
     "isAddTestCase": false,
-    "functionalities": ["create", "findAll", "findAllWithSearch", "findOne", "update", "delete"],
+    "functionalities": [
+      "create",
+      "findAll",
+      "findAllWithSearch",
+      "findOne",
+      "update",
+      "delete"
+    ],
     "fields": [
       {
         "name": "name",
@@ -11,7 +18,8 @@
         "customType": "",
         "optional": false,
         "example": "Lions",
-        "dto": true
+        "dto": true,
+        "unique": true
       },
       {
         "name": "city",
@@ -89,7 +97,13 @@
     "name": "Player",
     "parent": null,
     "isAddTestCase": false,
-    "functionalities": ["create", "findAllWithSearch", "findOne", "update", "delete"],
+    "functionalities": [
+      "create",
+      "findAllWithSearch",
+      "findOne",
+      "update",
+      "delete"
+    ],
     "fields": [
       {
         "name": "name",
@@ -142,7 +156,13 @@
     "name": "MatchType",
     "parent": "Match",
     "isAddTestCase": false,
-    "functionalities": ["create", "findAllWithSearch", "findOne", "update", "delete"],
+    "functionalities": [
+      "create",
+      "findAllWithSearch",
+      "findOne",
+      "update",
+      "delete"
+    ],
     "fields": [
       {
         "name": "name",
@@ -151,7 +171,8 @@
         "optional": false,
         "example": "League",
         "dto": true,
-        "associatedEnumName": "MatchCategory"
+        "associatedEnumName": "MatchCategory",
+        "unique": true
       }
     ],
     "relations": [],
@@ -257,7 +278,13 @@
     "name": "PlayerMatch",
     "parent": null,
     "isAddTestCase": false,
-    "functionalities": ["create", "findAllWithSearch", "findOne", "update", "delete"],
+    "functionalities": [
+      "create",
+      "findAllWithSearch",
+      "findOne",
+      "update",
+      "delete"
+    ],
     "fields": [
       {
         "name": "playerId",

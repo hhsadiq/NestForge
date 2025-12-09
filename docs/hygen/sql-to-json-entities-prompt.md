@@ -80,6 +80,7 @@ After processing, if both `findAll` and `findAllWithSearch` are present, the res
   "example": <type-matching-value>,
   "dto": true,
   "associatedEnumName": <EnumName>,
+  "unique": true
 }
 ```
 
@@ -87,6 +88,7 @@ After processing, if both `findAll` and `findAllWithSearch` are present, the res
 - `customType` = `""` unless `type` is `custom`.
 - `optional` reflects nullability; `dto` = `true`.
 - `associatedEnumName` is optional, add in case you want to associate enum to a field.
+- `unique` is optional boolean, set to `true` to add a unique constraint to the database column (maps to SQL `UNIQUE` constraint).
 
 ---
 

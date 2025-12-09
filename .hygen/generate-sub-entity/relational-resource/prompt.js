@@ -39,14 +39,13 @@ module.exports = async (args, prompter) => {
       const parsed = JSON.parse(raw);
 
       // Process functionalities to handle findAllWithSearch preference
-      const rawFunctionalities =
-        parsed.functionalities ?? [
-          'create',
-          'findAll',
-          'findOne',
-          'update',
-          'delete',
-        ];
+      const rawFunctionalities = parsed.functionalities ?? [
+        'create',
+        'findAll',
+        'findOne',
+        'update',
+        'delete',
+      ];
       const processedFunctionalities =
         processFunctionalities(rawFunctionalities);
 
@@ -59,12 +58,13 @@ module.exports = async (args, prompter) => {
         fields: Array.isArray(parsed.fields)
           ? parsed.fields.map((field) => ({
               name: field.name,
-              type: field.associatedEnumName? null : field.type,
+              type: field.associatedEnumName ? null : field.type,
               optional: field.optional,
               customType: field.customType,
               example: field.example,
               includeInDTO: field.dto,
               associatedEnumName: field.associatedEnumName,
+              unique: field.unique,
             }))
           : [],
       };
