@@ -84,7 +84,8 @@ Then save the file at the given location and remind me of the correct CLI comman
       "optional": true,
       "customType": "CustomTypeName (optional if type is 'custom')",
       "example": "example_value",
-      "dto": true
+      "dto": true,
+      "unique": true
     }
   ]
 }
@@ -97,6 +98,7 @@ Then save the file at the given location and remind me of the correct CLI comman
 > - `optional`: true if nullable or optional
 > - `example`: valid example for the field
 > - `dto`: true if it should be included in DTOs
+> - `unique`: optional boolean, set to `true` to add a unique constraint to the database column
 
 ---
 

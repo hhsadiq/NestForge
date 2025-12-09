@@ -51,7 +51,15 @@ module.exports = {
       initial: false,
     });
 
-    // Step 5: Ask for type
+    // Step 5: Ask if the property is unique
+    const { unique } = await prompter.prompt({
+      type: 'confirm',
+      name: 'unique',
+      message: 'Is this property unique?',
+      initial: false,
+    });
+
+    // Step 6: Ask for type
     const { type } = await prompter.prompt({
       type: 'select',
       name: 'type',
@@ -90,7 +98,7 @@ module.exports = {
       customType = customTypeInput;
     }
 
-    // Step 6: Ask for property example
+    // Step 7: Ask for property example
     const { example } = await prompter.prompt({
       type: 'input',
       name: 'example',
@@ -105,7 +113,7 @@ module.exports = {
       format: (input) => input.trim(),
     });
 
-    // Step 7: Ask if the property should be added to DTO
+    // Step 8: Ask if the property should be added to DTO
     const { isAddToDto } = await prompter.prompt({
       type: 'confirm',
       name: 'isAddToDto',
@@ -118,6 +126,7 @@ module.exports = {
       name,
       property,
       isOptional, // Include the isOptional field
+      unique, // Include the unique field
       type: customType || type,
       isAddToDto,
       example,

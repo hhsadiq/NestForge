@@ -3,6 +3,7 @@ description: project rules
 globs:
 alwaysApply: true
 ---
+
 # Cursor Rules
 
 ---
@@ -140,7 +141,8 @@ Cursor should validate/generate json objects based on following schema examples:
         "optional": false,
         "example": "League",
         "dto": true,
-        "associatedEnumName": "MatchCategory"
+        "associatedEnumName": "MatchCategory",
+        "unique": true
       }],
   "relations": [], // may have values depending upon the requirements
   "enums": [] // may have values depending upon the requirements
@@ -158,7 +160,8 @@ Cursor should validate/generate json objects based on following schema examples:
         "optional": false,
         "example": "League",
         "dto": true,
-        "associatedEnumName": "MatchCategory"
+        "associatedEnumName": "MatchCategory",
+        "unique": true
       }],
   "enums": [], // may have values depending upon the requirements
   "relations": [] // may have values depending upon the requirements
@@ -193,6 +196,7 @@ Cursor should validate/generate json objects based on following schema examples:
 - Relationship: requires `sourceEntityName`, `relationEntityName`, `relationType`
 - Enum: requires `entityName`, `enumName`, and `enumValues[]` array
 - **Functionalities**: You can include either `"findAll"` or `"findAllWithSearch"` (or both, but `findAllWithSearch` will be preferred and `findAll` will be removed automatically)
+- **Field attributes**: `unique` is optional boolean, set to `true` to add a unique constraint to the database column (maps to SQL `UNIQUE` constraint and TypeORM's `unique: true` option)
 
 ---
 

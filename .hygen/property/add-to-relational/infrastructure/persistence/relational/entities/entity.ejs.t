@@ -5,6 +5,6 @@ after: "export class"
 ---
 
 @Column({ 
-  type: '<%= type %>'<% if (isOptional) { -%>, nullable: true<% } -%>
+  type: '<%= type %>'<% if (isOptional) { -%>, nullable: true<% } -%><% if (unique) { -%>, unique: true<% } -%>
 })
 <%= property %><% if (isOptional) { -%>?<% } -%>: <%= h.getType(type) %>;
