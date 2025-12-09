@@ -12,12 +12,12 @@ after: "export class"
 <% if (sourceColumnName) { -%>
 @JoinColumn({ name: '<%= sourceColumnName %>' })
 <% }  %>
-<%= fieldName %>: <%= h.inflection.classify(relationEntityName) %>Entity;
+<%= h.inflection.transform(fieldName, ['underscore']) %>: <%= h.inflection.classify(relationEntityName) %>Entity;
 <% } else if (relationType === 'ManyToOne') { -%>
 @ManyToOne(() => <%= h.inflection.classify(relationEntityName) %>Entity)
 @JoinColumn({ name: '<%= sourceColumnName %>' })
-<%= fieldName %>: <%= h.inflection.classify(relationEntityName) %>Entity;
+<%= h.inflection.transform(fieldName, ['underscore']) %>: <%= h.inflection.classify(relationEntityName) %>Entity;
 <% } else if (relationType === 'OneToMany') { -%>
 @OneToMany(() => <%= h.inflection.classify(relationEntityName) %>Entity, (x) => x.<%= relationFieldName %>)
-<%= h.inflection.pluralize(fieldName) %>: <%= h.inflection.classify(relationEntityName) %>Entity[];
+<%= h.inflection.transform(fieldName, ['pluralize', 'underscore']) %>: <%= h.inflection.classify(relationEntityName) %>Entity[];
 <% } %>
