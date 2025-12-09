@@ -6,8 +6,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { BaseExceptionFilter } from '@nestjs/core';
-import { AbstractHttpAdapter } from '@nestjs/core';
+import { BaseExceptionFilter, AbstractHttpAdapter } from '@nestjs/core';
 import * as Sentry from '@sentry/nestjs';
 
 @Catch()
