@@ -26,7 +26,9 @@ export const paginationOptions: IPaginationOptions = {
 <% if (functionalities.includes('create')) { %>
 export const mockCreate<%= name %>Dto: Create<%= name %>Dto = {
     <% fields.forEach(field => { %>
+        <% if (field.includeInDTO) { %>
         <%= h.inflection.camelize(field.name, true) %>: <%- h.getValue(field) %>,
+        <% } %>
     <% }) %>
 
 };
@@ -34,7 +36,9 @@ export const mockCreate<%= name %>Dto: Create<%= name %>Dto = {
 <% if (functionalities.includes('update')) { %>
 export const mockUpdate<%= name %>Dto: Update<%= name %>Dto = {
     <% fields.forEach(field => { %>
+        <% if (field.includeInDTO) { %>
         <%= h.inflection.camelize(field.name, true) %>: <%- h.getValue(field) %>,
+        <% } %>
     <% }) %>
 };
 <% } %>
