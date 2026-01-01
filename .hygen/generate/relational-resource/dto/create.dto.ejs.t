@@ -4,7 +4,7 @@ to: "<%= functionalities.includes('create') ? `src/${h.inflection.transform(name
 <%
   const hasDtoFields = fields?.some(f => f.includeInDTO);
 
-  const needsString = fields?.some(f => f.includeInDTO && ['varchar','text','uuid','custom'].includes(f.type) && f.customType !== 'bit(1)');
+  const needsString = fields?.some(f => f.includeInDTO && ['varchar','text','uuid','custom', 'time'].includes(f.type) && f.customType !== 'bit(1)');
   const needsNumber = fields?.some(f => f.includeInDTO && ['int','float','double','decimal'].includes(f.type));
   const needsBoolean = fields?.some(f => f.includeInDTO && (f.type === 'boolean' || (f.type === 'custom' && f.customType === 'bit(1)')));
   const needsDate = fields?.some(f => f.includeInDTO && ['timestamp','date'].includes(f.type));
@@ -63,7 +63,7 @@ export class Create<%= name %>Dto {
   <%= propertyName %><%= field.optional ? '?' : '' %>: <%= h.inflection.classify(field.associatedEnumName) %>Enum;
   <% } else {
     const tsType = (
-      field.type === 'varchar' || field.type === 'text' || field.type === 'uuid' || field.type === 'custom'
+      field.type === 'varchar' || field.type === 'text' || field.type === 'uuid' || field.type === 'custom' || field.type === 'time'
         ? (field.customType === 'bit(1)' ? 'boolean' : 'string')
         : field.type === 'int' || field.type === 'float' || field.type === 'double' || field.type === 'decimal'
         ? 'number'

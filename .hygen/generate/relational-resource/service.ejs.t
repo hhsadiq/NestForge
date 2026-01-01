@@ -64,8 +64,8 @@ export class <%= h.inflection.transform(name, ['pluralize']) %>Service {
   <% } %>
 
   <% if (functionalities.includes('update')) { %>
-  update(id: <%= name %>['id'], update<%= name %>Dto: Update<%= name %>Dto) {
-    const <%= h.inflection.camelize(name, true) %> = this.<%= h.inflection.camelize(name, true) %>Repository.update(id, update<%= name %>Dto);
+  async update(id: <%= name %>['id'], update<%= name %>Dto: Update<%= name %>Dto) {
+    const <%= h.inflection.camelize(name, true) %> = await this.<%= h.inflection.camelize(name, true) %>Repository.update(id, update<%= name %>Dto);
     if (!<%= h.inflection.camelize(name, true) %>) {
       throw NOT_FOUND('<%= name %>', { id });
     }

@@ -30,7 +30,7 @@ export class <%= name %> {
       const tsType = (
         field.associatedEnumName
           ? h.inflection.classify(field.associatedEnumName) + 'Enum'
-          : field.type === 'varchar' || field.type === 'text' || field.type === 'uuid' || field.type === 'custom'
+          : field.type === 'varchar' || field.type === 'text' || field.type === 'uuid' || field.type === 'custom' || field.type === 'time'
           ? 'string'
           : field.type === 'int' || field.type === 'float' || field.type === 'double' || field.type === 'decimal' || field.type === 'numeric'
           ? 'number'

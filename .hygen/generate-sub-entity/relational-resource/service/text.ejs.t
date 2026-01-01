@@ -43,8 +43,8 @@ return <%= name %>Entity;
 <% } %>
 
 <% if (functionalities.includes('update')) { %>
-update<%= name %>(id: <%= name %>['id'], update<%= name %>Dto: Update<%= name %>Dto) {
-const <%= h.inflection.camelize(name, true) %> = this.<%= h.inflection.camelize(parent, true) %>Repository.update<%= name %>(id, update<%= name %>Dto);
+async update<%= name %>(id: <%= name %>['id'], update<%= name %>Dto: Update<%= name %>Dto) {
+const <%= h.inflection.camelize(name, true) %> = await this.<%= h.inflection.camelize(parent, true) %>Repository.update<%= name %>(id, update<%= name %>Dto);
 if (!<%= h.inflection.camelize(name, true) %>) {
     throw NOT_FOUND('<%= name %>', { id });
 }
