@@ -65,6 +65,8 @@ export class <%= name %>Entity extends EntityRelationalHelper {
       columnType = 'jsonb';
     } else if (field.type === 'custom') {
       columnType = field.customType;
+    } else if (field.type === 'time') {
+      columnType = "time";
     } else {
       columnType = 'varchar'; // fallback
     }

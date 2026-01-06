@@ -22,7 +22,8 @@ function toKebabCase(str) {
 const pathRules = {
   entity: ({ moduleName }) => {
     const folder = inflection.pluralize(toKebabCase(moduleName));
-    return path.join('src', folder, 'domain', `${toKebabCase(moduleName)}.ts`);
+    // return path.join('src', folder, 'domain', `${toKebabCase(moduleName)}.ts`);
+    return path.join('src', folder);
   },
   'sub-entity': ({ moduleName, parentModule }) => {
     if (!parentModule) throw new Error('Sub-entity requires a parentModule.');
@@ -57,13 +58,22 @@ async function runHygen(command, payload, type, name) {
 
 // Collect entities, sub-entities, relations, enums
 function collectDefinitions(jsonData) {
+  const modules = [];
   const entities = [];
   const subEntities = [];
   const relations = [];
   const enums = [];
 
   for (const item of jsonData) {
-    if (!item.parent && !item.relationType && !item.enumName) {
+    if (item.fields.length === 0) {
+      modules.push(item);
+    }
+    if (
+      !item.parent &&
+      !item.relationType &&
+      !item.enumName &&
+      item.fields.length > 0
+    ) {
       entities.push(item);
     }
     if (item.parent) {
@@ -83,7 +93,7 @@ function collectDefinitions(jsonData) {
     }
   }
 
-  return { entities, subEntities, relations, enums };
+  return { entities, subEntities, relations, enums, modules };
 }
 
 // ✅ Interactive check if entities-generator.json exists and not empty
@@ -136,8 +146,30 @@ async function ensureEntitiesFile() {
     console.log(
       '📦 Collecting entities, sub-entities, relations, and enums...',
     );
-    const { entities, subEntities, relations, enums } =
+    const { entities, subEntities, relations, enums, modules } =
       collectDefinitions(jsonData);
+
+    //  Modules
+    if (modules.length > 0) {
+      console.log('\n======================');
+      console.log('📂 Generating Modules');
+      console.log('======================');
+    }
+
+    for (const module of modules) {
+      const modulePath = pathRules.entity({ moduleName: module.name });
+      if (fs.existsSync(modulePath)) {
+        skipped.entities.push(`${module.name} (already exists)`);
+        continue;
+      }
+
+      await runHygen(
+        `npx cross-env DATA_FILE=.hygen-entities-generator/process-entity.json npm run generate:structural-resource`,
+        module,
+        'Module',
+        module.name,
+      );
+    }
 
     // 1️⃣ Entities
     if (entities.length > 0) {
@@ -151,6 +183,7 @@ async function ensureEntitiesFile() {
         skipped.entities.push(`${entity.name} (already exists)`);
         continue;
       }
+
       await runHygen(
         `npx cross-env DATA_FILE=.hygen-entities-generator/process-entity.json npm run generate:resource`,
         entity,

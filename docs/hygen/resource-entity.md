@@ -157,6 +157,6 @@ This will generate the full resource without further prompts.
 
 ---
 
-Previous: [Enum generator](enum.md)
+Previous: [Structural-resource generator](structural-resource.md)
 
 Next: [Sub-entity generator](sub-entity.md)

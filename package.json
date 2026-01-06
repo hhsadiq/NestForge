@@ -47,7 +47,8 @@
     "generate:enum": "hygen generate-enum relational-resource",
     "generate:migration": "node .hygen/generate-migration/relational-resource/interactive-migration.js",
     "generate:migration-from-sql": "node .hygen/generate-migration/relational-resource/migration-generator.js",
-    "setup": "chmod +x scripts/setup.sh && bash scripts/setup.sh"
+    "setup": "chmod +x scripts/setup.sh && bash scripts/setup.sh",
+    "generate:structural-resource": "hygen generate-structure structural-resource"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.914.0",

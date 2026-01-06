@@ -161,4 +161,4 @@ This will generate the enum without further prompts.
 
 Previous: [Entities (Batch)](entities.md)
 
-Next: [Resource generator](resource-entity.md)
+Next: [Structural-resource generator](structural-resource.md)
