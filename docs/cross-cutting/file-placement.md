@@ -62,7 +62,7 @@ Canonical structure reference: `src/bookings/` is the most complete example modu
 
 ## Reference
 
-The `src/` directory contains 30+ modules. Each follows identical internal structure.
+The `src/` directory contains 20+ modules. Each follows identical internal structure.
 Consistency is what makes the codebase navigable. When a file is in the wrong place:
 1. Other agents reach for it by convention and fail to find it
 2. Module boundaries leak — services start depending on each other's internals

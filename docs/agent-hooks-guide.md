@@ -1,6 +1,6 @@
 # Agent Hooks System — Implementation Guide
 
-This document covers the three-tier context injection system implemented for **booking-cms-apis**.
+This document covers the three-tier context injection system implemented for **NestForge**.
 It shows exactly what happens without the system versus with it, using real patterns from this codebase.
 
 > Based on: [Hook-Based Context Injection for AI Coding Agents](https://andrewpatterson.dev/posts/agent-convention-enforcement-system/) by Andrew Patterson.
@@ -115,7 +115,7 @@ a violation in place.
 
 ## The Real Problem: Convention Drift
 
-This codebase has 30+ modules all following the hexagonal pattern. That pattern has non-obvious rules:
+This codebase has 20+ modules all following the hexagonal pattern. That pattern has non-obvious rules:
 
 1. Services inject the **abstract repository** (not the concrete one, not TypeORM directly)
 2. Domain entities are **pure TypeScript** (zero TypeORM, zero infra imports)

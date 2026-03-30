@@ -1,6 +1,6 @@
-# AGENTS.md — booking-cms-apis
+# AGENTS.md — NestForge
 
-NestJS hexagonal (Ports & Adapters) architecture. 30+ feature modules, each with identical internal structure. This file is loaded every session — keep it loaded and trust it.
+NestJS hexagonal (Ports & Adapters) architecture. 20+ feature modules, each with identical internal structure. This file is loaded every session — keep it loaded and trust it.
 
 ---
 
