@@ -19,7 +19,7 @@ services:
       - ${MAIL_PORT}:1025
 
   adminer:
-    image: adminer@sha256:bf7ea9bd62afd2d34045b4098ad68feb4a08ad9f75f28dc5d9b7d6d84d63005c
+    image: adminer@sha256:400af848ac3f57938abde4867677df1b195674d232c8896a27d111d04b9c088c
     restart: always
     ports:
       - 8080:8080
