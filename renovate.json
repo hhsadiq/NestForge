@@ -124,8 +124,10 @@
       "groupName": "testing libraries"
     }
   ],
-  "dependencyDashboard": true,
-  "dependencyDashboardTitle": "🤖 Dependency Updates Dashboard",
-  "dependencyDashboardLabels": ["dependencies"],
-  "dependencyDashboardAutoclose": true
+  "dependencyDashboard": {
+    "enabled": true,
+    "title": "🤖 Dependency Updates Dashboard",
+    "labels": ["dependencies"],
+    "autoclose": true
+  }
 }
